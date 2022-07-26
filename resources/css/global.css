@@ -1,0 +1,142 @@
+body {
+    margin: 0;
+    position: static;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+}
+.navbar-top {
+    background-color: #fff;
+    box-shadow: inset 0 -1px 0 #cdcecf;
+    font-size: 0;
+    height: 60px;
+    left: 0;
+    position: fixed;
+    right: 0;
+    z-index: 5;
+}
+
+.navbar-top .navbar-top-left {
+    display: inline-block;
+    height: 60px;
+    vertical-align: middle;
+    width: 50%;
+}
+.navbar-top .navbar-top-left .brand-logo {
+    padding: 10px 5px !i;
+}
+
+a:active, a:focus, a:hover, a:link, a:visited {
+    color: #0e90d9;
+    text-decoration: none;
+}
+
+.navbar-top .navbar-top-right {
+    display: inline-block;
+    height: 60px;
+    padding: 10px;
+    text-align: right;
+    vertical-align: middle;
+    width: 50%;
+}
+
+.navbar-top .navbar-top-right .profile-info {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.navbar-top .navbar-top-right .profile-info .avatar {
+    background-color: #f7f8f9;
+    border: 1px solid #c1c2c3;
+    border-radius: 43px;
+    display: inline-block;
+    height: 40px;
+    margin-right: 10px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: middle;
+    width: 40px;
+}
+
+.navbar-top .navbar-top-right .profile-info .avatar .icon {
+    margin-top: 8px;
+}
+
+.avatar-icon {
+    background-image: url(../images/avatar-icon.svg);
+    height: 21px;
+    width: 16px;
+}
+
+.icon {
+    background-size: cover;
+    display: inline-block;
+    height: 20px;
+    vertical-align: top;
+    width: 20px;
+}
+
+.navbar-top .navbar-top-right .profile-info .info {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 20px;
+    min-width: 50px;
+    vertical-align: middle;
+}
+
+.navbar-top .navbar-top-right .profile-info .icon.ellipsis-icon {
+    height: 30px!important;
+    vertical-align: middle;
+    width: 30px!important;
+}
+
+.ellipsis-icon {
+    background-image: url(../images/ellipsis-icon.svg);
+}
+
+.navbar-top .navbar-top-right .profile-info .dropdown-list {
+    bottom: unset;
+    right: 0;
+    top: 50px;
+}
+.dropdown-list {
+    background-color: #fff;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 2px 5px 0 rgb(39 49 58 / 15%);
+    display: none;
+    margin-bottom: 20px;
+    position: absolute;
+    text-align: left;
+    width: 215px;
+    z-index: 10;
+}
+
+.dropdown-list .dropdown-container {
+    overflow-y: auto;
+}
+
+.dropdown-list .dropdown-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.dropdown-list .dropdown-container ul li {
+    color: #546e7a;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 8px 12px;
+}
+
+.dropdown-list .dropdown-container ul li a:active, .dropdown-list .dropdown-container ul li a:focus, .dropdown-list .dropdown-container ul li a:link, .dropdown-list .dropdown-container ul li a:visited {
+    color: #546e7a;
+    display: block;
+}
+
+.navbar-top-left i{
+    margin-right: 5px !important;
+    font-size: 20px !important;
+}

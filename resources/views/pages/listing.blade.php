@@ -1,0 +1,10 @@
+@extends('layouts.default')
+@section('page_title')
+   Welcome
+@stop
+@section('content')
+   <ui>
+       <li>IN</li>
+       <li>OUT</li>
+   </ui>
+@stop
