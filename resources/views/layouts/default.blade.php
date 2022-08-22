@@ -3,20 +3,11 @@
 <head>
    @include('includes.head')
 </head>
-<body>
-<div class="container">
-   <header class="row">
-       @include('includes.header')
-   </header>
-   <div class="body-container nominifier">
-        <div id="main" class="home">
-            <!-- @yield('contact-content') -->
-            @include('includes.body_container')
-        </div>
+<body>  
+    @include('includes.header')
+    <div class="container">
+        @include('includes.body_container')
     </div>
-   <!-- <footer class="row">
-       @include('includes.footer')
-   </footer> -->
-</div>
+    <div style="" id="preloader"><div class="loader" id="loader"></div></div>
 </body>
 </html>

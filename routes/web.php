@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Leads;
 use App\Http\Controllers\Contact;
 use App\Http\Controllers\Login;
+use App\Http\Controllers\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,26 @@ use App\Http\Controllers\Login;
 //     return view('welcome');
 // });
 
-Route::get('',[Login::class, 'index']);
+// Auth::routes();
 
-Route::get('contact',[Contact::class, 'index']);
+// Route::get('',[Login::class, 'login'])->name('login');
 
-Route::get('get_contact',[Contact::class, 'get']);
+Route::get('',[Login::class, 'login_sso_action'])->name('login_sso_action');
 
-Route::post('update_data',[Contact::class, 'update_data']);
+Route::get('login_sso_action',[Login::class, 'login_sso_action'])->name('login_sso_action');
 
-Route::get('login',[Login::class, 'index']);
+Route::get('attempt_login',[Login::class, 'attempt_login'])->middleware('auth');
 
+Route::get('index',[Dashboard::class, 'index'])->name('index')->middleware('auth');
+
+Route::get('contact',[Contact::class, 'index'])->name('contact')->middleware('auth');
+
+Route::get('get_contact',[Contact::class, 'get'])->name('get_contact')->middleware('auth');
+
+Route::post('update_data',[Contact::class, 'update_data'])->name('update_data')->middleware('auth');
+
+Route::post('set_remainder',[Contact::class, 'set_remainder'])->name('set_remainder')->middleware('auth');
+
+Route::get('fetch_reminder_count',[Contact::class, 'fetch_reminder_count'])->name('fetch_reminder_count')->middleware('auth');
+
+Route::get('reminder',[Contact::class, 'reminder'])->name('reminder')->middleware('auth');
