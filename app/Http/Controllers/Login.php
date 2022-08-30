@@ -19,7 +19,6 @@ class Login extends BaseController
     }
 
     public function login_sso_action(Request $request) {
-
         if(isset($_REQUEST['state'])){
             $request        = $_REQUEST;
             $expectedState  = session('oauthState');

@@ -29,7 +29,7 @@
             <div><i class="fas fa-clock bg-gray"></i></div>
          </div>
          @else
-            <h3 class="alert"><i class="fas fa-exclamation-triangle text-warning"></i> Oops! No records found.</h3>
+            <h3 class="alert"><i class="fas fa-exclamation-triangle text-warning text-center"></i> Oops! No records found.</h3>
          @endif
       </div>
    </div>

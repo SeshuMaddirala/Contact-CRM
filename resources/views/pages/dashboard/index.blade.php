@@ -4,11 +4,11 @@
 @stop
 
 @section('content')
-<div class="row">
-   <div class="col-md-6 col-lg-4 order-2 mb-4">
+<div class="contents row">
+   <div class="profile-head col-md-6 col-lg-4 order-2 mb-4">
       <div class="card h-100">
-         <div class="card-header d-flex align-items-center justify-content-between">
-            <h5 class="card-title m-0 me-2">Profile Unread Count</h5>
+         <div class="card-header">
+         <h5 class="content-block card-title m-0 me-2">Profile Unread Count</h5>
             <!-- <div class="dropdown">
                <button class="btn p-0" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <i class="bx bx-dots-vertical-rounded"></i>
@@ -20,7 +20,7 @@
                </div>
             </div> -->
          </div>
-         <div class="card-body">
+         <div class="profile-head card-body">
             <table class="table table-borderless text-nowrap">
                <thead>
                   <tr>
@@ -34,7 +34,7 @@
                      <tr>
                         <td>{{$key+1}}</td>
                         <td>
-                           <div class="d-flex align-items-center">
+                           <div class="table-data">
                               <span>{{$val['profile_name']}}</span>
                            </div>
                         </td>
@@ -47,12 +47,13 @@
       </div>
    </div>
    
-   <div class="col-lg-2 col-md-12 col-2 mb-2">
+   <div class="profile-head col-lg-2 col-md-12 col-2 mb-2">
       <div class="card">
          <div class="card-body pb-0">
-            <span class="d-block fw-semibold mb-1 card-title">Unregistered Contacts (BOT) </span>
+            <!-- <span class="content d-block mb-1 card-title">Unregistered Contacts (BOT) </span> -->
+            <h5 class="content-block card-title m-0 me-2">Unregistered Contacts (BOT)</h5>
             <hr style="margin-top: 11px;margin-bottom: 11px;border: 0;border-top: 1px solid #dbd1d1;">
-            <h3 class="mb-1" >{{$dashboard_data['unregistered_count']}}</h3>
+            <h3 class="data mb-1" >{{$dashboard_data['unregistered_count']}}</h3>
          </div>
       </div>
    </div>
