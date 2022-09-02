@@ -13,10 +13,11 @@
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-            <li class="{{ Request::path() == 'index' ? 'active' : '' }}"><a href="index">Dashboard</a></li>
-            <li class="{{ Request::path() == 'contact' ? 'active' : '' }}"><a href="contact">Contacts</a></li>
-            <li class="{{ Request::path() == 'reminder' ? 'active' : '' }}"><a href="reminder">Reminders</a></li>
+        <ul class="nav navbar-nav menu-ul-li">
+            <li class="{{ Request::path() == 'index' ? 'active' : '' }}"><a href="index"><i class="fa-fw fa-solid fa-house-chimney fa-2x" title="Dashboard"></i>Dashboard</a></li>
+            <li class="{{ Request::path() == 'contact' ? 'active' : '' }}"><a href="contact"><i class="fa-fw fa-solid fa-address-card fa-2x" title="Contacts"></i>Contacts</a></li>
+            <li class="{{ Request::path() == 'reminder' ? 'active' : '' }}"><a href="reminder"><i class="fa-fw far fa-bell" title="Reminders"></i>Reminders</a></li>
+            <li class="{{ Request::path() == 'activities' ? 'active' : '' }}"><a href="activities"><i class="fa-fw fa-solid fa-clipboard-list fa-2x" title="Activities"></i>Activities</a></li>
         </ul>
         <ul class="nav navbar-nav ml-auto float-right">
             <li class="nav-item dropdown reminder-section">

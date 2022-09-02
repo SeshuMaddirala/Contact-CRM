@@ -344,11 +344,7 @@ var datatable_obj = {};
 
 var contact_form = {
     init:function(){
-        // $('#contact-form thead tr')
-        // .clone(true)
-        // .addClass('filters')
-        // .appendTo('#contact-form thead');
-
+        
         datatable_obj = $('#contact-form').DataTable( {
             dom         : "Bfrtip",
             scrollX     : true,

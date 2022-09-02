@@ -28,7 +28,7 @@ label {
 }
 
 .content-wrapper{
-    margin-top: 5%;
+    margin-top: 6%;
 }
 
 .h-100 {
@@ -195,6 +195,12 @@ tbody, td, tfoot, th, thead, tr {
 .navbar-default .navbar-nav>li>a{
     color: white;
 }
+.navbar-default .menu-ul-li>li>a{
+    display: grid;
+    text-align: center;
+    align-content: center;
+    font-size: 13px;
+}
 
 .navbar-default .navbar-nav>li>a:hover{
     color: white;
@@ -234,6 +240,10 @@ tbody, td, tfoot, th, thead, tr {
 .handsontable tbody tr:nth-child(odd) td {
   background-color: #dee2e6;
 }
+
+.handsontable .wtSpreader table.htCore tbody tr:nth-child(odd) td {
+    background-color: #fff !important;
+  }
 
 .handsontable .htAutocompleteArrow{
     color: #2b4068 !important;
@@ -361,12 +371,14 @@ tbody, td, tfoot, th, thead, tr {
 .handsontable thead th .relative{
     background-color: #525585;
     color: white;
+    background-color: #ffffff;
+    color: black;
     padding: 9px;
 }
 
 .handsontable thead th {
-    border-top: 1px solid black !important;
-    border-bottom: 1px solid black !important;
+    /* border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important; */
 }
 
 .handsontable thead th:first-child .relative{
@@ -384,7 +396,7 @@ tbody, td, tfoot, th, thead, tr {
     padding: 2px 4px;
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 3px;
 }
 .badge-warning {
     color: #1f2d3d;
@@ -616,9 +628,135 @@ tbody, td, tfoot, th, thead, tr {
     /* content: 'X' */
   }
   
-  .handsontable thead TR:nth-child(1) TH:first-child:after {
+  /* .handsontable thead TR:nth-child(1) TH:first-child:after {
     content: 'X'
   }
   .handsontable thead TR:nth-child(1) span.cornerHeader {
     line-height: 0 !important;
+  } */
+
+  .handsontable .manualColumnResizer.active, .handsontable .manualColumnResizer:hover, .handsontable .manualRowResizer.active, .handsontable .manualRowResizer:hover{
+    background-color: #d2d8ff;
   }
+
+  .contact-datefilter-div{
+    margin-top: -7px;
+    margin-right: 10px;
+  }
+
+  .daterangepicker .ranges li.active{
+    background-color: #2b4068;
+  }
+
+  .btn-primary {
+    background-color: #2b4068 !important;
+    border-color: #2b4068 !important;
+}
+
+.daterangepicker td.active, .daterangepicker td.active:hover{
+    background-color: #2b4068;
+}
+
+.daterangepicker td.in-range{
+    background-color: #e3ecff;
+}
+
+.no-data-msg{
+    margin: 65px;font-size: 26px;
+}
+
+.navbar-nav>li>a {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    line-height: 20px !important;
+}
+
+.navbar-nav>li>a>i.fa-fw {
+    text-align: center;
+    margin-left: 27%;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.navbar-nav.ml-auto{
+    margin-top: 12px;
+} 
+
+.nav-item.reminder-section{
+    margin-top: 4px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+    
+    background-color: #ffffff;
+    border: 1px solid #2b4068;
+}
+
+.contact-datefilter-div{
+    background: #fff;
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+}
+
+#contact-datefilter{
+    border: 0px solid #2b4068;
+    outline: 0px !important;
+}
+
+.contact-datefilter-div #datefilter{
+    border: 0px solid #2b4068;
+    outline: 0px !important;
+}
+
+.handsontable .htUIInput.htUIButtonOK input{
+    background-color: #2b4068;
+    border-color: #2b4068;
+}
+
+.handsontable .columnSorting.sortAction:hover{
+    text-decoration: none;
+}
+
+.handsontable span.colHeader.columnSorting.sortAction:before{
+    background-image: url('../image/sort.png');
+    font-size: 17px;
+    width: 25px;
+    height: 18px;
+    right: -16px;
+}
+
+/* .handsontable span.colHeader.columnSorting.sortAction:after{
+    background-image: url('../image/sort.png');
+} */
+
+
+button.btn-modal{
+    background-color: #2b4068 !important;
+    border-color: #2b4068 !important;
+    float: right;
+    margin-top: -6px;
+    margin-right: 8px;
+}
+
+.add_new_filter{
+    margin-bottom:10px;
+}
+
+.filter-delete-row{
+    cursor: pointer;
+    padding-top: 10px;
+}
+
+.handsontable thead th:nth-child(4) .relative,
+.handsontable thead th:nth-child(5) .relative,
+.handsontable thead th:nth-child(6) .relative,
+.handsontable thead th:nth-child(7) .relative,
+.handsontable thead th:nth-child(8) .relative,
+.handsontable thead th:nth-child(9) .relative{
+    background-color: #afeae9 !important;
+}
+
+.main-checkbox-input, .checkbox-input{
+    cursor: pointer;
+}

@@ -19,7 +19,7 @@
                      <i class="fas fa-solid fa-angle-right"></i>
                      <div class="timeline-item">
                         <span class="time"><i class="fas fa-clock"></i> {{$s_val['reminder_time']}}</span>
-                        <h3 class="timeline-header">{{$s_val['tSubject']}}</h3>
+                        <h3 class="timeline-header">{{$s_val['tSubject']}} [{{$s_val['tAttendees']}}]</h3>
                         <div class="timeline-body">{{$s_val['tNotes']}}</div>
                      </div>
                   </div>

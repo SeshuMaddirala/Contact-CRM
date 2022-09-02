@@ -3,12 +3,22 @@
    Contact List
 @stop
 
+@section('default_column')
+   $default_column   
+@stop
+
 @section('content')
    <div class="panel panel-default">
       <div class="panel-heading">
          Contact's List
-         <button type="button" class="btn btn-primary remainderModal" data-toggle="modal" data-target="#remainderModal">Remainder</button>
+         <button type="button" class="btn btn-primary remainderModal" data-toggle="modal" data-target="#remainderModal">Reminder</button>
          <!-- <button type="button" class="btn btn-primary filter-icon"><i class="fa fa-filter"></i></button> -->
+         <button type="button" class="btn btn-primary filterModal btn-modal" data-toggle="modal" data-target="#filterModal">Filter</button>
+         <button type="button" class="btn btn-primary btn-modal export-btn"><i class="fa-solid fa-download"></i> Export</button>
+         <div class="float-right contact-datefilter-div">
+            <i class="fa-solid fa-calendar-days"></i>
+            <input type="text" name="contact-datefilter" id="contact-datefilter" value=""  />
+         </div>
       </div>
       <div class="panel-body">
          <div class="table-responsive">
@@ -36,12 +46,21 @@
                      <input type="hidden" class="form-control" id="contacts_name">
                   </div>
                   <div class="form-group">
+                     <label for="attendees" class="col-form-label">Attendees</label>
+                     <select class="form-control" id="attendees" placeholder="Please search attendees">
+                     </select>
+                  </div>
+                  <div class="form-group">
                      <label for="remainder_date_time" class="col-form-label">Date&Time</label>
-                     <input type="text" class="form-control" id="remainder_date_time">
+                     <input type="text" class="form-control" id="remainder_date_time" placeholder="Please select date&time">
+                     <!-- <div class="contact-datefilter-div">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <input type="text" class="form-control" id="remainder_date_time" placeholder="Please select date&time">
+                     </div> -->
                   </div>
                   <div class="form-group">
                      <label for="message-text" class="col-form-label">Notes</label>
-                     <textarea class="form-control" id="message-text"></textarea>
+                     <textarea class="form-control" id="message-text" placeholder="Please enter notes"></textarea>
                   </div>
                </form>
             </div>
@@ -52,17 +71,27 @@
          </div>
       </div>
    </div>
+
+   @include('includes.filter')
 @stop
 
 @section('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script> -->
+<script src="{{ asset('js/handsontable.full.min.js') }}"></script>
+<script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
+<script src="{{ asset('js/daterangepicker.min.js') }}" ></script>
+<script src="{{ asset('js/select2.full.min.js') }}"></script>
+<script src="{{ asset('js/chosen.jquery.min.js') }}"></script>
 <script src="{{ asset('js/contact-form-new.js') }}"></script>
-<link href="https://cdn.jsdelivr.net/npm/handsontable@latest/dist/handsontable.full.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" />
+<link rel="stylesheet" href="{{ asset('css/handsontable.full.min.css') }}"/>
+<link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/chosen.min.css') }}"/>
+<!-- https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen-sprite.png -->
+<link rel="stylesheet" href="{{ asset('css/daterangepicker.min.css') }}" />
+<link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
 @stop
 
 <script>
    var column_pre_data = @json($enum_values);
+   var column_property = @json($default_column);
 </script>

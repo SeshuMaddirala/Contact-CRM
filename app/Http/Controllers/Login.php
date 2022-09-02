@@ -147,4 +147,22 @@ class Login extends BaseController
         session($query_response);
         return true;
     }
+
+    public function get_user(Request $request){
+
+        $request_data   = $request->all();
+        $where_cond     = " vUserName LIKE '%".$request_data['q']."%' OR vEmail LIKE '%".$request_data['q']."%'";
+
+        $query_obj_data = DB::table('user')
+        ->selectRaw("vEmail as id,CONCAT(vUserName,' [',vEmail,' ]') as text")
+        ->whereRaw($where_cond)
+        ->orderBy('iUserId','DESC')
+        ->get();
+        
+        $query_response = [];
+        if(!empty($query_obj_data)){
+            $query_response = json_decode(json_encode($query_obj_data), true);
+        }
+        echo json_encode($query_response);exit;
+    }
 }
