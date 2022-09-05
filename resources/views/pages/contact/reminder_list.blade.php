@@ -6,7 +6,7 @@
 @section('content')
 <div class="container-fluid">
    <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-8">
          @if(!empty($data))
          <div class="timeline">
             @php($count = 1)
@@ -18,8 +18,12 @@
                   <div id="collapse{{$count}}" class="collapse @if($count <= 5) in @endif" @if($count > 5) aria-expanded="false" @else aria-expanded="true" @endif>
                      <i class="fas fa-solid fa-angle-right"></i>
                      <div class="timeline-item">
+                        <?php 
+                           $attendees = implode(',',array_column($s_val['tAttendees'],'name'));
+                        ?>
                         <span class="time"><i class="fas fa-clock"></i> {{$s_val['reminder_time']}}</span>
-                        <h3 class="timeline-header">{{$s_val['tSubject']}} [{{$s_val['tAttendees']}}]</h3>
+                        <h3 class="timeline-header">{{$s_val['tSubject']}}</h3>
+                        <h6 class="timeline-header"><i class="fa-solid fa-user-plus"></i> {{$attendees}}</h6>
                         <div class="timeline-body">{{$s_val['tNotes']}}</div>
                      </div>
                   </div>

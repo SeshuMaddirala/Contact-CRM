@@ -417,6 +417,7 @@ class Contact extends BaseController
         $tmp_query_resp = [];
         if(is_array($query_response) && count($query_response) > 0){
             foreach($query_response as $key => $val){
+                $val['tAttendees'] = json_decode($val['tAttendees'],true);
                 $tmp_query_resp[$val['reminder_date']][] = $val;
             }
         }

@@ -612,6 +612,16 @@ tbody, td, tfoot, th, thead, tr {
     margin-left: 20px;
 }
 
+.nav-item.dropdown.open .user-profile:hover{
+    background-color: #2b4068;
+    color: white;
+}
+
+.nav-item.dropdown.open .user-profile{
+    background-color: #2b4068;
+    color: white;
+}
+
 .reminder-section{
     margin-right: 10px;
 }
