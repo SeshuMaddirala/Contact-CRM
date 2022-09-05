@@ -691,6 +691,7 @@ var contact_form = {
             manualColumnResize: true,
             manualRowResize: true,
             minSpareRows    : 1,
+            minRows         : 5,
             fixedColumnsStart: 2,
             licenseKey      : 'non-commercial-and-evaluation',
             customBorders   : true,
@@ -717,7 +718,7 @@ var contact_form = {
                 if(obj[0][1] == 'contact_id' || obj[0][1] == 'contact_interaction_id'){
                     return false;
                 }
-                
+
                 if(obj[0][3] == '' || obj[0][3] == null){
                     return false;
                 }

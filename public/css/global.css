@@ -760,3 +760,7 @@ button.btn-modal{
 .main-checkbox-input, .checkbox-input{
     cursor: pointer;
 }
+
+.txt-align-center{
+    text-align: center;
+}

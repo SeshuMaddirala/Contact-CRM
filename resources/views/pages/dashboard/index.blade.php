@@ -30,17 +30,25 @@
                   </tr>
                </thead>
                <tbody>
-                  @foreach($dashboard_data['unread_response'] as $key => $val)
+                  @if(!empty($dashboard_data['unread_response']))
+                     @foreach($dashboard_data['unread_response'] as $key => $val)
+                        <tr>
+                           <td>{{$key+1}}</td>
+                           <td>
+                              <div class="d-flex align-items-center">
+                                 <span>{{$val['profile_name']}}</span>
+                              </div>
+                           </td>
+                           <td>{{$val['unread_count']}}</td>
+                        </tr>
+                     @endforeach
+                  @else
                      <tr>
-                        <td>{{$key+1}}</td>
-                        <td>
-                           <div class="d-flex align-items-center">
-                              <span>{{$val['profile_name']}}</span>
-                           </div>
+                        <td colspan="3" class="txt-align-center">
+                           No records found
                         </td>
-                        <td>{{$val['unread_count']}}</td>
                      </tr>
-                  @endforeach
+                  @endif
                </tbody>
             </table>
          </div>
@@ -52,7 +60,7 @@
          <div class="card-body pb-0">
             <span class="d-block fw-semibold mb-1 card-title">Unregistered Contacts (BOT) </span>
             <hr style="margin-top: 11px;margin-bottom: 11px;border: 0;border-top: 1px solid #dbd1d1;">
-            <h3 class="mb-1" >{{$dashboard_data['unregistered_count']}}</h3>
+            <h3 class="mb-1 txt-align-center">{{$dashboard_data['unregistered_count']}}</h3>
          </div>
       </div>
    </div>
