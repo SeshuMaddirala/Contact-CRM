@@ -56,16 +56,16 @@ class Contact extends BaseController
                         }
                         break;
                     case 'begins_with':
-                        $where_cond .= ' LIKE "'.$extra_val['filter_value'].' %/"';
+                        $where_cond .= ' LIKE "'.$extra_val['filter_value'].'%"';
                         break;
                     case 'ends_with':
-                        $where_cond .= ' LIKE /%"'.$extra_val['filter_value'].'"';
+                        $where_cond .= ' LIKE "%'.$extra_val['filter_value'].'"';
                         break;
                     case 'contains':
-                        $where_cond .= ' LIKE /%"'.$extra_val['filter_value'].'%/"';
+                        $where_cond .= ' LIKE "%'.$extra_val['filter_value'].'%"';
                         break;
                     case 'does_not_contains':
-                        $where_cond .= ' NOT LIKE /%"'.$extra_val['filter_value'].'%/"';
+                        $where_cond .= ' NOT LIKE "%'.$extra_val['filter_value'].'%"';
                         break;
                     default:
                         if($extra_val['filter_type'] == 'date'){
@@ -76,6 +76,7 @@ class Contact extends BaseController
                 }
             }
         }
+
 
         $select_columns = ['c.iContactsId as contact_id','ci.iContactInteractionId as contact_interaction_id','c.eStatus as communication_status','date_format(c.dtStatusDate,"%d/%m/%Y") as status_date','date_format(c.dtLastConversationDate,"%d/%m/%Y") as last_conv_date','c.tDiscussionPoints as discussion_points','c.vNextSteps as next_steps','date_format(c.dtNextActionDate,"%d/%m/%Y") as next_action_date','c.vContactName as contact_name','c.eRelationshipStatus as relationship_status','c.vDesignation as designation','c.vReportingManager as reporting_manager','c.vOrganizationName as organization_name','c.vWebsite as website','c.vPreviousRelationShip as previous_relationship','c.vIndustry as industry','c.vCityName as city_name','c.vStateName as state_name','c.vCountryName as country_name','c.vLinkedURL as linked_url','c.vEmail as email','c.eReachoutCategory as reachout_category','c.vWorkNumber as work_number','c.vMobileNumber as mobile_number','c.eCategory as category','c.eTouchPoints as touch_points','c.eAdaptability as adaptability','c.eDispositionTowards as disposition_towards','c.eCoverage as coverage','c.tResponse as response','ci.tMessage as message','ci.vMessageBy as message_by','ci.eConnectionStatus as connection_status','ci.eMessageStatus as message_status','date_format(ci.dMessageDate,"%d/%m/%Y") as message_date','ci.dMessageTime as message_time',"concat(ci.dMessageDate,' ',ci.dMessageTime) as  message_date_time"];
 
@@ -416,6 +417,7 @@ class Contact extends BaseController
         $tmp_query_resp = [];
         if(is_array($query_response) && count($query_response) > 0){
             foreach($query_response as $key => $val){
+                $val['tAttendees'] = json_decode($val['tAttendees'],true);
                 $tmp_query_resp[$val['reminder_date']][] = $val;
             }
         }
@@ -536,34 +538,34 @@ class Contact extends BaseController
                 'type'          => 'text'
             ],
             [
-                'class_name' => 'message_by',
-                'name' => 'message_by',
-                'data' => 'message_by',
+                'class_name'    => 'message_by',
+                'name'          => 'message_by',
+                'data'          => 'message_by',
                 'db_name'       => 'vMessageBy',
                 'db_table'      => 'contact_interaction',
-                'title' => 'Message By',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Message By',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'message_date',
-                'name' => 'message_date',
-                'data' => 'message_date',
+                'class_name'    => 'message_date',
+                'name'          => 'message_date',
+                'data'          => 'message_date',
                 'db_name'       => 'dMessageDate',
                 'db_table'      => 'contact_interaction',
-                'title' => 'Message Date',
-                'source_data' => '',
-                'type' => 'date'
+                'title'         => 'Message Date',
+                'source_data'   => '',
+                'type'          => 'date'
             ],
             [
-                'class_name' => 'message_time',
-                'name' => 'message_time',
-                'data' => 'message_time',
+                'class_name'    => 'message_time',
+                'name'          => 'message_time',
+                'data'          => 'message_time',
                 'db_name'       => 'dMessageTime',
                 'db_table'      => 'contact_interaction',
-                'title' => 'Message Time',
-                'source_data' => '',
-                'type' => 'time'
+                'title'         => 'Message Time',
+                'source_data'   => '',
+                'type'          => 'time'
             ],
             [
                 'class_name'    => 'status_date',
@@ -576,34 +578,34 @@ class Contact extends BaseController
                 'type'          => 'date'
             ],
             [
-                'class_name' => 'conversation_date',
-                'name' => 'conversation_date',
-                'data' => 'last_conv_date',
+                'class_name'    => 'last_conv_date',
+                'name'          => 'last_conv_date',
+                'data'          => 'last_conv_date',
                 'db_name'       => 'dtLastConversationDate',
                 'db_table'      => 'contacts',
-                'title' => 'Recent Conversation Date',
-                'source_data' => '',
-                'type' => 'date'
+                'title'         => 'Recent Conversation Date',
+                'source_data'   => '',
+                'type'          => 'date'
             ],
             [
-                'class_name' => 'next_steps',
-                'name' => 'next_steps',
-                'data' => 'next_steps',
+                'class_name'    => 'next_steps',
+                'name'          => 'next_steps',
+                'data'          => 'next_steps',
                 'db_name'       => 'vNextSteps',
                 'db_table'      => 'contacts',
-                'title' => 'Next Steps',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Next Steps',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'next_action_date',
-                'name' => 'next_action_date',
-                'data' => 'next_action_date',
+                'class_name'    => 'next_action_date',
+                'name'          => 'next_action_date',
+                'data'          => 'next_action_date',
                 'db_name'       => 'dtNextActionDate',
                 'db_table'      => 'contacts',
-                'title' => 'Next Action Date',
-                'source_data' => '',
-                'type' => 'date'
+                'title'         => 'Next Action Date',
+                'source_data'   => '',
+                'type'          => 'date'
             ],
             [
                 'class_name'    => 'communication_status',
@@ -616,94 +618,94 @@ class Contact extends BaseController
                 'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'relationship_status',
-                'name' => 'relationship_status',
-                'data' => 'relationship_status',
+                'class_name'    => 'relationship_status',
+                'name'          => 'relationship_status',
+                'data'          => 'relationship_status',
                 'db_name'       => 'eRelationshipStatus',
                 'db_table'      => 'contacts',
-                'title' => 'Relationship Status',
-                'source' => (!empty($column_enum['eRelationshipStatus'])?$column_enum['eRelationshipStatus']:[]),
-                'type' => 'dropdown'
+                'title'         => 'Relationship Status',
+                'source'        => (!empty($column_enum['eRelationshipStatus'])?$column_enum['eRelationshipStatus']:[]),
+                'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'designation',
-                'name' => 'designation',
-                'data' => 'designation',
+                'class_name'    => 'designation',
+                'name'          => 'designation',
+                'data'          => 'designation',
                 'db_name'       => 'vDesignation',
                 'db_table'      => 'contacts',
-                'title' => 'Designation',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Designation',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'reporting_manager',
-                'name' => 'reporting_manager',
-                'data' => 'reporting_manager',
+                'class_name'    => 'reporting_manager',
+                'name'          => 'reporting_manager',
+                'data'          => 'reporting_manager',
                 'db_name'       => 'vReportingManager',
                 'db_table'      => 'contacts',
-                'title' => 'Reporting Manager',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Reporting Manager',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'organization_name',
-                'name' => 'organization_name',
-                'data' => 'organization_name',
+                'class_name'    => 'organization_name',
+                'name'          => 'organization_name',
+                'data'          => 'organization_name',
                 'db_name'       => 'vOrganizationName',
                 'db_table'      => 'contacts',
-                'title' => 'Current Company Name',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Current Company Name',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'website',
-                'name' => 'website',
-                'data' => 'website',
+                'class_name'    => 'website',
+                'name'          => 'website',
+                'data'          => 'website',
                 'db_name'       => 'vWebsite',
                 'db_table'      => 'contacts',
-                'title' => 'Current Company Website',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Current Company Website',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'previous_relationship',
-                'name' => 'previous_relationship',
-                'data' => 'previous_relationship',
+                'class_name'    => 'previous_relationship',
+                'name'          => 'previous_relationship',
+                'data'          => 'previous_relationship',
                 'db_name'       => 'vPreviousRelationShip',
                 'db_table'      => 'contacts',
-                'title' => 'Relationship History Year(2005+)',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Relationship History Year(2005+)',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'industry',
-                'name' => 'industry',
-                'data' => 'industry',
+                'class_name'    => 'industry',
+                'name'          => 'industry',
+                'data'          => 'industry',
                 'db_name'       => 'vIndustry',
                 'db_table'      => 'contacts',
-                'title' => 'Industry',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Industry',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'city',
-                'name' => 'city',
-                'data' => 'city_name',
-                'db_name'       => 'iCityId',
+                'class_name'    => 'city_name',
+                'name'          => 'city_name',
+                'data'          => 'city_name',
+                'db_name'       => 'vCityName',
                 'db_table'      => 'contacts',
-                'title' => 'City',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'City',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'state',
-                'name' => 'state',
-                'data' => 'state_name',
-                'db_name'       => 'iStateId',
+                'class_name'    => 'state_name',
+                'name'          => 'state_name',
+                'data'          => 'state_name',
+                'db_name'       => 'vStateName',
                 'db_table'      => 'contacts',
-                'title' => 'State',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'State',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             // [
             //     'class_name' => 'country',
@@ -716,136 +718,136 @@ class Contact extends BaseController
             //     'type' => 'text'
             // ],
             [
-                'class_name' => 'discussion_points',
-                'name' => 'discussion_points',
-                'data' => 'discussion_points',
+                'class_name'    => 'discussion_points',
+                'name'          => 'discussion_points',
+                'data'          => 'discussion_points',
                 'db_name'       => 'tDiscussionPoints',
                 'db_table'      => 'contacts',
-                'title' => 'Discussion Points',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Discussion Points',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'email',
-                'name' => 'email',
-                'data' => 'email',
+                'class_name'    => 'email',
+                'name'          => 'email',
+                'data'          => 'email',
                 'db_name'       => 'vEmail',
                 'db_table'      => 'contacts',
-                'title' => 'Email',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Email',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'reachout_category',
-                'name' => 'reachout_category',
-                'data' => 'reachout_category',
+                'class_name'    => 'reachout_category',
+                'name'          => 'reachout_category',
+                'data'          => 'reachout_category',
                 'db_name'       => 'eReachoutCategory',
                 'db_table'      => 'contacts',
-                'title' => 'Reach-out Category',
-                'source' => (!empty($column_enum['eReachoutCategory'])?$column_enum['eReachoutCategory']:[]),
-                'type' => 'dropdown'
+                'title'         => 'Reach-out Category',
+                'source'        => (!empty($column_enum['eReachoutCategory'])?$column_enum['eReachoutCategory']:[]),
+                'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'work_number',
-                'name' => 'work_number',
-                'data' => 'work_number',
+                'class_name'    => 'work_number',
+                'name'          => 'work_number',
+                'data'          => 'work_number',
                 'db_name'       => 'vWorkNumber',
                 'db_table'      => 'contacts',
-                'title' => 'Work Phone',
-                'source_data' => '',
-                'type' => 'numeric'
+                'title'         => 'Work Phone',
+                'source_data'   => '',
+                'type'          => 'numeric'
             ],
             [
-                'class_name' => 'mobile_number',
-                'name' => 'mobile_number',
-                'data' => 'mobile_number',
+                'class_name'    => 'mobile_number',
+                'name'          => 'mobile_number',
+                'data'          => 'mobile_number',
                 'db_name'       => 'vMobileNumber',
                 'db_table'      => 'contacts',
-                'title' => 'Mobile',
-                'source_data' => '',
-                'type' => 'numeric'
+                'title'         => 'Mobile',
+                'source_data'   => '',
+                'type'          => 'numeric'
             ],
             [
-                'class_name' => 'category',
-                'name' => 'category',
-                'data' => 'category',
+                'class_name'    => 'category',
+                'name'          => 'category',
+                'data'          => 'category',
                 'db_name'       => 'eCategory',
                 'db_table'      => 'contacts',
-                'title' => 'Lead Category',
-                'source' => (!empty($column_enum['eCategory'])?$column_enum['eCategory']:[]),
-                'type' => 'dropdown'
+                'title'         => 'Lead Category',
+                'source'        => (!empty($column_enum['eCategory'])?$column_enum['eCategory']:[]),
+                'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'touch_points',
-                'name' => 'touch_points',
-                'data' => 'touch_points',
+                'class_name'    => 'touch_points',
+                'name'          => 'touch_points',
+                'data'          => 'touch_points',
                 'db_name'       => 'eTouchPoints',
                 'db_table'      => 'contacts',
-                'title' => 'Touch Points',
-                'source' => (!empty($column_enum['eTouchPoints'])?$column_enum['eTouchPoints']:[]),
-                'type' => 'dropdown',
-                'editor'=> 'select',
-                'multiple'=> true
+                'title'         => 'Touch Points',
+                'source'        => (!empty($column_enum['eTouchPoints'])?$column_enum['eTouchPoints']:[]),
+                'type'          => 'dropdown',
+                'editor'        => 'select',
+                'multiple'      => true
             ],
             [
-                'class_name' => 'adaptability',
-                'name' => 'adaptability',
-                'data' => 'adaptability',
+                'class_name'    => 'adaptability',
+                'name'          => 'adaptability',
+                'data'          => 'adaptability',
                 'db_name'       => 'eAdaptability',
                 'db_table'      => 'contacts',
-                'title' => 'Adaptability to Change',
-                'source' => (!empty($column_enum['eAdaptability'])?$column_enum['eAdaptability']:[]),
-                'type' => 'dropdown'
+                'title'         => 'Adaptability to Change',
+                'source'        => (!empty($column_enum['eAdaptability'])?$column_enum['eAdaptability']:[]),
+                'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'disposition_towards',
-                'name' => 'disposition_towards',
-                'data' => 'disposition_towards',
+                'class_name'    => 'disposition_towards',
+                'name'          => 'disposition_towards',
+                'data'          => 'disposition_towards',
                 'db_name'       => 'eDispositionTowards',
                 'db_table'      => 'contacts',
-                'title' => 'Disposition towards GGK',
-                'source' => (!empty($column_enum['eDispositionTowards'])?$column_enum['eDispositionTowards']:[]),
-                'type' => 'dropdown'
+                'title'         => 'Disposition towards GGK',
+                'source'        => (!empty($column_enum['eDispositionTowards'])?$column_enum['eDispositionTowards']:[]),
+                'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'coverage',
-                'name' => 'coverage',
-                'data' => 'coverage',
+                'class_name'    => 'coverage',
+                'name'          => 'coverage',
+                'data'          => 'coverage',
                 'db_name'       => 'eCoverage',
                 'db_table'      => 'contacts',
-                'title' => 'Coverage',
-                'source' => (!empty($column_enum['eCoverage'])?$column_enum['eCoverage']:[]),
-                'type' => 'dropdown'
+                'title'         => 'Coverage',
+                'source'        => (!empty($column_enum['eCoverage'])?$column_enum['eCoverage']:[]),
+                'type'          => 'dropdown'
             ],
             [
-                'class_name' => 'response',
-                'name' => 'response',
-                'data' => 'response',
+                'class_name'    => 'response',
+                'name'          => 'response',
+                'data'          => 'response',
                 'db_name'       => 'tResponse',
                 'db_table'      => 'contacts',
-                'title' => 'Response',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'Response',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'contact_id',
-                'name' => 'contact_id',
-                'data' => 'contact_id',
+                'class_name'    => 'contact_id',
+                'name'          => 'contact_id',
+                'data'          => 'contact_id',
                 'db_name'       => 'iContactId',
                 'db_table'      => 'contacts',
-                'title' => 'contact_id',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'contact_id',
+                'source_data'   => '',
+                'type'          => 'text'
             ],
             [
-                'class_name' => 'contact_interaction_id',
-                'name' => 'contact_interaction_id',
-                'data' => 'contact_interaction_id',
+                'class_name'    => 'contact_interaction_id',
+                'name'          => 'contact_interaction_id',
+                'data'          => 'contact_interaction_id',
                 'db_name'       => 'iContactInteractionId',
                 'db_table'      => 'contact_interaction',
-                'title'     => 'contact_interaction_id',
-                'source_data' => '',
-                'type' => 'text'
+                'title'         => 'contact_interaction_id',
+                'source_data'   => '',
+                'type'          => 'text'
             ]
         ];
     }

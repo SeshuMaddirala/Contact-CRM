@@ -6,6 +6,7 @@ use App\Http\Controllers\Contact;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\settings;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +51,7 @@ Route::get('reminder',[Contact::class, 'reminder'])->name('reminder')->middlewar
 
 Route::get('export_data',[Contact::class, 'export_data'])->name('export_data')->middleware('auth');
 
-Route::get('setting',[Contact::class, 'export_data'])->name('export_data')->middleware('auth');
+Route::get('settings',[Settings::class, 'index'])->name('settings')->middleware('auth');
 
 Route::get('activities',[ActivitiesController::class, 'index'])->name('activities')->middleware('auth');
 
