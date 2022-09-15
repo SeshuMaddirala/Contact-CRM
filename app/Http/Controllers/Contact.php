@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\View;
 use TokenCache;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
+use phpDocumentor\Reflection\Types\Null_;
 
 include_once('TokenCache.php');
 
@@ -195,6 +196,7 @@ class Contact extends BaseController
                         'vLinkedURL'    => ($linked_url != '')?$linked_url:'',
                         'iContactId'    => ($contact_id != '')?$contact_id:'',
                         $db_name        => $new_value,
+                        'elogBy'        => 'Manual',
                         'iAddedById'    => loggedUserData()['user_id'],
                         'iUpdatedById'  => loggedUserData()['user_id'],
                         'dtAddedDate'   => date('Y-m-d H:i:s'),

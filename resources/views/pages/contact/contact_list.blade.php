@@ -32,7 +32,7 @@
          <div class="modal-content">
             <div class="modal-header">
                <h5 class="modal-title" id="remainderModalLabel">
-                  <strong>Create Remainder</strong>
+                  <strong>Create Reminder</strong>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true">&times;</span>
                   </button>
@@ -46,27 +46,28 @@
                      <input type="hidden" class="form-control" id="contacts_name">
                   </div>
                   <div class="form-group">
-                     <label for="attendees" class="col-form-label">Attendees</label>
-                     <select class="form-control" id="attendees" placeholder="Please search attendees">
+                     <label for="attendees" class="col-form-label">Attendees</label><nbsp>*</nbsp>
+                     <select class="form-control" name="attendees" id="attendees" placeholder="Please search attendees">
                      </select>
                   </div>
                   <div class="form-group">
-                     <label for="remainder_date_time" class="col-form-label">Date&Time</label>
-                     <input type="text" class="form-control" id="remainder_date_time" placeholder="Please select date&time">
+                     <label for="remainder_date_time" class="col-form-label">Date&Time</label><nbsp>*</nbsp>
+                     <input type="text" class="form-control" name="remainderdatetime" id="remainder_date_time" placeholder="Please select date&time">
                      <!-- <div class="contact-datefilter-div">
                         <i class="fa-solid fa-calendar-days"></i>
                         <input type="text" class="form-control" id="remainder_date_time" placeholder="Please select date&time">
                      </div> -->
                   </div>
                   <div class="form-group">
-                     <label for="message-text" class="col-form-label">Notes</label>
-                     <textarea class="form-control" id="message-text" placeholder="Please enter notes"></textarea>
+                     <label for="message-text" class="col-form-label">Notes</label><nbsp>*</nbsp>
+                     <textarea class="form-control" name="messagetext" id="message-text" placeholder="Please enter notes"></textarea>
                   </div>
                </form>
             </div>
             <div class="modal-footer">
                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                <button type="button" class="btn btn-primary save-remainder">Save changes</button>
+               <!-- <button type="button" class="btn btn-primary clear-remainder">clear</button> -->
             </div>
          </div>
       </div>
@@ -77,6 +78,7 @@
 
 @section('scripts')
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script> -->
+
 <script src="{{ asset('js/handsontable.full.min.js') }}"></script>
 <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
 <script src="{{ asset('js/daterangepicker.min.js') }}" ></script>
@@ -89,6 +91,8 @@
 <!-- https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen-sprite.png -->
 <link rel="stylesheet" href="{{ asset('css/daterangepicker.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
+
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 @stop
 
 <script>

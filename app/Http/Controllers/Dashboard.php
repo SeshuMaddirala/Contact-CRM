@@ -28,7 +28,16 @@ class Dashboard extends BaseController
             return (array)$item; 
         }, $query_obj_data->toArray());
 
-    
+        $select_unregisteredcolumns = ['ci.vLinkedURL as unregistered_LinkedURL','ci.eConnectionStatus as unregistered_ConnectionStatus'];
+
+        $query_obj_data = DB::table('contact_interaction as ci')
+            ->selectRaw(implode(",",$select_unregisteredcolumns))
+            ->get();
+
+        $unregistered_response = array_map(function($item) {
+            return (array)$item; 
+        }, $query_obj_data->toArray());
+
         $unregistered_response = DB::table('contact_interaction as ci')
             // ->join('contact_interaction as ci','ci.vLinkedURL','!=','c.vLinkedURL','left')
             ->whereRaw("ci.vLinkedURL NOT IN (select c.vLinkedURL from contacts as c where c.vLinkedURL <> null or c.vLinkedURL <> '')")
@@ -37,7 +46,8 @@ class Dashboard extends BaseController
 
         $return_arr = [
             'unread_response'       => $unread_response,
-            'unregistered_count'    => $unregistered_response
+            //'unregistered_count'    => $unregistered_response
+            'unregistered_response'    => $unregistered_response
         ];
 
         return $return_arr;
