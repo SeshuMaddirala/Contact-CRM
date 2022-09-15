@@ -43,19 +43,11 @@
                         </tr>
                      @endforeach
                   @else
-                     @foreach($dashboard_data['unread_response'] as $key => $val)
-                        <tr>
-                           <td>{{$key+1}}</td>
-                           <td>
-                              <div class="d-flex align-items-center">
-                                 <span>{{$val['profile_name']}}</span>
-                              </div>
-                           <td colspan="3" class="txt-align-center">
-                              No records found
-                           </td>
-                           <td>{{$val['unread_count']}}</td>
-                        </tr>
-                     @endforeach
+                     <tr>
+                        <td colspan="3" class="txt-align-center">
+                           No records found
+                        </td>
+                     </tr>
                   @endif
                </tbody>
             </table>
@@ -90,9 +82,7 @@
                      @endforeach
                   </tbody>
                </table>
-            </div>
-         </div>
-     
-   </div>
+            </div>     
+      </div>
 </div>
 @stop

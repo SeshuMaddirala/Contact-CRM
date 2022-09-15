@@ -784,4 +784,6 @@ table.htCore tbody tr td.listbox {
 table.htCore tbody tr td.listbox:hover {
     font-weight: 700;
     background-color: #9370DB !important;
+.txt-align-center{
+    text-align: center;
 }

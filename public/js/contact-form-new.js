@@ -580,6 +580,7 @@ var contact_form = {
                 $(this).parents('tr').find('input.filter_value').removeClass('hide');
                 $(this).parents('tr').find('select.filter_value').addClass('hide');
                 $(this).parents('tr').find('select.filter_value').chosen("destroy")
+
                 $(this).parents('tr').find('input.filter_value').daterangepicker({
                     opens           : 'left',
                     showDropdowns   : true,
@@ -607,6 +608,7 @@ var contact_form = {
                     daterangepicker_instance.remove();
                 }
                 $(this).parents('tr').find('select.filter_value').addClass('hide');
+                $(this).parents('tr').find('select.filter_value').chosen("destroy");
             }else if(data_type == 'dropdown'){
                 $(this).parents('tr').find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
 
@@ -793,7 +795,6 @@ var contact_form = {
                 if(obj[0][3] === "Please select value"){
                     return false;
                 }
-                
                 if(obj[0][3] == '' || obj[0][3] == null){
                     return false;
                 }
@@ -823,10 +824,12 @@ var contact_form = {
                 if (source === 'loadData') {
                   return; //don't save this change
                 }
-
+                console.log(change);
                 const col_props = column_property.filter(function(val){   
                     return val.name == change[0][1]; 
                 });
+                
+                console.log(col_props);
 
                 change[0][4]    = col_props[0]['db_name'];
                 change[0][5]    = col_props[0]['db_table'];

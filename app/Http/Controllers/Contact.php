@@ -78,6 +78,7 @@ class Contact extends BaseController
             }
         }
 
+
         $select_columns = ['c.iContactsId as contact_id','ci.iContactInteractionId as contact_interaction_id','c.eStatus as communication_status','date_format(c.dtStatusDate,"%d/%m/%Y") as status_date','date_format(c.dtLastConversationDate,"%d/%m/%Y") as last_conv_date','c.tDiscussionPoints as discussion_points','c.vNextSteps as next_steps','date_format(c.dtNextActionDate,"%d/%m/%Y") as next_action_date','c.vContactName as contact_name','c.eRelationshipStatus as relationship_status','c.vDesignation as designation','c.vReportingManager as reporting_manager','c.vOrganizationName as organization_name','c.vWebsite as website','c.vPreviousRelationShip as previous_relationship','c.vIndustry as industry','c.vCityName as city_name','c.vStateName as state_name','c.vCountryName as country_name','c.vLinkedURL as linked_url','c.vEmail as email','c.eReachoutCategory as reachout_category','c.vWorkNumber as work_number','c.vMobileNumber as mobile_number','c.eCategory as category','c.eTouchPoints as touch_points','c.eAdaptability as adaptability','c.eDispositionTowards as disposition_towards','c.eCoverage as coverage','c.tResponse as response','ci.tMessage as message','ci.vMessageBy as message_by','ci.eConnectionStatus as connection_status','ci.eMessageStatus as message_status','date_format(ci.dMessageDate,"%d/%m/%Y") as message_date','ci.dMessageTime as message_time',"concat(ci.dMessageDate,' ',ci.dMessageTime) as  message_date_time"];
 
         $query_obj_data = DB::table('contacts as c')

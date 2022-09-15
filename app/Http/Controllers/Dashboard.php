@@ -38,10 +38,11 @@ class Dashboard extends BaseController
             return (array)$item; 
         }, $query_obj_data->toArray());
 
-    
-        // $unregistered_response = DB::table('contacts as c')
-        //     ->join('contact_interaction as ci','ci.vLinkedURL','!=','c.vLinkedURL','left')
-        //     ->count();
+        $unregistered_response = DB::table('contact_interaction as ci')
+            // ->join('contact_interaction as ci','ci.vLinkedURL','!=','c.vLinkedURL','left')
+            ->whereRaw("ci.vLinkedURL NOT IN (select c.vLinkedURL from contacts as c where c.vLinkedURL <> null or c.vLinkedURL <> '')")
+            ->count();
+
 
         $return_arr = [
             'unread_response'       => $unread_response,
