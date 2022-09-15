@@ -381,6 +381,11 @@ var contact_form = {
 
         $(document).off('click','.save-remainder');
         $(document).on('click','.save-remainder',function(){
+            
+            if(!$('#remainder_form').valid()){
+                return false;
+            }
+
             var save_obj = {
                 'remainder_date_time'   : $('#remainder_date_time').val(),
                 'notes'                 : $('#message-text').val(),
@@ -418,7 +423,7 @@ var contact_form = {
                         setMessage('Error occurred while creating reminder','.modal-footer',false);
                     }
                 }
-            });
+            });             
         });
 
         $('#remainderModal').on('show.bs.modal', function (event) {
@@ -489,12 +494,51 @@ var contact_form = {
                       },
                       placeholder: 'Please search attendees',
                 });
+                
 
                 $('.chosen-select').chosen();
+                // $(document).on('click','.save-remainder',function(){
+                    //debugger;
+                    $('#remainder_form').validate({ 
+                        rules: {
+                            attendees: {
+                                required: true,
+                            },
+                            remainderdatetime: {
+                                required: true,
+                            },
+                            messagetext: {
+                                required: true,
+                                minlength: 3
+                            }
+                        },
+                        messages: {
+                            attendees: {
+                                required: "Enter attendees",
+                            
+                            },
+                            remainderdatetime: {
+                                required: "select date&time ",
+                                
+                            },
+                            messagetext: {
+                                required: "Enter Notes",
+                                minlength: "Notes should be atleast 3 characters long",
+                                
+                            }
+                        }  
+                    });
+                    $('#remainder_date_time, #message-text').val('');
+                    $('#attendees').val(null).trigger('change');
+                    $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
 
-            },500);
+            },300);
         });
-
+        $(document).on('click','.clear-remainder',function(){
+            $('#remainder_date_time, #message-text').val('');
+            $('#attendees').val(null).trigger('change');
+            $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
+        });
         // $(document).off('click','.filter-icon');
         // $(document).on('click','.filter-icon',function(){
         //     if($('.filterHeader').hasClass('hide')){
@@ -519,15 +563,23 @@ var contact_form = {
             var data_type       = $('option:selected', this).attr('data-type');
             var db_column_name  = $('option:selected', this).attr('data-dbcolumn-name');
 
+            $(this).parents('tr').find('input.filter_value').val('');
+            // $(this).parents('tr').find('select.filter_value option').val('selected'.false);
             if(data_type == 'text' || data_type == 'text'){
                 $(this).parents('tr').find('input.filter_value').removeClass('hide');
+                //$(this).parents('tr').find('input.filter_value_date').removeClass('hide');
+                var daterangepicker_instance = $(this).parents('tr').find('input.filter_value').data("daterangepicker");
+                if(daterangepicker_instance != undefined){
+                    daterangepicker_instance.remove();
+                }
                 $(this).parents('tr').find('select.filter_value').addClass('hide');
+                $(this).parents('tr').find('select.filter_value').chosen("destroy")
             }else if(data_type == 'date'){
                 $(this).parents('tr').find('.filter-type').html('<option value="date">NA</option>');
                 $(this).parents('tr').find('.filter-type').attr('disabled',true);
                 $(this).parents('tr').find('input.filter_value').removeClass('hide');
                 $(this).parents('tr').find('select.filter_value').addClass('hide');
-
+                $(this).parents('tr').find('select.filter_value').chosen("destroy")
                 $(this).parents('tr').find('input.filter_value').daterangepicker({
                     opens           : 'left',
                     showDropdowns   : true,
@@ -548,9 +600,13 @@ var contact_form = {
                 });
 
             }else if(data_type == 'time'){
+                //$(this).parents('tr').find('input.filter_value_date').removeClass('hide');
                 $(this).parents('tr').find('input.filter_value').removeClass('hide');
+                var daterangepicker_instance = $(this).parents('tr').find('input.filter_value').data("daterangepicker");
+                if(daterangepicker_instance != undefined){
+                    daterangepicker_instance.remove();
+                }
                 $(this).parents('tr').find('select.filter_value').addClass('hide');
-
             }else if(data_type == 'dropdown'){
                 $(this).parents('tr').find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
 
@@ -562,6 +618,7 @@ var contact_form = {
                 $(this).parents('tr').find('select.filter_value').removeClass('hide').html(select_option);
                 $(this).parents('tr').find('select.filter_value').chosen("destroy").chosen();
                 $(this).parents('tr').find('input.filter_value').addClass('hide');
+                //$(this).parents('tr').find('input.filter_value_date').removeClass('hide');
             }
         });
 
@@ -634,18 +691,31 @@ var contact_form = {
                     });
                 }
                 window.open("export_data?row_ids="+selected_row_ids,'_blank')
+            } else {
+                alert("Select any item");
             }
             
         });
     },
     plugin_initialize:function(){
-
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+        if(dd<10) {
+            dd='0'+dd
+        } 
+        if(mm<10) {
+            mm='0'+mm
+        } 
+        today = dd+'/'+mm+'/'+yyyy;  
         $('#contact-datefilter').daterangepicker({
             opens           : 'left',
             showDropdowns   : true,
             linkedCalendars : false,
             startDate       : moment().startOf('month'),
             endDate         : moment().endOf('month'),
+            maxDate         : today,
             locale: {
                 format: 'DD-MM-YYYY',
             },
@@ -661,8 +731,8 @@ var contact_form = {
 
         // $('#remainder_date_time').datetimepicker({
         //     format:'d/m/Y H:i:s'
-        // });            
-
+        // });          
+        
         $('#remainder_date_time').daterangepicker({
             opens           : 'left',
             showDropdowns   : true,
@@ -670,6 +740,7 @@ var contact_form = {
             timePicker      : true,  
             minDate         : new Date(),
             startDate       : new Date(),
+            maxDate         : today,
             locale: {
                 format: 'DD/MM/YYYY hh:mm A',
             }
@@ -691,6 +762,7 @@ var contact_form = {
             manualColumnResize: true,
             manualRowResize: true,
             minSpareRows    : 1,
+            minRows         : 5,
             fixedColumnsStart: 2,
             licenseKey      : 'non-commercial-and-evaluation',
             customBorders   : true,
@@ -717,6 +789,10 @@ var contact_form = {
                 if(obj[0][1] == 'contact_id' || obj[0][1] == 'contact_interaction_id'){
                     return false;
                 }
+
+                if(obj[0][3] === "Please select value"){
+                    return false;
+                }
                 
                 if(obj[0][3] == '' || obj[0][3] == null){
                     return false;
@@ -725,6 +801,14 @@ var contact_form = {
                 if(obj[0][2] != '' && (obj[0][2] == obj[0][3])){
                     return false;
                 }
+                // if(obj[0][1]=='last_conv_date') {
+                    // if(typeof(obj[0][1]) == 'string') {
+                    //     return false;
+                    // }else {
+                    //     return true;
+                    // }
+                // }
+               
 
                 if($.inArray(obj[0][1], ["connection_status","message_status","message","message_by","message_date","message_time"]) != -1) {
                     var current_instance = $("#dataTable").handsontable('getInstance');
@@ -807,18 +891,64 @@ var contact_form = {
             //         // 'data': val.data
             //     };
             // }else{
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth()+1; 
+                var yyyy = today.getFullYear();
+                if(dd<10) {
+                    dd='0'+dd
+                } 
+                if(mm<10) {
+                    mm='0'+mm
+                } 
+              //  today = dd+'/'+mm+'/'+yyyy; 
+                today = mm+'/'+dd+'/'+yyyy; 
+
                 var obj = { 
                     'title': val.title,
                     'type': val.type,
                     'source':val.source,
-                    'data': val.data
+                    'data': val.data,
+                    'name':val.name
                 };
 
                 if(val.type == 'time'){
                     obj['timeFormat']       = 'h:mm:ss a';
                     obj['correctFormat']    = true;
+                }else if(val.type == 'date'){
+                    obj['correctFormat']    = true;
+                    if(val.name == 'status_date' || val.name == 'last_conv_date') {
+                        obj['datePickerConfig'] = {
+                            disableDayFn(date) {
+                                var d = date.getDate();
+                                var m = date.getMonth()+1; 
+                                var y = date.getFullYear();
+                                if(d<10) {
+                                    d='0'+d
+                                } 
+                                if(m<10) {
+                                    m='0'+m
+                                } 
+                                date = m+'/'+d+'/'+y; 
+                                console.log(date);
+                                console.log("today: "+today);
+
+                                var d1 = new Date(date);
+                                var d2 = new Date(today);
+                                if(d1 <= d2){
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            }
+                        }
+                    }   
+                }else if(val.type == 'dropdown'){	
+                    // console.log(obj['source']);
+                    obj['placeholder']    = "Please select value";
+                    obj['source'].splice(0, 0, "Please select value");
                 }
-            // }
+            
             columns_obj.push(obj);
         });
 
@@ -864,6 +994,7 @@ var contact_form = {
             debounceFn(colIndex, event);
         });
     }
+    
 }
 
 const debounceFn = Handsontable.helper.debounce((colIndex, event) => {

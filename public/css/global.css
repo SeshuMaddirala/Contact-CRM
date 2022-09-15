@@ -241,10 +241,13 @@ tbody, td, tfoot, th, thead, tr {
   background-color: #dee2e6;
 }
 
-.handsontable .wtSpreader table.htCore tbody tr:nth-child(odd) td {
+/* .handsontable .wtSpreader table.htCore tbody tr:nth-child(odd) td {
+    background-color: #fff !important;
+  } */
+
+  .handsontable .wtSpreader table.htCore tbody tr td {
     background-color: #fff !important;
   }
-
 .handsontable .htAutocompleteArrow{
     color: #2b4068 !important;
 }
@@ -612,6 +615,16 @@ tbody, td, tfoot, th, thead, tr {
     margin-left: 20px;
 }
 
+.nav-item.dropdown.open .user-profile:hover{
+    background-color: #2b4068;
+    color: white;
+}
+
+.nav-item.dropdown.open .user-profile{
+    background-color: #2b4068;
+    color: white;
+}
+
 .reminder-section{
     margin-right: 10px;
 }
@@ -759,4 +772,16 @@ button.btn-modal{
 
 .main-checkbox-input, .checkbox-input{
     cursor: pointer;
+}
+
+#remainder_form .error {
+    color: red;
+}
+
+table.htCore tbody tr td.listbox {
+    /* border: 1px solid black !important; */
+}
+table.htCore tbody tr td.listbox:hover {
+    font-weight: 700;
+    background-color: #9370DB !important;
 }
