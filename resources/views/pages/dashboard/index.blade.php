@@ -55,14 +55,34 @@
       </div>
    </div>
    
-   <div class="col-lg-2 col-md-12 col-2 mb-2">
+   <div class="col-md-6 col-lg-6 order-2 mb-4">
       <div class="card">
-         <div class="card-body pb-0">
-            <span class="d-block fw-semibold mb-1 card-title">Unregistered Contacts (BOT) </span>
-            <hr style="margin-top: 11px;margin-bottom: 11px;border: 0;border-top: 1px solid #dbd1d1;">
-            <h3 class="mb-1 txt-align-center">{{$dashboard_data['unregistered_count']}}</h3>
-         </div>
+            <div class="card-body pb-0">
+               <span class="d-block fw-semibold mb-1 card-title">Unregistered Contacts (BOT) </span>
+               <hr style="margin-top: 11px;margin-bottom: 11px;border: 0;border-top: 1px solid #dbd1d1;">
+            </div>
+            <div class="card-body">
+               <table class="table table-borderless text-nowrap">
+                  <thead>
+                     <tr>
+                        <th>LinkedIn</th>
+                        <th>ConnectionStatus</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     @foreach($dashboard_data['unregistered_response'] as $key => $val)
+                        <tr>
+                           <td>
+                              <div class="d-flex align-items-center">
+                                 <span>{{$val['unregistered_LinkedURL']}}</span>
+                              </div>
+                           </td>
+                           <td>{{$val['unregistered_ConnectionStatus']}}</td>
+                        </tr>
+                     @endforeach
+                  </tbody>
+               </table>
+            </div>     
       </div>
-   </div>
 </div>
 @stop
