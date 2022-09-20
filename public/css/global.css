@@ -4,6 +4,7 @@ body {
     height: 100%;
     width: 100%;
     background: #f5f5f9;
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
 }
 label {
     max-width: 100%;
@@ -100,6 +101,10 @@ label {
     -ms-flex: 1 1 auto;
     flex: 1 1 auto;
     padding: 1.5rem;
+    height: 300px;
+    min-height: 100px;
+    overflow: hidden;
+    overflow-y: scroll;
 }
 
 .m-0 {
@@ -157,6 +162,7 @@ html:not([dir=rtl]) .me-2 {
 tbody, td, tfoot, th, thead, tr {
     border: 0 solid;
     border-color: inherit;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .card .table {
@@ -219,6 +225,20 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .custom-scroll ::-webkit-scrollbar {
+    width:6px;
+    height: 8px;
+}
+.custom-scroll::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+}
+.custom-scroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #4f4595;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.5);
+}
+
+.wtHolder ::-webkit-scrollbar {
     width:6px;
     height: 8px;
 }
@@ -286,11 +306,12 @@ tbody, td, tfoot, th, thead, tr {
       margin: -75px 0 0 -75px;
       border-radius: 50%;
       border: 3px solid transparent;
-      border-top-color: #9370DB;
-      -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
+      /* border-top-color: #9370DB; */
+      /* -webkit-animation: spin 2s linear infinite; */
+      /* animation: spin 2s linear infinite; */
+      background-image: url('../image/loader.gif');
   }
-  #loader:before {
+  /* #loader:before {
       content: "";
       position: absolute;
       top: 5px;
@@ -339,7 +360,7 @@ tbody, td, tfoot, th, thead, tr {
           -ms-transform: rotate(360deg);
           transform: rotate(360deg);
       }
-  }
+  } */
   
 .wtHolder .form-control{
     height: 11px;
@@ -351,6 +372,18 @@ tbody, td, tfoot, th, thead, tr {
 
 .alert{
     padding: 10px;
+    text-align: center;
+
+    display: flex;
+    margin-top: 182px;
+    padding: 10px;
+    text-align: center;
+    font-size: 40px;
+    font-family: cursive;
+    color: #2b4068;
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
     text-align: center;
 }
 
@@ -369,6 +402,17 @@ tbody, td, tfoot, th, thead, tr {
     position: absolute;
     top: 60px;
     z-index: 100;
+
+    left: 10px;
+    left: 220px;
+    top: 64px;
+    width: 99%;
+    width: 80%;
+    position: absolute;
+    top: 60px;
+    z-index: 100;
+    /* top: 60px; */
+    z-index: 999;
 }
 
 .handsontable thead th .relative{
@@ -588,7 +632,8 @@ tbody, td, tfoot, th, thead, tr {
 .icon-a{
     margin: 0 !important;
     padding: 0 !important;
-    border-radius: 50%;
+    border-radius: 20%;
+    background-color: white;
     border: 1px solid white;
 }
 .app-icon{
@@ -630,9 +675,13 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover{   
-    color: white;
+    /* color: white;
     border-bottom: 2px solid white;
-    background-color: #2b4068;
+    background-color: #2b4068; */
+    color: #2b4068;
+    background-color:white;
+    border-radius: 5px;
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 40%);
 }
 
 .handsontable thead TR:nth-child(1) {
@@ -778,12 +827,70 @@ button.btn-modal{
     color: red;
 }
 
+.error {
+    color: red;
+}
+
 table.htCore tbody tr td.listbox {
     /* border: 1px solid black !important; */
 }
 table.htCore tbody tr td.listbox:hover {
     font-weight: 700;
-    background-color: #9370DB !important;
+    background-color: #c0d6fb !important;
+}
 .txt-align-center{
     text-align: center;
+}
+
+.unregister-contct td{
+    max-width: 0;
+    overflow: hidden;
+    /* text-overflow: ellipsis;
+    white-space: nowrap; */
+    word-break: break-all;
+}
+
+
+.unregister-contct td::before{
+    content: '&nbsp;';
+    visibility: hidden;
+}
+
+.unregister-contct td{
+    width: 50% !important;
+}
+
+.unregister-contct td:first-child{
+    width: 50% !important;
+}
+
+.handsontable.listbox .ht_master table{
+    border: 1px solid #475bbc;
+}
+
+.tracking-item .tracking-content{
+    overflow: hidden;
+    word-break: break-all;
+}
+.has-event .pika-button, .is-selected .pika-button{
+    background: #2b4068;
+    box-shadow: inset 0 1px 3px #2b4068;
+}
+.pika-button{
+    color: #000;
+    background: #fff;
+}
+
+.pika-table th{
+    color: #000;
+    background: #fff;
+}
+
+.pika-button:hover, .pika-row.pick-whole-week:hover .pika-button{
+    color: #fff;
+    background: #2b4068;
+}
+
+.pika-lendar{
+    width:285px;
 }

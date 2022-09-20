@@ -119,9 +119,13 @@ class Contact extends BaseController
         $contact_name   = $request_data[0][11];
         
         if($data_type == 'date'){
-            $new_value = date('Y-m-d', strtotime(str_replace('/', '-', $new_value)));
+            if(isset($new_value) && $new_value != ''){
+                $new_value = date('Y-m-d', strtotime(str_replace('/', '-', $new_value)));
+            }
         }else if($data_type == 'time'){
-            $new_value = date('H:i:s',strtotime($new_value));
+            if(isset($new_value) && $new_value != ''){
+                $new_value = date('H:i:s',strtotime($new_value));
+            }
         }
 
         switch($db_table){
@@ -411,11 +415,13 @@ class Contact extends BaseController
         $query_obj_data = DB::table('set_reminder')
         ->selectRaw("*,DATE_FORMAT(dtRemainderDateTime,'%d/%m/%Y') as reminder_date,DATE_FORMAT(dtRemainderDateTime,'%H:%i') as reminder_time")
         ->whereRaw($where_cond)
-        ->where(DB::raw("DATE_FORMAT(dtRemainderDateTime,'%Y-%m-%d %H:%i')"), '>=',date('Y-m-d H:i'))
+        // ->where(DB::raw("DATE_FORMAT(dtRemainderDateTime,'%Y-%m-%d %H:%i')"), '>=',date('Y-m-d H:i'))
         ->where('iAddedById',loggedUserData()['user_id'])
+        // ->limit(10)
         ->get();
         
         $query_response = json_decode(json_encode($query_obj_data), true);
+
         $tmp_query_resp = [];
         if(is_array($query_response) && count($query_response) > 0){
             foreach($query_response as $key => $val){
@@ -460,21 +466,23 @@ class Contact extends BaseController
         }, $query_obj_data->toArray());
         
         $default_columns    = $this->defaultColumns();
-        $column_titles      = array_diff(array_column($default_columns,'title'),['contact_id','contact_interaction_id']);
-        $column_data_key    = array_column($this->defaultColumns(),'data');
+        $hidden_columns     = ['contact_id','contact_interaction_id'];
+        $column_titles      = array_diff(array_column($default_columns,'title'),$hidden_columns);
+        $column_data_key    = array_column($default_columns,'data');
 
-        $filename   = storage_path()."/contact_list.csv";
-        $output     = fopen($filename, 'w+');
+        $filename           = storage_path()."/contact_list.csv";
+        $output             = fopen($filename, 'w+');
         
         fputcsv($output, $column_titles);
-        
+
         foreach ($query_response as $line) {
             $temp_arr = [];
             foreach($column_data_key as $val){
-                if(!empty($line[$val])){                    
-                    $temp_arr[] = $line[$val];
+                if(!in_array($val,$hidden_columns)){                    
+                    $temp_arr[] = !empty($line[$val])?$line[$val]:'N/A';
                 }
             }
+            
             if(!empty($temp_arr) && count($temp_arr) > 0){
                 fputcsv($output, $temp_arr);
             }

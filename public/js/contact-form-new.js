@@ -385,7 +385,7 @@ var contact_form = {
             if(!$('#remainder_form').valid()){
                 return false;
             }
-
+            
             var save_obj = {
                 'remainder_date_time'   : $('#remainder_date_time').val(),
                 'notes'                 : $('#message-text').val(),
@@ -423,7 +423,7 @@ var contact_form = {
                         setMessage('Error occurred while creating reminder','.modal-footer',false);
                     }
                 }
-            });             
+            });
         });
 
         $('#remainderModal').on('show.bs.modal', function (event) {
@@ -474,7 +474,7 @@ var contact_form = {
                 $("#attendees").select2({
                     tags                : true,
                     multiple            : true,
-                    tokenSeparators     : [',', ' '],
+                    // tokenSeparators     : [',', ' '],
                     minimumInputLength  : 3,
                     ajax: {
                         url     : "get_user",
@@ -491,46 +491,56 @@ var contact_form = {
                               results: data
                             };
                         }
-                      },
-                      placeholder: 'Please search attendees',
+                    },
+                    placeholder: 'Please search attendees',
+                    createTag: function (params) {
+                        // // Don't offset to create a tag if there is no @ symbol
+                        if (params.term.indexOf('@') === -1) {
+                            return null;
+                        }
+                        return {
+                            id: params.term,
+                            text: params.term
+                        }
+                    }
                 });
-                
 
-                $('.chosen-select').chosen();
+
+                $('.chosen-select').chosen();                
                 // $(document).on('click','.save-remainder',function(){
                     //debugger;
-                    $('#remainder_form').validate({ 
-                        rules: {
-                            attendees: {
-                                required: true,
-                            },
-                            remainderdatetime: {
-                                required: true,
-                            },
-                            messagetext: {
-                                required: true,
-                                minlength: 3
-                            }
+                $('#remainder_form').validate({ 
+                    rules: {
+                        attendees: {
+                            required: true,
                         },
-                        messages: {
-                            attendees: {
-                                required: "Enter attendees",
+                        remainderdatetime: {
+                            required: true,
+                        },
+                        messagetext: {
+                            required: true,
+                            minlength: 3
+                        }
+                    },
+                    messages: {
+                        attendees: {
+                            required: "Enter attendees",
+                        
+                        },
+                        remainderdatetime: {
+                            required: "select date&time ",
                             
-                            },
-                            remainderdatetime: {
-                                required: "select date&time ",
-                                
-                            },
-                            messagetext: {
-                                required: "Enter Notes",
-                                minlength: "Notes should be atleast 3 characters long",
-                                
-                            }
-                        }  
-                    });
-                    $('#remainder_date_time, #message-text').val('');
-                    $('#attendees').val(null).trigger('change');
-                    $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
+                        },
+                        messagetext: {
+                            required: "Enter Notes",
+                            minlength: "Notes should be atleast 3 characters long",
+                            
+                        }
+                    }  
+                });
+                $('#remainder_date_time, #message-text').val('');
+                $('#attendees').val(null).trigger('change');
+                $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
 
             },300);
         });
@@ -562,7 +572,7 @@ var contact_form = {
         $(document).on('change','.filter-column',function(){
             var data_type       = $('option:selected', this).attr('data-type');
             var db_column_name  = $('option:selected', this).attr('data-dbcolumn-name');
-
+            
             $(this).parents('tr').find('input.filter_value').val('');
             // $(this).parents('tr').find('select.filter_value option').val('selected'.false);
             if(data_type == 'text' || data_type == 'text'){
@@ -666,6 +676,8 @@ var contact_form = {
                     }
                 }
             });
+            
+            contact_form.getLoadData();
         });
 
         $(document).off('click','.main-checkbox-input');
@@ -733,8 +745,8 @@ var contact_form = {
 
         // $('#remainder_date_time').datetimepicker({
         //     format:'d/m/Y H:i:s'
-        // });          
-        
+        // });            
+
         $('#remainder_date_time').daterangepicker({
             opens           : 'left',
             showDropdowns   : true,
@@ -742,7 +754,7 @@ var contact_form = {
             timePicker      : true,  
             minDate         : new Date(),
             startDate       : new Date(),
-            maxDate         : today,
+            // maxDate         : today,
             locale: {
                 format: 'DD/MM/YYYY hh:mm A',
             }
@@ -757,6 +769,7 @@ var contact_form = {
             // colHeaders      : true,
             rowHeaders      : true,
             columnSorting   : true,
+            colWidths       : 300,
             rowHeights      : 40,
             height          : 'auto',
             width           : 'auto',
@@ -795,13 +808,15 @@ var contact_form = {
                 if(obj[0][3] === "Please select value"){
                     return false;
                 }
-                if(obj[0][3] == '' || obj[0][3] == null){
+
+                if((obj[0][2] == '' || obj[0][2] == null)&& (obj[0][3] == '' || obj[0][3] == null)){
                     return false;
                 }
 
                 if(obj[0][2] != '' && (obj[0][2] == obj[0][3])){
                     return false;
                 }
+
                 // if(obj[0][1]=='last_conv_date') {
                     // if(typeof(obj[0][1]) == 'string') {
                     //     return false;
@@ -809,7 +824,7 @@ var contact_form = {
                     //     return true;
                     // }
                 // }
-               
+
 
                 if($.inArray(obj[0][1], ["connection_status","message_status","message","message_by","message_date","message_time"]) != -1) {
                     var current_instance = $("#dataTable").handsontable('getInstance');
@@ -824,13 +839,11 @@ var contact_form = {
                 if (source === 'loadData') {
                   return; //don't save this change
                 }
-                console.log(change);
+                
                 const col_props = column_property.filter(function(val){   
                     return val.name == change[0][1]; 
                 });
                 
-                console.log(col_props);
-
                 change[0][4]    = col_props[0]['db_name'];
                 change[0][5]    = col_props[0]['db_table'];
                 change[0][6]    = col_props[0]['type'];
@@ -879,6 +892,7 @@ var contact_form = {
     },
     getColumns:function(){
         var columns_obj = [];
+        
         $.each(column_property, function(i, val){
             // if(val.name == 'touch_points'){
             //     var obj = { 
@@ -894,25 +908,14 @@ var contact_form = {
             //         // 'data': val.data
             //     };
             // }else{
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth()+1; 
-                var yyyy = today.getFullYear();
-                if(dd<10) {
-                    dd='0'+dd
-                } 
-                if(mm<10) {
-                    mm='0'+mm
-                } 
-              //  today = dd+'/'+mm+'/'+yyyy; 
-                today = mm+'/'+dd+'/'+yyyy; 
 
                 var obj = { 
-                    'title': val.title,
-                    'type': val.type,
-                    'source':val.source,
-                    'data': val.data,
-                    'name':val.name
+                    'title' : val.title,
+                    'type'  : val.type,
+                    'source': val.source,
+                    'data'  : val.data,
+                    'name'  : val.name,
+                    'allowInvalid': false
                 };
 
                 if(val.type == 'time'){
@@ -922,23 +925,9 @@ var contact_form = {
                     obj['correctFormat']    = true;
                     if(val.name == 'status_date' || val.name == 'last_conv_date') {
                         obj['datePickerConfig'] = {
-                            disableDayFn(date) {
-                                var d = date.getDate();
-                                var m = date.getMonth()+1; 
-                                var y = date.getFullYear();
-                                if(d<10) {
-                                    d='0'+d
-                                } 
-                                if(m<10) {
-                                    m='0'+m
-                                } 
-                                date = m+'/'+d+'/'+y; 
-                                console.log(date);
-                                console.log("today: "+today);
-
-                                var d1 = new Date(date);
-                                var d2 = new Date(today);
-                                if(d1 <= d2){
+                            disableDayFn(date) { 
+                                var d2 = new Date();
+                                if(date <= d2){
                                     return false;
                                 } else {
                                     return true;
@@ -947,11 +936,10 @@ var contact_form = {
                         }
                     }   
                 }else if(val.type == 'dropdown'){	
-                    // console.log(obj['source']);
                     obj['placeholder']    = "Please select value";
                     obj['source'].splice(0, 0, "Please select value");
                 }
-            
+
             columns_obj.push(obj);
         });
 
@@ -997,7 +985,7 @@ var contact_form = {
             debounceFn(colIndex, event);
         });
     }
-    
+
 }
 
 const debounceFn = Handsontable.helper.debounce((colIndex, event) => {
