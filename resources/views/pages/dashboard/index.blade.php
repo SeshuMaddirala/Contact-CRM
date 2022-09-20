@@ -20,7 +20,7 @@
                </div>
             </div> -->
          </div>
-         <div class="card-body">
+         <div class="card-body custom-scroll">
             <table class="table table-borderless text-nowrap">
                <thead>
                   <tr>
@@ -44,7 +44,7 @@
                      @endforeach
                   @else
                      <tr>
-                        <td colspan="3" class="txt-align-center">
+                        <td colspan="3" class="txt-align-center error">
                            No records found
                         </td>
                      </tr>
@@ -55,21 +55,21 @@
       </div>
    </div>
    
-   <div class="col-md-6 col-lg-6 order-2 mb-4">
-      <div class="card">
-            <div class="card-body pb-0">
-               <span class="d-block fw-semibold mb-1 card-title">Unregistered Contacts (BOT) </span>
-               <hr style="margin-top: 11px;margin-bottom: 11px;border: 0;border-top: 1px solid #dbd1d1;">
-            </div>
-            <div class="card-body">
-               <table class="table table-borderless text-nowrap">
-                  <thead>
-                     <tr>
-                        <th>LinkedIn</th>
-                        <th>ConnectionStatus</th>
-                     </tr>
-                  </thead>
-                  <tbody>
+   <div class="col-md-6 col-lg-4 order-2 mb-4">
+      <div class="card h-100">
+         <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="card-title m-0 me-2">Unregistered Contacts (BOT)</h5>
+         </div>
+         <div class="card-body custom-scroll">
+            <table class="table table-borderless unregister-contct">
+               <thead>
+                  <tr>
+                     <th>LinkedIn</th>
+                     <th>ConnectionStatus</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  @if(!empty($dashboard_data['unregistered_response']))
                      @foreach($dashboard_data['unregistered_response'] as $key => $val)
                         <tr>
                            <td>
@@ -80,9 +80,17 @@
                            <td>{{$val['unregistered_ConnectionStatus']}}</td>
                         </tr>
                      @endforeach
-                  </tbody>
-               </table>
-            </div>     
+               @else
+                  <tr>
+                     <td colspan="3" class="txt-align-center error">
+                        No records found
+                     </td>
+                  </tr>
+               @endif
+               </tbody>
+            </table>
+         </div>     
       </div>
+   </div>
 </div>
 @stop
