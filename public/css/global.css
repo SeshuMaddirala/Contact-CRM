@@ -104,7 +104,7 @@ label {
     height: 300px;
     min-height: 100px;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .m-0 {
@@ -850,18 +850,18 @@ table.htCore tbody tr td.listbox:hover {
     word-break: break-all;
 }
 
-
+/* 
 .unregister-contct td::before{
     content: '&nbsp;';
     visibility: hidden;
-}
+} */
 
 .unregister-contct td{
-    width: 50% !important;
+    /* width: 35% !important; */
 }
 
 .unregister-contct td:first-child{
-    width: 50% !important;
+    width: 70% !important;
 }
 
 .handsontable.listbox .ht_master table{
