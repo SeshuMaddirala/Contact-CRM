@@ -11,6 +11,7 @@
    <div class="panel panel-default">
       <div class="panel-heading">
          Contact's List
+         <span class="selected-count"></span>
          <button type="button" class="btn btn-primary remainderModal" data-toggle="modal" data-target="#remainderModal">Reminder</button>
          <!-- <button type="button" class="btn btn-primary filter-icon"><i class="fa fa-filter"></i></button> -->
          <button type="button" class="btn btn-primary filterModal btn-modal" data-toggle="modal" data-target="#filterModal">Filter</button>
@@ -77,9 +78,9 @@
 @stop
 
 @section('scripts')
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script> -->
 
 <script src="{{ asset('js/handsontable.full.min.js') }}"></script>
+<script src="{{ asset('js/handsontable-chosen-editor.js') }}"></script>
 <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
 <script src="{{ asset('js/daterangepicker.min.js') }}" ></script>
 <script src="{{ asset('js/select2.full.min.js') }}"></script>
@@ -88,7 +89,6 @@
 <link rel="stylesheet" href="{{ asset('css/handsontable.full.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}" />
 <link rel="stylesheet" href="{{ asset('css/chosen.min.css') }}"/>
-<!-- https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen-sprite.png -->
 <link rel="stylesheet" href="{{ asset('css/daterangepicker.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
 
@@ -96,6 +96,7 @@
 @stop
 
 <script>
-   var column_pre_data = @json($enum_values);
-   var column_property = @json($default_column);
+   var column_pre_data  = @json($column_source_data);
+   var column_property  = @json($default_column);
+   var hidden_column_id = @json($hidden_column_id);
 </script>

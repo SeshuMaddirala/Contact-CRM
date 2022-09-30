@@ -1,370 +1,4 @@
-// var column_property =         [
-//     {
-//         'class_name' : 'contact_name',
-//         'name' : 'contact_name',
-//         'data' : 'contact_name',
-//         'db_name'       : 'vContactName',
-//         'db_table'      : 'contacts',
-//         'title' : 'Contact Name',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-       
-//         'class_name' : 'linked_url',
-//         'name' : 'linked_url',
-//         'data' : 'linked_url',
-//         'db_name'       : 'vLinkedURL',
-//         'db_table'      : 'contacts',
-//         'title' : 'Contact LinkedIn',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'connection_status',
-//         'name' : 'connection_status',
-//         'data' : 'connection_status',
-//         'db_name'       : 'eConnectionStatus',
-//         'db_table'      : 'contact_interaction',
-//         'title' : 'Connection Status',
-//         'source' : column_pre_data['eConnectionStatus'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'message_status',
-//         'name' : 'message_status',
-//         'data' : 'message_status',
-//         'db_name'       : 'eMessageStatus',
-//         'db_table'      : 'contact_interaction',
-//         'title' : 'Message Status',
-//         'source' :  column_pre_data['eMessageStatus'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'message',
-//         'name' : 'message',
-//         'data' : 'message',
-//         'db_name'       : 'tMessage',
-//         'db_table'      : 'contact_interaction',
-//         'title' : 'Last Message',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'message_by',
-//         'name' : 'message_by',
-//         'data' : 'message_by',
-//         'db_name'       : 'vMessageBy',
-//         'db_table'      : 'contact_interaction',
-//         'title' : 'Message By',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'message_date',
-//         'name' : 'message_date',
-//         'data' : 'message_date',
-//         'db_name'       : 'dMessageDate',
-//         'db_table'      : 'contact_interaction',
-//         'title' : 'Message Date',
-//         'source_data' : '',
-//         'type' : 'date'
-//     },
-//      {
-//         'class_name' : 'message_time',
-//         'name' : 'message_time',
-//         'data' : 'message_time',
-//         'db_name'       : 'dMessageTime',
-//         'db_table'      : 'contact_interaction',
-//         'title' : 'Message Time',
-//         'source_data' : '',
-//         'type' : 'time'
-//     },
-//     {
-//         'class_name'    : 'status_date',
-//         'name'          : 'status_date',
-//         'data'          : 'status_date',
-//         'db_name'       : 'dtStatusDate',
-//         'db_table'      : 'contacts',
-//         'title'         : 'Status Date',
-//         'source_data'   : '',
-//         'type'          : 'date'
-//     },
-//     {
-//         'class_name' : 'conversation_date',
-//         'name' : 'conversation_date',
-//         'data' : 'last_conv_date',
-//         'db_name'       : 'dtLastConversationDate',
-//         'db_table'      : 'contacts',
-//         'title' : 'Recent Converstion Date',
-//         'source_data' : '',
-//         'type' : 'date'
-//     },
-//     {
-//         'class_name' : 'next_steps',
-//         'name' : 'next_steps',
-//         'data' : 'next_steps',
-//         'db_name'       : 'vNextSteps',
-//         'db_table'      : 'contacts',
-//         'title' : 'Next Steps',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'next_action_date',
-//         'name' : 'next_action_date',
-//         'data' : 'next_action_date',
-//         'db_name'       : 'dtNextActionDate',
-//         'db_table'      : 'contacts',
-//         'title' : 'Next Action Date',
-//         'source_data' : '',
-//         'type' : 'date'
-//     },
-//     {
-//         'class_name'    : 'communication_status',
-//         'name'          : 'communication_status',
-//         'data'          : 'communication_status',
-//         'db_name'       : 'eStatus',
-//         'db_table'      : 'contacts',
-//         'title'         : 'Communication Status',
-//         'source'        : column_pre_data['eStatus'],
-//         'type'          : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'relationship_status',
-//         'name' : 'relationship_status',
-//         'data' : 'relationship_status',
-//         'db_name'       : 'eRelationshipStatus',
-//         'db_table'      : 'contacts',
-//         'title' : 'Relationship Status',
-//         'source' : column_pre_data['eRelationshipStatus'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'designation',
-//         'name' : 'designation',
-//         'data' : 'designation',
-//         'db_name'       : 'vDesignation',
-//         'db_table'      : 'contacts',
-//         'title' : 'Designation',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'reporting_manager',
-//         'name' : 'reporting_manager',
-//         'data' : 'reporting_manager',
-//         'db_name'       : 'vReportingManager',
-//         'db_table'      : 'contacts',
-//         'title' : 'Reporting Manager',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'organization_name',
-//         'name' : 'organization_name',
-//         'data' : 'organization_name',
-//         'db_name'       : 'vOrganizationName',
-//         'db_table'      : 'contacts',
-//         'title' : 'Current Company Name',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'website',
-//         'name' : 'website',
-//         'data' : 'website',
-//         'db_name'       : 'vWebsite',
-//         'db_table'      : 'contacts',
-//         'title' : 'Company Website',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'previous_relationship',
-//         'name' : 'previous_relationship',
-//         'data' : 'previous_relationship',
-//         'db_name'       : 'vPreviousRelationShip',
-//         'db_table'      : 'contacts',
-//         'title' : 'Relationship History(Year 2005+)',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'industry',
-//         'name' : 'industry',
-//         'data' : 'industry',
-//         'db_name'       : 'vIndustry',
-//         'db_table'      : 'contacts',
-//         'title' : 'Industry',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'city',
-//         'name' : 'city',
-//         'data' : 'city_name',
-//         'db_name'       : 'iCityId',
-//         'db_table'      : 'contacts',
-//         'title' : 'City',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'state',
-//         'name' : 'state',
-//         'data' : 'state_name',
-//         'db_name'       : 'iStateId',
-//         'db_table'      : 'contacts',
-//         'title' : 'State',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'country',
-//         'name' : 'country',
-//         'data' : 'country_name',
-//         'db_name'       : 'iCountryId',
-//         'db_table'      : 'contacts',
-//         'title' : 'Country',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'discussion_points',
-//         'name' : 'discussion_points',
-//         'data' : 'discussion_points',
-//         'db_name'       : 'tDiscussionPoints',
-//         'db_table'      : 'contacts',
-//         'title' : 'Discussion Points',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'email',
-//         'name' : 'email',
-//         'data' : 'email',
-//         'db_name'       : 'vEmail',
-//         'db_table'      : 'contacts',
-//         'title' : 'Email',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'reachout_category',
-//         'name' : 'reachout_category',
-//         'data' : 'reachout_category',
-//         'db_name'       : 'eReachoutCategory',
-//         'db_table'      : 'contacts',
-//         'title' : 'Reach-out Category',
-//         'source' : column_pre_data['eReachoutCategory'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'work_number',
-//         'name' : 'work_number',
-//         'data' : 'work_number',
-//         'db_name'       : 'vWorkNumber',
-//         'db_table'      : 'contacts',
-//         'title' : 'Work Number',
-//         'source_data' : '',
-//         'type' : 'numeric'
-//     },
-//     {
-//         'class_name' : 'mobile_number',
-//         'name' : 'mobile_number',
-//         'data' : 'mobile_number',
-//         'db_name'       : 'vMobileNumber',
-//         'db_table'      : 'contacts',
-//         'title' : 'Mobile Number',
-//         'source_data' : '',
-//         'type' : 'numeric'
-//     },
-//     {
-//         'class_name' : 'category',
-//         'name' : 'category',
-//         'data' : 'category',
-//         'db_name'       : 'eCategory',
-//         'db_table'      : 'contacts',
-//         'title' : 'Lead Category',
-//         'source' : column_pre_data['eCategory'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'touch_points',
-//         'name' : 'touch_points',
-//         'data' : 'touch_points',
-//         'db_name'       : 'eTouchPoints',
-//         'db_table'      : 'contacts',
-//         'title' : 'Touch Points',
-//         'source' : column_pre_data['eTouchPoints'],
-//         'type' : 'dropdown',
-//         'editor': 'select',
-//         'multiple': true
-//     },
-//     {
-//         'class_name' : 'adaptability',
-//         'name' : 'adaptability',
-//         'data' : 'adaptability',
-//         'db_name'       : 'eAdaptability',
-//         'db_table'      : 'contacts',
-//         'title' : 'Adaptability to Change',
-//         'source' : column_pre_data['eAdaptability'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'disposition_towards',
-//         'name' : 'disposition_towards',
-//         'data' : 'disposition_towards',
-//         'db_name'       : 'eDispositionTowards',
-//         'db_table'      : 'contacts',
-//         'title' : 'Disposition Towards',
-//         'source' : column_pre_data['eDispositionTowards'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'coverage',
-//         'name' : 'coverage',
-//         'data' : 'coverage',
-//         'db_name'       : 'eCoverage',
-//         'db_table'      : 'contacts',
-//         'title' : 'Coverage',
-//         'source' : column_pre_data['eCoverage'],
-//         'type' : 'dropdown'
-//     },
-//     {
-//         'class_name' : 'response',
-//         'name' : 'response',
-//         'data' : 'response',
-//         'db_name'       : 'tResponse',
-//         'db_table'      : 'contacts',
-//         'title' : 'Response',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'contact_id',
-//         'name' : 'contact_id',
-//         'data' : 'contact_id',
-//         'db_name'       : 'iContactId',
-//         'db_table'      : 'contacts',
-//         'title' : 'Contact',
-//         'source_data' : '',
-//         'type' : 'text'
-//     },
-//     {
-//         'class_name' : 'contact_interaction_id',
-//         'name' : 'contact_interaction_id',
-//         'data' : 'contact_interaction_id',
-//         'db_name'       : 'iContactInteractionId',
-//         'db_table'      : 'contact_interaction',
-//         'title'     : 'contact_interaction_id',
-//         'source_data' : '',
-//         'type' : 'text'
-//     }
-// ]
 var hot;
-
 var contact_form = {
     init:function(){
 
@@ -394,12 +28,6 @@ var contact_form = {
                 'attendees'             : $('#attendees').val()
             }
 
-            // $.ajaxSetup({
-            //     headers: {
-            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //     },
-            // });
-
             $.ajax({
                 url         : "set_remainder",
                 dataType    : "json",
@@ -426,7 +54,7 @@ var contact_form = {
             });
         });
 
-        $('#remainderModal').on('show.bs.modal', function (event) {
+        $('#remainderModal').on('shown.bs.modal', function (event) {
             var hotInstance     = $("#dataTable").handsontable('getInstance');
             $(this).find('.modal-body .contactlist-ul').remove();
 
@@ -469,81 +97,130 @@ var contact_form = {
             }else{
                 $(this).find('.modal-body input#contacts').parents('.form-group').show();
             }
-
-            setTimeout(function(){  
-                $("#attendees").select2({
-                    tags                : true,
-                    multiple            : true,
-                    // tokenSeparators     : [',', ' '],
-                    minimumInputLength  : 3,
-                    ajax: {
-                        url     : "get_user",
-                        dataType: 'json',
-                        cache   : true,
-                        delay   : 250,
-                        data    : function (params) {
-                            return {
-                                q   : params.term
-                            };
-                        },
-                        processResults: function (data) {
-                            return {
-                              results: data
-                            };
-                        }
-                    },
-                    placeholder: 'Please search attendees',
-                    createTag: function (params) {
-                        // // Don't offset to create a tag if there is no @ symbol
-                        if (params.term.indexOf('@') === -1) {
-                            return null;
-                        }
+            
+            $("#attendees").select2({
+                tags                : true,
+                multiple            : true,
+                // tokenSeparators     : [',', ' '],
+                minimumInputLength  : 3,
+                placeholder         : 'Please search attendees',
+                ajax: {
+                    url     : "get_user",
+                    dataType: 'json',
+                    cache   : true,
+                    delay   : 250,
+                    data    : function (params) {
                         return {
-                            id: params.term,
-                            text: params.term
-                        }
-                    }
-                });
-
-
-                $('.chosen-select').chosen();                
-                // $(document).on('click','.save-remainder',function(){
-                    //debugger;
-                $('#remainder_form').validate({ 
-                    rules: {
-                        attendees: {
-                            required: true,
-                        },
-                        remainderdatetime: {
-                            required: true,
-                        },
-                        messagetext: {
-                            required: true,
-                            minlength: 3
-                        }
+                            q   : params.term
+                        };
                     },
-                    messages: {
-                        attendees: {
-                            required: "Enter attendees",
-                        
-                        },
-                        remainderdatetime: {
-                            required: "select date&time ",
-                            
-                        },
-                        messagetext: {
-                            required: "Enter Notes",
-                            minlength: "Notes should be atleast 3 characters long",
-                            
-                        }
-                    }  
-                });
-                $('#remainder_date_time, #message-text').val('');
-                $('#attendees').val(null).trigger('change');
-                $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                },
+                createTag: function (params) {
+                    // // Don't offset to create a tag if there is no @ symbol
+                    if (params.term.indexOf('@') === -1) {
+                        return null;
+                    }
+                    return {
+                        id: params.term,
+                        text: params.term
+                    }
+                }
+            });
 
-            },300);
+            $('#remainder_form .chosen-select').chosen("destroy").chosen();                
+            $('#remainder_form').validate({ 
+                rules: {
+                    attendees: {
+                        required: true,
+                    },
+                    remainderdatetime: {
+                        required: true,
+                    },
+                    messagetext: {
+                        required: true,
+                        minlength: 3
+                    }
+                },
+                messages: {
+                    attendees: {
+                        required: "Enter attendees",
+                    
+                    },
+                    remainderdatetime: {
+                        required: "select date&time ",
+                        
+                    },
+                    messagetext: {
+                        required: "Enter Notes",
+                        minlength: "Notes should be atleast 3 characters long",
+                        
+                    }
+                }  
+            });
+            $('#remainder_date_time, #message-text').val('');
+            $('#attendees').val(null).trigger('change');
+            $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
         });
+
+        $('#filterModal').on('shown.bs.modal', function (event) {
+            
+            $('.filter-table .chosen-select').chosen("destroy").chosen();                
+
+            $.each(logged_filter_data,function(key,val){
+                var tr_object = $('.filter-table tr[data-row="'+key+'"]');
+                
+                if(val['column_type'] == 'dropdown'){
+                    tr_object.find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
+    
+                    var select_option = '';
+                    $.each(column_pre_data[val['filter_column']],function(ckey,cval){
+                        var selected = "";
+                        if($.inArray(cval,val['filter_value'])  !== -1){
+                            selected = "selected";
+                        }
+
+                        select_option += '<option value="'+cval+'" '+selected+'>'+cval+'</option>';
+                    });
+    
+                    tr_object.find('select.filter_value').removeClass('hide').html(select_option);
+                    tr_object.find('select.filter_value').chosen("destroy").chosen();
+                    tr_object.find('input.filter_value').addClass('hide');
+                }else if(val['column_type'] == 'text' || val['column_type'] == 'time'){
+                    tr_object.find('input.filter_value').val(val['filter_value']);
+                    tr_object.find('input.filter_value').removeClass('hide');
+                    tr_object.find('select.filter_value').addClass('hide');
+                    tr_object.find('select.filter_value').chosen("destroy");
+                }else if(val['column_type'] == 'date'){
+                    tr_object.find('input.filter_value').daterangepicker({
+                        opens           : 'left',
+                        showDropdowns   : true,
+                        linkedCalendars : false,
+                        locale: {
+                            format: 'DD-MM-YYYY',
+                        },
+                        ranges: {
+                            'Today': [moment(), moment()],
+                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                        }
+                    });
+                    
+                    tr_object.find('input.filter_value').val(val['filter_value']);
+                    tr_object.find('input.filter_value').removeClass('hide');
+                    tr_object.find('select.filter_value').addClass('hide');
+                    tr_object.find('select.filter_value').chosen("destroy");
+                }
+            });
+        });
+
         $(document).on('click','.clear-remainder',function(){
             $('#remainder_date_time, #message-text').val('');
             $('#attendees').val(null).trigger('change');
@@ -644,7 +321,8 @@ var contact_form = {
                         'filter_column' : $(val).find('.filter-column option:selected').attr('data-dbcolumn-name'),
                         'filter_type'   : $(val).find('.filter-type').val(),
                         'filter_value'  : (column_type == 'dropdown')?$(val).find('select.filter_value').val():$(val).find('input.filter_value').val(),
-                        'table_name'    : $(val).find('.filter-column option:selected').attr('data-table-name')
+                        'table_name'    : $(val).find('.filter-column option:selected').attr('data-table-name'),
+                        'column_type'   : column_type
                     }
                 }
             });
@@ -655,7 +333,9 @@ var contact_form = {
         $(document).off('click','.add_new_filter');
         $(document).on('click','.add_new_filter',function(){
             var table_first_row = $('.filter-table').find('tr.hide').clone();
+            table_first_row.find('select:not(.hide)').addClass('chosen-select');
             $('.filter-table').append(table_first_row.removeClass('hide'));
+            $('.filter-table .chosen-select').chosen("destroy").chosen();                
         });
 
         $(document).off('click','.filter-delete-row');
@@ -677,7 +357,7 @@ var contact_form = {
                 }
             });
             
-            contact_form.getLoadData();
+            contact_form.getLoadData({},'clear_filter');
         });
 
         $(document).off('click','.main-checkbox-input');
@@ -788,7 +468,7 @@ var contact_form = {
             autoWrapRow     : true,
             contextMenu     : ['row_above', 'row_below', 'remove_row'],
             hiddenColumns   : {
-                columns: [33,34],
+                columns: hidden_column_id,
                 indicators: false
             },
                 // $('.htCore .cornerHeader').html('<input type="checkbox" class="main-checkbox-input">');
@@ -801,31 +481,57 @@ var contact_form = {
             },
             afterGetRowHeader: drawCheckboxInRowHeaders,
             beforeChange     : function(obj) {
-                if(obj[0][1] == 'contact_id' || obj[0][1] == 'contact_interaction_id'){
+                
+                if(obj[0][1] == 'iContactsId' || obj[0][1] == 'iContactInteractionId'){
                     return false;
                 }
 
                 if(obj[0][3] === "Please select value"){
                     return false;
                 }
-
-                if((obj[0][2] == '' || obj[0][2] == null)&& (obj[0][3] == '' || obj[0][3] == null)){
+                
+                if((obj[0][2] == '' || obj[0][2] == null) && (obj[0][3] == '' || obj[0][3] == null)){
                     return false;
                 }
 
-                if(obj[0][2] != '' && (obj[0][2] == obj[0][3])){
-                    return false;
+                const col_props = column_property.filter(function(val){   
+                    return val.db_name == obj[0][1]; 
+                });
+
+                column_type = col_props[0]['type'];
+
+                if(column_type == 'dropdown'){
+                    if(obj[0][2] != '' && obj[0][2] != null){
+                        var old_value = obj[0][2].split(',');
+                        var new_value = obj[0][3].split(',');
+                        
+                        if(old_value.length > new_value.length){
+                            var main_loop   = old_value;
+                            var sub_loop    = new_value; 
+                        }else{
+                            var main_loop   = new_value;
+                            var sub_loop    = old_value;
+                        }
+
+                        // var allow_further = true;
+                        // $.each(main_loop,function(m_key,m_val){
+                        //     $.each(sub_loop,function(ss_key,ss_val){
+                        //         if(m_val != ss_val){
+                        //             allow_further = false;
+                        //         }
+                        //     });
+                        // });
+
+                        // if(!allow_further){
+                        //     return false;
+                        // }
+                    }
+                }else{   
+                    if(obj[0][2] != '' && (obj[0][2] == obj[0][3])){
+                        return false;
+                    }
                 }
-
-                // if(obj[0][1]=='last_conv_date') {
-                    // if(typeof(obj[0][1]) == 'string') {
-                    //     return false;
-                    // }else {
-                    //     return true;
-                    // }
-                // }
-
-
+                
                 if($.inArray(obj[0][1], ["connection_status","message_status","message","message_by","message_date","message_time"]) != -1) {
                     var current_instance = $("#dataTable").handsontable('getInstance');
                     
@@ -840,17 +546,26 @@ var contact_form = {
                   return; //don't save this change
                 }
                 
-                const col_props = column_property.filter(function(val){   
-                    return val.name == change[0][1]; 
+                var curr_props  = '';
+                var contact_id  = '';
+                var ci_id       = '';
+                $.each(column_property,function(key,val){
+                    if(change[0][1] == val.db_name){
+                        curr_props = val;
+                    }else if(val.db_name == 'iContactsId'){
+                        contact_id = key;
+                    }else if(val.db_name == 'iContactInteractionId'){
+                        ci_id = key;
+                    }
                 });
-                
-                change[0][4]    = col_props[0]['db_name'];
-                change[0][5]    = col_props[0]['db_table'];
-                change[0][6]    = col_props[0]['type'];
+
+                change[0][4]    = curr_props['db_name'];
+                change[0][5]    = curr_props['db_table'];
+                change[0][6]    = curr_props['type'];
                 change[0][7]    = this.getDataAtCell(change[0][0],1);
-                change[0][8]    = this.getDataAtCell(change[0][0],33);
-                change[0][9]    = this.getDataAtCell(change[0][0],34);
-                change[0][10]   = col_props[0]['title'];
+                change[0][8]    = this.getDataAtCell(change[0][0],contact_id);
+                change[0][9]    = this.getDataAtCell(change[0][0],ci_id);
+                change[0][10]   = curr_props['title'];
                 change[0][11]   = this.getDataAtCell(change[0][0],0);
 
                 $.ajax({
@@ -867,12 +582,7 @@ var contact_form = {
                     },
                     success: function (data) {
                         if(data.success == 1){
-                            var currentInstance = $("#dataTable").handsontable('getInstance');
-                            // if(data.db_table == 'contacts'){
-                            //     currentInstance.setDataAtCell(change[0][0],33,data.insert_id);
-                            // }else if(data.db_table == 'contact_interaction'){
-                            //     currentInstance.setDataAtCell(change[0][0],34,data.insert_id);                                
-                            // }
+                            // var currentInstance = $("#dataTable").handsontable('getInstance');
 
                             if(typeof data['insert_id'] != "undefined" && data['insert_id'] != ''){
                                 contact_form.getLoadData();
@@ -883,6 +593,15 @@ var contact_form = {
                         }
                     }
                 });
+            },
+            afterSelection:function(row, column, row2, column2, preventScrolling, preventScrolling, selectionLayerLevel){
+                preventScrolling.value = true;
+                var row_count = (row == row2)?1:(row > row2)?row+1:row2+1;
+                var col_count = (column == column2)?1:(column > column2)?column+1:column2+1;
+                $('.panel-heading .selected-count').html(' - [Rows:'+row_count+', Columns:'+col_count+']');
+            },
+            afterDeselect:function(){
+                $('.panel-heading .selected-count').html('');
             }
             // , 
             // beforeRemoveRow: function(index, amount) {
@@ -894,66 +613,66 @@ var contact_form = {
         var columns_obj = [];
         
         $.each(column_property, function(i, val){
-            // if(val.name == 'touch_points'){
-            //     var obj = { 
-            //         'title': val.title,
-            //         'editor': "select",
-            //         // 'width': 150,
-            //         // 'chosenOptions': {
-            //         //     'multiple': true,
-            //         //     'data': val.data
-            //         // },
-            //         'selectOptions':val.source,
-            //         'multiple':true
-            //         // 'data': val.data
-            //     };
-            // }else{
+            var obj = { 
+                'title' : val.title,
+                'type'  : val.type,
+                'source': val.source_data,
+                'data'  : val.db_name,
+                'name'  : val.name,
+                'allowInvalid': val.validate
+            };
 
-                var obj = { 
-                    'title' : val.title,
-                    'type'  : val.type,
-                    'source': val.source,
-                    'data'  : val.data,
-                    'name'  : val.name,
-                    'allowInvalid': false
-                };
-
-                if(val.type == 'time'){
-                    obj['timeFormat']       = 'h:mm:ss a';
-                    obj['correctFormat']    = true;
-                }else if(val.type == 'date'){
-                    obj['correctFormat']    = true;
-                    if(val.name == 'status_date' || val.name == 'last_conv_date') {
-                        obj['datePickerConfig'] = {
-                            disableDayFn(date) { 
-                                var d2 = new Date();
-                                if(date <= d2){
-                                    return false;
-                                } else {
-                                    return true;
-                                }
+            if(val.type == 'time'){
+                obj['timeFormat']       = 'h:mm:ss a';
+                obj['correctFormat']    = true;
+            }else if(val.type == 'date'){
+                obj['correctFormat']    = true;
+                if(val.db_name == 'dtStatusDate' || val.db_name == 'dtLastConversationDate') {
+                    obj['datePickerConfig'] = {
+                        disableDayFn(date) { 
+                            var d2 = new Date();
+                            if(date <= d2){
+                                return false;
+                            } else {
+                                return true;
                             }
                         }
-                    }   
-                }else if(val.type == 'dropdown'){	
-                    obj['placeholder']    = "Please select value";
-                    obj['source'].splice(0, 0, "Please select value");
+                    }
+                }   
+            }else if(val.type == 'dropdown'){	
+                obj['placeholder']  = "Please select value";
+                // obj['source'].splice(0, 0, "Please select value");
+                obj['renderer']     =  customDropdownRenderer;
+                obj['editor']       = "chosen";
+                
+                var source_data     = [];
+                $.each(val.source_data,function(source_key,source_val){
+                    source_data.push({'id':source_val,'label':source_val})
+                });
+                obj['chosenOptions']= {
+                    multiple: true,
+                    data    : source_data
                 }
+            }
 
             columns_obj.push(obj);
         });
 
         return columns_obj;
     },
-    getLoadData:function(extra_data = '', call_from = ''){
+    getLoadData:function(extra_data = {}, call_from = ''){
         $.ajax({
             url     : "get_contact",
             dataType: 'json',
-            data    : {'start_date' : $('#contact-datefilter').val().split(" - ")[0],'end_date' : $('#contact-datefilter').val().split(" - ")[1],extra_data},
+            data    : {'start_date' : $('#contact-datefilter').val().split(" - ")[0],'end_date' : $('#contact-datefilter').val().split(" - ")[1],'extra_data':extra_data,'call_from':call_from},
             type    : 'GET',
             success : function (res) {
                 if(call_from == 'filter'){
                     $('.close').trigger('click');
+                }
+
+                if(call_from == 'filter' || call_from == 'clear_filter'){
+                    logged_filter_data = res.logged_filter_data;
                 }
                 $('#dataTable').data('handsontable').loadData(res.data);
             }
@@ -994,6 +713,31 @@ const debounceFn = Handsontable.helper.debounce((colIndex, event) => {
     filtersPlugin.addCondition(colIndex, 'contains', [event.target.value]);
     filtersPlugin.filter();
 }, 100);
+
+function customDropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
+    var selectedId;
+    var optionsList = cellProperties.chosenOptions.data;
+
+    if(typeof optionsList === "undefined" || typeof optionsList.length === "undefined" || !optionsList.length) {
+        Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
+        return td;
+    }
+
+    var values = (value + "").split(",");
+    value = [];
+    for (var index = 0; index < optionsList.length; index++) {
+
+        if (values.indexOf(optionsList[index].id + "") > -1) {
+            selectedId = optionsList[index].id;
+            value.push(optionsList[index].label);
+        }
+    }
+    value = value.join(", ");
+
+    Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
+    return td;
+}
+
 
 function drawCheckboxInRowHeaders(row, TH) {
     var input       = document.createElement('input');

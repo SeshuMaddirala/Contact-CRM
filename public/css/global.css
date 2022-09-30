@@ -195,11 +195,11 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .navbar-default .navbar-brand:focus, .navbar-default .navbar-brand:hover{
-    color: white;
+    color: white !important;
 }
 
 .navbar-default .navbar-nav>li>a{
-    color: white;
+    color: white !important;
 }
 .navbar-default .menu-ul-li>li>a{
     display: grid;
@@ -207,6 +207,12 @@ tbody, td, tfoot, th, thead, tr {
     align-content: center;
     font-size: 13px;
 }
+/* .navbar-default .seconday_ul>li>a{
+    display: grid;
+    text-align: center;
+    align-content: center;
+    font-size: 13px;
+} */
 
 .navbar-default .navbar-nav>li>a:hover{
     color: white;
@@ -374,7 +380,7 @@ tbody, td, tfoot, th, thead, tr {
     padding: 10px;
     text-align: center;
 
-    display: flex;
+    /* display: flex;
     margin-top: 182px;
     padding: 10px;
     text-align: center;
@@ -384,7 +390,7 @@ tbody, td, tfoot, th, thead, tr {
     z-index: 999;
     align-items: center;
     justify-content: center;
-    text-align: center;
+    text-align: center; */
 }
 
 .modal-dialog .popup-msg{
@@ -396,14 +402,14 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .popup-msg{
-    left: 10px;
+    left: 15px;
     top: 64px;
-    width: 99%;
+    width: 98%;
     position: absolute;
     top: 60px;
     z-index: 100;
 
-    left: 10px;
+    /* left: 10px;
     left: 220px;
     top: 64px;
     width: 99%;
@@ -412,7 +418,7 @@ tbody, td, tfoot, th, thead, tr {
     top: 60px;
     z-index: 100;
     /* top: 60px; */
-    z-index: 999;
+    /* z-index: 999; */ 
 }
 
 .handsontable thead th .relative{
@@ -636,6 +642,10 @@ tbody, td, tfoot, th, thead, tr {
     background-color: white;
     border: 1px solid white;
 }
+
+.icon-a:hover{
+    background-color: white;
+}
 .app-icon{
     margin: 0;
     padding: 0;
@@ -678,8 +688,8 @@ tbody, td, tfoot, th, thead, tr {
     /* color: white;
     border-bottom: 2px solid white;
     background-color: #2b4068; */
-    color: #2b4068;
-    background-color:white;
+    color: #2b4068 !important;
+    background-color:white !important;
     border-radius: 5px;
     box-shadow: inset 0 0 6px rgb(0 0 0 / 40%);
 }
@@ -893,4 +903,82 @@ table.htCore tbody tr td.listbox:hover {
 
 .pika-lendar{
     width:285px;
+}
+
+.alert-dismissable .close, .alert-dismissible .close{
+    right: -6px;
+    color: black;
+}
+
+.seconday_ul {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+  
+.seconday_ul li{
+    border: 1px solid white;
+}
+.seconday_ul a {
+    color: #2b4068;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+}
+  
+.seconday_ul a:hover {background-color: #fff;}
+  
+.menu-ul-li li:hover .seconday_ul {display: block;}
+
+.seconday_ul li>a>i{
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.selected-count{
+    font-weight: 500;
+}
+
+.handsontableInputHolder .chosen-container{
+    width: 300px !important;
+    line-height: 34px !important;
+}
+
+.handsontableInputHolder .chosen-container-multi .chosen-choices li.search-choice{
+    background-color: #fff;
+    line-height: 20px;
+    background-image: linear-gradient(#fff 20%,#fff 50%,#fff 52%,#fff 100%);
+}
+
+.handsontableInputHolder .chosen-container-multi .chosen-choices li.search-choice .search-choice-close{
+    top: 8px;
+}
+
+.column-list-div .form-row{
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { 
+    border-radius: 20rem; 
+}
+.toggle.ios .toggle-handle {
+    border-radius: 20rem; 
+}
+
+.toggle.ios{
+    display: block;
+}
+
+.column-list-div .form-control{
+    color: #000;
 }

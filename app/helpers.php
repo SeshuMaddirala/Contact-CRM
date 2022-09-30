@@ -16,3 +16,23 @@ if (! function_exists('loggedUserData')) {
         ];
     }
 }
+
+if (! function_exists('getUserData')) {
+    function getUserData($user_id = '')
+    {
+        if(!isset($user_id) || $user_id == ''){
+            return [];
+        }
+        
+        $query_obj_data = DB::table('user')
+        ->where('iUserId',$user_id)
+        ->get();
+
+        $query_response = [];
+        if(!empty($query_obj_data)){
+            $query_response = json_decode(json_encode($query_obj_data), true);
+        }
+        
+        return $query_response;
+    }
+}

@@ -10,23 +10,34 @@ use TokenCache;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 use phpDocumentor\Reflection\Types\Null_;
+use Illuminate\Support\Facades\Storage;
 
 include_once('TokenCache.php');
 
 class Contact extends BaseController
 {
     public function index(Request $request){
-        $enum_values    = $this->getEnumValues();
-        $default_column = $this->defaultColumns($enum_values);
-        return view('pages.contact.contact_list',['enum_values'=> $enum_values,'default_column'=> $default_column]);        
+        $default_column     = $this->defaultColumns();
+        $logged_filter_data = $this->getFilterLogData();
+        $hidden_column_id   = array_keys(array_column($default_column, 'hide_column'), 'true');
+        
+        $column_source_data = [];
+        foreach($default_column as $d_val){
+            if(!empty($d_val['source_data'])){
+                $column_source_data[$d_val['db_name']] = $d_val['source_data'];
+            }
+        }
+
+        return view('pages.contact.contact_list',
+        ['column_source_data'=> $column_source_data,'default_column'=> $default_column,'filter_data' => $logged_filter_data,'hidden_column_id' => $hidden_column_id]);        
     }
 
     public function get(Request $request){
-        $request_data   = $request->all();
-        
-        $start_date     = str_replace('/', '-', $request_data['start_date']);
-        $end_date       = str_replace('/', '-', $request_data['end_date']);
-        
+        $request_data               = $request->all();
+        $start_date                 = str_replace('/', '-', $request_data['start_date']);
+        $end_date                   = str_replace('/', '-', $request_data['end_date']);
+        $request_data['extra_data'] = isset($request_data['extra_data'])?$request_data['extra_data']:[];
+
         $where_cond     = '1=1';
         if($request_data['start_date'] != '' && $request_data['end_date'] != ''){
             $where_cond = " DATE_FORMAT(c.dtAddedDate,'%Y-%m-%d') BETWEEN '".date('Y-m-d',strtotime($start_date))."' AND '".date('Y-m-d',strtotime($end_date))."'";
@@ -34,52 +45,66 @@ class Contact extends BaseController
 
         if(!empty($request_data['extra_data'])){
             foreach($request_data['extra_data'] as $extra_val){
-                $table_alias = ($extra_val['table_name'] == 'contact_interaction')?"ci":"c";
-                
+                $table_alias        = ($extra_val['table_name'] == 'contact_interaction')?"ci":"c";
+                $temp_where_cond    = '';
+
                 if($extra_val['filter_type'] == 'date'){
-                    $where_cond .= " AND "." DATE_FORMAT(".$table_alias.'.'.$extra_val['filter_column'].",'%Y-%m-%d')";
+                    $temp_where_cond .= " AND "." DATE_FORMAT(".$table_alias.'.'.$extra_val['filter_column'].",'%Y-%m-%d')";
                 }else{
-                    $where_cond .= " AND ".$table_alias.'.'.$extra_val['filter_column'];
+                    $temp_where_cond .= " AND ".$table_alias.'.'.$extra_val['filter_column'];
                 }
                 switch($extra_val['filter_type']){
                     case 'equal_to':
                         if(is_array($extra_val['filter_value'])){
-                            $where_cond .= ' IN ( "'.implode('","',$extra_val['filter_value']).'" )';
+                            $temp_where_cond    = " AND ( ";
+                            $temp_wc_arr        = [];
+                            foreach($extra_val['filter_value'] as $filter_val){
+                                $temp_wc_arr[] = 'FIND_IN_SET("'.$filter_val.'",'.$table_alias.'.'.$extra_val['filter_column'].")";
+                            }
+
+                            $temp_where_cond .= implode(' OR ',$temp_wc_arr)." ) ";
                         }else{
-                            $where_cond .= ' = "'.$extra_val['filter_value'].'"';
+                            $temp_where_cond .= ' = "'.$extra_val['filter_value'].'"';
                         }
                         break;
                     case 'not_equal_to':
                         if(is_array($extra_val['filter_value'])){
-                            $where_cond .= ' NOT IN ( "'.implode('","',$extra_val['filter_value']).'" )';
+                            $temp_where_cond    = " AND ( ";
+                            $temp_wc_arr        = [];
+                            foreach($extra_val['filter_value'] as $filter_val){
+                                $temp_wc_arr[] = '!FIND_IN_SET("'.$filter_val.'",'.$table_alias.'.'.$extra_val['filter_column'].")";
+                            }
+
+                            $temp_where_cond .= implode(' AND ',$temp_wc_arr)." ) ";
                         }else{
-                            $where_cond .= ' != "'.$extra_val['filter_value'].'"';
+                            $temp_where_cond .= ' != "'.$extra_val['filter_value'].'"';
                         }
                         break;
                     case 'begins_with':
-                        $where_cond .= ' LIKE "'.$extra_val['filter_value'].'%"';
+                        $temp_where_cond .= ' LIKE "'.$extra_val['filter_value'].'%"';
                         break;
                     case 'ends_with':
-                        $where_cond .= ' LIKE "%'.$extra_val['filter_value'].'"';
+                        $temp_where_cond .= ' LIKE "%'.$extra_val['filter_value'].'"';
                         break;
                     case 'contains':
-                        $where_cond .= ' LIKE "%'.$extra_val['filter_value'].'%"';
+                        $temp_where_cond .= ' LIKE "%'.$extra_val['filter_value'].'%"';
                         break;
                     case 'does_not_contains':
-                        $where_cond .= ' NOT LIKE "%'.$extra_val['filter_value'].'%"';
+                        $temp_where_cond .= ' NOT LIKE "%'.$extra_val['filter_value'].'%"';
                         break;
                     default:
                         if($extra_val['filter_type'] == 'date'){
                             $filter_date    = explode(' - ',$extra_val['filter_value']);
-                            $where_cond    .= " BETWEEN '".date('Y-m-d',strtotime($filter_date[0]))."' AND '".date('Y-m-d',strtotime($filter_date[1]))."'";
+                            $temp_where_cond    .= " BETWEEN '".date('Y-m-d',strtotime($filter_date[0]))."' AND '".date('Y-m-d',strtotime($filter_date[1]))."'";
                         }
                     break;
                 }
+
+                $where_cond .= $temp_where_cond; 
             }
         }
 
-
-        $select_columns = ['c.iContactsId as contact_id','ci.iContactInteractionId as contact_interaction_id','c.eStatus as communication_status','date_format(c.dtStatusDate,"%d/%m/%Y") as status_date','date_format(c.dtLastConversationDate,"%d/%m/%Y") as last_conv_date','c.tDiscussionPoints as discussion_points','c.vNextSteps as next_steps','date_format(c.dtNextActionDate,"%d/%m/%Y") as next_action_date','c.vContactName as contact_name','c.eRelationshipStatus as relationship_status','c.vDesignation as designation','c.vReportingManager as reporting_manager','c.vOrganizationName as organization_name','c.vWebsite as website','c.vPreviousRelationShip as previous_relationship','c.vIndustry as industry','c.vCityName as city_name','c.vStateName as state_name','c.vCountryName as country_name','c.vLinkedURL as linked_url','c.vEmail as email','c.eReachoutCategory as reachout_category','c.vWorkNumber as work_number','c.vMobileNumber as mobile_number','c.eCategory as category','c.eTouchPoints as touch_points','c.eAdaptability as adaptability','c.eDispositionTowards as disposition_towards','c.eCoverage as coverage','c.tResponse as response','ci.tMessage as message','ci.vMessageBy as message_by','ci.eConnectionStatus as connection_status','ci.eMessageStatus as message_status','date_format(ci.dMessageDate,"%d/%m/%Y") as message_date','ci.dMessageTime as message_time',"concat(ci.dMessageDate,' ',ci.dMessageTime) as  message_date_time"];
+        $select_columns = ['c.iContactsId','ci.iContactInteractionId','c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y")as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y")','ci.dMessageTime','c.vHometownState'];
 
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
@@ -98,6 +123,16 @@ class Contact extends BaseController
         $output = array(
             'data'  =>	$query_response
         );
+
+        /**
+         * Log filter data
+         */
+        if(isset($request_data['call_from']) && (in_array($request_data['call_from'],['clear_filter','filter']))){
+            $this->logFilterData($request_data['extra_data'],$request_data['call_from']);
+        
+            $output['logged_filter_data'] = $this->getFilterLogData();
+        }
+        
 
         echo json_encode($output);exit;
     }
@@ -176,7 +211,22 @@ class Contact extends BaseController
                         ];
                         $this->addActivities('contacts',$contact_id,json_encode($params_obj),'update_contact');
                     }
+                } 
+
+                /**
+                 * Set reminder based on column change
+                 */
+                $reminder_columns = ['dtNextActionDate'];
+
+                if(in_array($db_name,$reminder_columns)){
+                    $required_data = [
+                        'contacts_url'  => $linked_url,
+                        'contacts_name' => $contact_name,
+                        'column_data'   => $new_value,
+                    ];
+                    $this->setColumnBasedReminder($request,$required_data);
                 }
+
                 break;
             case 'contact_interaction':
                 if($contact_id != ''){
@@ -190,10 +240,6 @@ class Contact extends BaseController
                 }, $query_obj_data->toArray());
                 
                 $return_arr = ['success' => 0];
-
-                // if($field_name == 'message_date_time'){
-
-                // }
 
                 if(empty($ci_data_exist)){
                     $db_inert_id = DB::table('contact_interaction')->insertGetId([
@@ -267,6 +313,7 @@ class Contact extends BaseController
                 }else{
                     preg_match("/^enum\(\'(.*)\'\)$/", $val->Type, $matches);
                 }
+                
                 $return_arr[$val->Field] = explode("','", $matches[1]);
             }
         }
@@ -285,13 +332,13 @@ class Contact extends BaseController
         return $return_arr;
     } 
 
-    public function set_remainder(Request $request){
-        $request_data   = $request->all();
+    public function set_remainder(Request $request,$input_params = []){
+        $request_data   = !empty($input_params)?$input_params:$request->all();
         $notes          = $request_data['notes'];
         $request_data['remainder_date_time'] = date("Y-m-d H:i:s",strtotime(str_replace('/', '-',$request_data['remainder_date_time'])));
         
         $reminder_response = $this->createRemainder($request_data);
-
+        
         if(!empty($reminder_response)){
             DB::table('set_reminder')->insert([
                 'dtRemainderDateTime'   => $request_data['remainder_date_time'],
@@ -450,7 +497,7 @@ class Contact extends BaseController
 
     public function export_data(Request $request){
 
-        $select_columns = ['c.eStatus as communication_status','date_format(c.dtStatusDate,"%d/%m/%Y") as status_date','date_format(c.dtLastConversationDate,"%d/%m/%Y") as last_conv_date','c.tDiscussionPoints as discussion_points','c.vNextSteps as next_steps','date_format(c.dtNextActionDate,"%d/%m/%Y") as next_action_date','c.vContactName as contact_name','c.eRelationshipStatus as relationship_status','c.vDesignation as designation','c.vReportingManager as reporting_manager','c.vOrganizationName as organization_name','c.vWebsite as website','c.vPreviousRelationShip as previous_relationship','c.vIndustry as industry','c.vCityName as city_name','c.vStateName as state_name','c.vCountryName as country_name','c.vLinkedURL as linked_url','c.vEmail as email','c.eReachoutCategory as reachout_category','c.vWorkNumber as work_number','c.vMobileNumber as mobile_number','c.eCategory as category','c.eTouchPoints as touch_points','c.eAdaptability as adaptability','c.eDispositionTowards as disposition_towards','c.eCoverage as coverage','c.tResponse as response','ci.tMessage as message','ci.vMessageBy as message_by','ci.eConnectionStatus as connection_status','ci.eMessageStatus as message_status','date_format(ci.dMessageDate,"%d/%m/%Y") as message_date','ci.dMessageTime as message_time'];
+        $select_columns = ['c.vStatus as communication_status','date_format(c.dtStatusDate,"%d/%m/%Y") as status_date','date_format(c.dtLastConversationDate,"%d/%m/%Y") as last_conv_date','c.tDiscussionPoints as discussion_points','c.vNextSteps as next_steps','date_format(c.dtNextActionDate,"%d/%m/%Y") as next_action_date','c.vContactName as contact_name','c.vRelationshipStatus as relationship_status','c.vDesignation as designation','c.vReportingManager as reporting_manager','c.vOrganizationName as organization_name','c.vWebsite as website','c.vPreviousRelationShip as previous_relationship','c.vIndustry as industry','c.vCityName as city_name','c.vStateName as state_name','c.vCountryName as country_name','c.vLinkedURL as linked_url','c.vEmail as email','c.vReachoutCategory as reachout_category','c.vWorkNumber as work_number','c.vMobileNumber as mobile_number','c.vCategory as category','c.vTouchPoints as touch_points','c.vAdaptability as adaptability','c.vDispositionTowards as disposition_towards','c.vCoverage as coverage','c.tResponse as response','ci.tMessage as message','ci.vMessageBy as message_by','ci.vConnectionStatus as connection_status','ci.vMessageStatus as message_status','date_format(ci.dMessageDate,"%d/%m/%Y") as message_date','ci.dMessageTime as message_time'];
 
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
@@ -495,7 +542,26 @@ class Contact extends BaseController
         }
     }
 
+    public function setColumnBasedReminder($request,$input_params = []){
+        if(!is_array($input_params) || empty($input_params)){
+            return false;
+        }
+
+        $required_data = [
+            'notes' => "Linked CRM Personal Reminder",
+            'remainder_date_time' => $input_params['column_data'],
+            'contacts_url' => $input_params['contacts_url'],
+            'contacts_name' => $input_params['contacts_name'],
+        ];
+        
+        $this->set_remainder($request,$required_data);
+        return true;
+    }
+
     public function defaultColumns($column_enum = ''){
+
+        return json_decode(Storage::disk('public')->get('contact_column.json'),true);
+
         return [
             [
                 'class_name'    => 'contact_name',
@@ -815,7 +881,7 @@ class Contact extends BaseController
                 'data'          => 'disposition_towards',
                 'db_name'       => 'eDispositionTowards',
                 'db_table'      => 'contacts',
-                'title'         => 'Disposition towards GGK',
+                'title'         => 'Disposition towards Us',
                 'source'        => (!empty($column_enum['eDispositionTowards'])?$column_enum['eDispositionTowards']:[]),
                 'type'          => 'dropdown'
             ],
@@ -858,7 +924,46 @@ class Contact extends BaseController
                 'title'         => 'contact_interaction_id',
                 'source_data'   => '',
                 'type'          => 'text'
+            ],
+            [
+                'class_name'    => 'hometown_state',
+                'name'          => 'hometown_state',
+                'data'          => 'hometown_state',
+                'db_name'       => 'vHometownState',
+                'db_table'      => 'contacts',
+                'title'         => 'Hometown State',
+                'source_data'   => '',
+                'type'          => 'text'
             ]
         ];
+    }
+
+    public function logFilterData($input_params = [],$action_for = ''){
+        
+        $update_data = [];
+        foreach($input_params as $value){
+            unset($value['table_name']);
+            $update_data[] = $value;
+        }
+
+        if(isset(loggedUserData()['user_id']) && loggedUserData()['user_id'] != ''){
+            DB::table('user')
+            ->where('iUserId', loggedUserData()['user_id'])  
+            ->update(array(
+                'tConfiguration'=> json_encode($update_data),
+                'iUpdatedById'  => loggedUserData()['user_id'],
+                'dtUpdatedDate' => date('Y-m-d H:i:s')
+            ));
+        }
+        return true;
+    }
+
+    public function getFilterLogData(){
+        $user_data  = getUserData(loggedUserData()['user_id']);
+        $log_data   = [];
+        if(!empty($user_data)){
+            $log_data = json_decode($user_data[0]['tConfiguration'],true);
+        }
+        return $log_data;
     }
 }

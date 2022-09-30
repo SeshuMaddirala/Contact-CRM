@@ -28,7 +28,7 @@ class Dashboard extends BaseController
             return (array)$item; 
         }, $query_obj_data->toArray());
 
-        $select_unregisteredcolumns = ['ci.vLinkedURL as unregistered_LinkedURL','ci.eConnectionStatus as unregistered_ConnectionStatus'];
+        $select_unregisteredcolumns = ['ci.vLinkedURL as unregistered_LinkedURL','ci.vConnectionStatus as unregistered_ConnectionStatus'];
 
         $query_obj_data = DB::table('contact_interaction as ci')
             ->selectRaw(implode(",",$select_unregisteredcolumns))
