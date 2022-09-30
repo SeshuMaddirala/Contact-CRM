@@ -185,8 +185,8 @@ class ContactInteractionController extends Controller
                 'vLinkedURL'        => $input_params['linked_url'],
                 'tMessage'          => $input_params['message'],
                 'vMessageBy'        => $input_params['message_by'],
-                'eConnectionStatus' => $input_params['connection_status'],
-                'eMessageStatus'    => $input_params['message_status'],
+                'vConnectionStatus' => $input_params['connection_status'],
+                'vMessageStatus'    => $input_params['message_status'],
                 'dMessageDate'      => $input_params['message_date'],
                 'dMessageTime'      => date('H:i:s',strtotime($input_params['message_time'])),
                 'dtProcessedDate'   => date_format(date_create($input_params['processed_date']),"Y-m-d H:i:s")
@@ -203,8 +203,8 @@ class ContactInteractionController extends Controller
             ->update(array(
                 'tMessage'          => $input_params['message'],
                 'vMessageBy'        => $input_params['message_by'],
-                'eConnectionStatus' => $input_params['connection_status'],
-                'eMessageStatus'    => $input_params['message_status'],
+                'vConnectionStatus' => $input_params['connection_status'],
+                'vMessageStatus'    => $input_params['message_status'],
                 'dMessageDate'      => $input_params['message_date'],
                 'dMessageTime'      => date('H:i:s',strtotime($input_params['message_time'])),
                 'dtProcessedDate'   => date_format(date_create($input_params['processed_date']),"Y-m-d H:i:s")

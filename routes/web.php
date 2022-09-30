@@ -51,7 +51,9 @@ Route::get('reminder',[Contact::class, 'reminder'])->name('reminder')->middlewar
 
 Route::get('export_data',[Contact::class, 'export_data'])->name('export_data')->middleware('auth');
 
-Route::get('settings',[Settings::class, 'index'])->name('settings')->middleware('auth');
+Route::get('column_list',[Settings::class, 'column_list'])->name('column_list')->middleware('auth');
+
+Route::post('add_update_column',[Settings::class, 'add_update_column'])->name('add_update_column')->middleware('auth');
 
 Route::get('activities',[ActivitiesController::class, 'index'])->name('activities')->middleware('auth');
 

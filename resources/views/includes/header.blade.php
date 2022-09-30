@@ -18,7 +18,14 @@
             <li class="{{ Request::path() == 'contact' ? 'active' : '' }}"><a href="contact"><i class="fa-fw fa-solid fa-address-card fa-2x" title="Contacts"></i>Contacts</a></li>
             <li class="{{ Request::path() == 'reminder' ? 'active' : '' }}"><a href="reminder"><i class="fa-fw far fa-bell" title="Reminders"></i>Reminders</a></li>
             <li class="{{ Request::path() == 'activities' ? 'active' : '' }}"><a href="activities"><i class="fa-fw fa-solid fa-clipboard-list fa-2x" title="Activities"></i>Activities</a></li>
-            <!-- <li class="{{ Request::path() == 'settings' ? 'active' : '' }}"><a href="settings"><i class="fa-fw fa-solid fa-clipboard-list fa-2x" title="Settings"></i>Settings</a></li> -->
+            <li class="{{ Request::path() == 'settings' ? 'active' : '' }}">
+                <a href="javascript:;;">
+                    <i class="fa-fw fa-solid fa-gear fa-2x" title="Settings"></i>Settings
+                </a>
+                <ul class="seconday_ul">
+                    <li><a href="column_list"><i class="fa-fw fa-solid fa-file-circle-plus fa-2x"></i>Column List</a></li>
+                </ul>
+            </li>
         </ul>
         <ul class="nav navbar-nav ml-auto float-right">
             <li class="nav-item dropdown reminder-section">
