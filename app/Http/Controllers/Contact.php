@@ -497,7 +497,7 @@ class Contact extends BaseController
 
     public function export_data(Request $request){
 
-        $select_columns = ['c.vStatus as communication_status','date_format(c.dtStatusDate,"%d/%m/%Y") as status_date','date_format(c.dtLastConversationDate,"%d/%m/%Y") as last_conv_date','c.tDiscussionPoints as discussion_points','c.vNextSteps as next_steps','date_format(c.dtNextActionDate,"%d/%m/%Y") as next_action_date','c.vContactName as contact_name','c.vRelationshipStatus as relationship_status','c.vDesignation as designation','c.vReportingManager as reporting_manager','c.vOrganizationName as organization_name','c.vWebsite as website','c.vPreviousRelationShip as previous_relationship','c.vIndustry as industry','c.vCityName as city_name','c.vStateName as state_name','c.vCountryName as country_name','c.vLinkedURL as linked_url','c.vEmail as email','c.vReachoutCategory as reachout_category','c.vWorkNumber as work_number','c.vMobileNumber as mobile_number','c.vCategory as category','c.vTouchPoints as touch_points','c.vAdaptability as adaptability','c.vDispositionTowards as disposition_towards','c.vCoverage as coverage','c.tResponse as response','ci.tMessage as message','ci.vMessageBy as message_by','ci.vConnectionStatus as connection_status','ci.vMessageStatus as message_status','date_format(ci.dMessageDate,"%d/%m/%Y") as message_date','ci.dMessageTime as message_time'];
+        $select_columns = ['c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y") as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime'];
 
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
@@ -513,9 +513,16 @@ class Contact extends BaseController
         }, $query_obj_data->toArray());
         
         $default_columns    = $this->defaultColumns();
-        $hidden_columns     = ['contact_id','contact_interaction_id'];
-        $column_titles      = array_diff(array_column($default_columns,'title'),$hidden_columns);
-        $column_data_key    = array_column($default_columns,'data');
+        $hidden_column_id   = array_keys(array_column($default_columns, 'hide_column'), 'true');
+        
+        $hidden_columns_title = $hidden_columns_db_name = []; 
+        foreach($hidden_column_id as $hc_val){
+            $hidden_columns_title[]     = $default_columns[$hc_val]['title'];
+            $hidden_columns_db_name[]   = $default_columns[$hc_val]['db_name'];    
+        }
+
+        $column_titles      = array_diff(array_column($default_columns,'title'),$hidden_columns_title);
+        $column_data_key    = array_column($default_columns,'db_name');
 
         $filename           = storage_path()."/contact_list.csv";
         $output             = fopen($filename, 'w+');
@@ -525,7 +532,7 @@ class Contact extends BaseController
         foreach ($query_response as $line) {
             $temp_arr = [];
             foreach($column_data_key as $val){
-                if(!in_array($val,$hidden_columns)){                    
+                if(!in_array($val,$hidden_columns_db_name)){                    
                     $temp_arr[] = !empty($line[$val])?$line[$val]:'N/A';
                 }
             }
