@@ -167,58 +167,60 @@ var contact_form = {
             $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
         });
 
-        $('#filterModal').on('shown.bs.modal', function (event) {
-            
-            $('.filter-table .chosen-select').chosen("destroy").chosen();                
-
-            $.each(logged_filter_data,function(key,val){
-                var tr_object = $('.filter-table tr[data-row="'+key+'"]');
+        $('#filterModal').on('shown.bs.modal', function (event) {     
                 
-                if(val['column_type'] == 'dropdown'){
-                    tr_object.find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
-    
-                    var select_option = '';
-                    $.each(column_pre_data[val['filter_column']],function(ckey,cval){
-                        var selected = "";
-                        if($.inArray(cval,val['filter_value'])  !== -1){
-                            selected = "selected";
-                        }
-
-                        select_option += '<option value="'+cval+'" '+selected+'>'+cval+'</option>';
-                    });
-    
-                    tr_object.find('select.filter_value').removeClass('hide').html(select_option);
-                    tr_object.find('select.filter_value').chosen("destroy").chosen();
-                    tr_object.find('input.filter_value').addClass('hide');
-                }else if(val['column_type'] == 'text' || val['column_type'] == 'time'){
-                    tr_object.find('input.filter_value').val(val['filter_value']);
-                    tr_object.find('input.filter_value').removeClass('hide');
-                    tr_object.find('select.filter_value').addClass('hide');
-                    tr_object.find('select.filter_value').chosen("destroy");
-                }else if(val['column_type'] == 'date'){
-                    tr_object.find('input.filter_value').daterangepicker({
-                        opens           : 'left',
-                        showDropdowns   : true,
-                        linkedCalendars : false,
-                        locale: {
-                            format: 'DD-MM-YYYY',
-                        },
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        }
-                    });
+            $('.filter-table .chosen-select').chosen("destroy").chosen();      
+            contact_form.setFilterDataOnForm(logged_filter_data['custom_filter']);
+            // if(logged_filter_data['custom_filter'] != ''){
+            //     $.each(logged_filter_data['custom_filter'],function(key,val){
+            //         var tr_object = $('.filter-table tr[data-row="'+key+'"]');
                     
-                    tr_object.find('input.filter_value').val(val['filter_value']);
-                    tr_object.find('input.filter_value').removeClass('hide');
-                    tr_object.find('select.filter_value').addClass('hide');
-                    tr_object.find('select.filter_value').chosen("destroy");
-                }
-            });
+            //         if(val['column_type'] == 'dropdown'){
+            //             tr_object.find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
+        
+            //             var select_option = '';
+            //             $.each(column_pre_data[val['filter_column']],function(ckey,cval){
+            //                 var selected = "";
+            //                 if($.inArray(cval,val['filter_value'])  !== -1){
+            //                     selected = "selected";
+            //                 }
+
+            //                 select_option += '<option value="'+cval+'" '+selected+'>'+cval+'</option>';
+            //             });
+        
+            //             tr_object.find('select.filter_value').removeClass('hide').html(select_option);
+            //             tr_object.find('select.filter_value').chosen("destroy").chosen();
+            //             tr_object.find('input.filter_value').addClass('hide');
+            //         }else if(val['column_type'] == 'text' || val['column_type'] == 'time'){
+            //             tr_object.find('input.filter_value').val(val['filter_value']);
+            //             tr_object.find('input.filter_value').removeClass('hide');
+            //             tr_object.find('select.filter_value').addClass('hide');
+            //             tr_object.find('select.filter_value').chosen("destroy");
+            //         }else if(val['column_type'] == 'date'){
+            //             tr_object.find('input.filter_value').daterangepicker({
+            //                 opens           : 'left',
+            //                 showDropdowns   : true,
+            //                 linkedCalendars : false,
+            //                 locale: {
+            //                     format: 'DD-MM-YYYY',
+            //                 },
+            //                 ranges: {
+            //                     'Today': [moment(), moment()],
+            //                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            //                     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            //                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            //                     'This Month': [moment().startOf('month'), moment().endOf('month')],
+            //                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            //                 }
+            //             });
+                        
+            //             tr_object.find('input.filter_value').val(val['filter_value']);
+            //             tr_object.find('input.filter_value').removeClass('hide');
+            //             tr_object.find('select.filter_value').addClass('hide');
+            //             tr_object.find('select.filter_value').chosen("destroy");
+            //         }
+            //     });
+            // }
         });
 
         $(document).on('click','.clear-remainder',function(){
@@ -357,7 +359,15 @@ var contact_form = {
                 }
             });
             
-            contact_form.getLoadData({},'clear_filter');
+            contact_form.getLoadData();
+        });
+
+        
+        $('#exportModal').on('show.bs.modal', function (event) {   
+            if(!$('.main-checkbox-input').is(':checked') && !$('.checkbox-input').is(':checked')){
+                alert("Please select atleast one contact to export");
+                return event.preventDefault(); 
+            }
         });
 
         $(document).off('click','.main-checkbox-input');
@@ -373,42 +383,93 @@ var contact_form = {
         $(document).on('click','.export-btn',function(){
             
             if($('.main-checkbox-input').is(':checked') || $('.checkbox-input').is(':checked')){
-                
+
+                var contact_id  = '';
+                $.each(column_property,function(key,val){
+                    if(val.db_name == 'iContactsId'){
+                        contact_id = key;
+                    }
+                });
+
                 var selected_row_ids = [];
+                var selected_column  = [];
+                var unselected_column  = [];
                 if($('.main-checkbox-input').is(':checked')){
                     $.each($(".checkbox-input"), function (K, V) {
-                        selected_row_ids.push($("#dataTable").handsontable('getInstance').getDataAtCell($(V).attr('data-row'),33));
+                        selected_row_ids.push($("#dataTable").handsontable('getInstance').getDataAtCell($(V).attr('data-row'),contact_id));
                     });
                 }else if($('.checkbox-input').is(':checked')){
                     $.each($(".checkbox-input:checked"), function (K, V) {    
-                        selected_row_ids.push($("#dataTable").handsontable('getInstance').getDataAtCell($(V).attr('data-row'),33));        
+                        selected_row_ids.push($("#dataTable").handsontable('getInstance').getDataAtCell($(V).attr('data-row'),contact_id));        
                     });
                 }
-                window.open("export_data?row_ids="+selected_row_ids,'_blank')
+                $.each($(".export-col-checkbox"), function (K1, V1) {
+                    if($(this).is(':checked')){
+                        selected_column.push($(this).attr('data-dbcolumn-name'));
+                    }else{
+                        unselected_column.push($(this).attr('data-dbcolumn-name'));
+                    }        
+                });
+
+                if(selected_column.length <= 0){
+                    alert("Please select atleast one column");
+                    return false;
+                }
+
+                window.open("export_data?row_ids="+selected_row_ids+"&unselected_column="+btoa(unselected_column),'_blank');
             } else {
-                alert("Select any item");
+                alert("Please select atleast one contact to export");
             }
             
         });
+
+        $(document).off('click','.add-new-contact');
+        $(document).on('click','.add-new-contact',function(){
+            var curr_instance = $("#dataTable").handsontable('getInstance');            
+            curr_instance.alter('insert_row', 0, 1);
+        });
+
+        $(document).off('change','.export-check-uncheck');
+        $(document).on('change','.export-check-uncheck',function(){
+            if($(this).prop('checked')){
+                $('.export-col-checkbox').prop("checked", true);
+            }else{
+                $('.export-col-checkbox').prop("checked", false);
+            }
+        });
     },
     plugin_initialize:function(){
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth()+1; 
-        var yyyy = today.getFullYear();
+        var today   = new Date();
+        var dd      = today.getDate();
+        var mm      = today.getMonth()+1; 
+        var yyyy    = today.getFullYear();
+        
         if(dd<10) {
             dd='0'+dd
         } 
+        
         if(mm<10) {
             mm='0'+mm
         } 
-        today = dd+'/'+mm+'/'+yyyy;  
+        today = dd+'/'+mm+'/'+yyyy;
+
+        // var start_date  = moment().startOf('month');
+        // var end_date    = moment().endOf('month');
+        var start_date    = '';
+        var end_date      = '';
+
+        if(!$.isEmptyObject(logged_filter_data) && logged_filter_data['global_filter'] != ''){
+            start_date  = logged_filter_data['global_filter']['start_date']; 
+            end_date    = logged_filter_data['global_filter']['end_date'];
+        }
+
         $('#contact-datefilter').daterangepicker({
             opens           : 'left',
             showDropdowns   : true,
             linkedCalendars : false,
-            startDate       : moment().startOf('month'),
-            endDate         : moment().endOf('month'),
+            autoUpdateInput : (start_date != '')?true:false,
+            startDate       : (start_date != '')?start_date:'',
+            endDate         : (end_date != '')?end_date:'',
             maxDate         : today,
             locale: {
                 format: 'DD-MM-YYYY',
@@ -444,7 +505,7 @@ var contact_form = {
     },
     initialize_handsontable:function(){
         hot = $('#dataTable').handsontable({
-            data            : contact_form.getLoadData(),
+            data            : contact_form.getLoadData({},'onload'),
             columns         : contact_form.getColumns(),
             // colHeaders      : true,
             rowHeaders      : true,
@@ -455,6 +516,7 @@ var contact_form = {
             width           : 'auto',
             stretchH        : 'all',
             manualColumnResize: true,
+            // persistentState:true,
             manualRowResize: true,
             minSpareRows    : 1,
             minRows         : 5,
@@ -466,18 +528,17 @@ var contact_form = {
             manualRowMove   : true,
             manualColumnMove: true,
             autoWrapRow     : true,
-            contextMenu     : ['row_above', 'row_below', 'remove_row'],
+            // contextMenu     : ['row_above', 'row_below', 'remove_row'],
+            contextMenu     : ['row_above', 'row_below'],
             hiddenColumns   : {
                 columns: hidden_column_id,
                 indicators: false
             },
-                // $('.htCore .cornerHeader').html('<input type="checkbox" class="main-checkbox-input">');
             afterGetColHeader: function(col, TH) {
                 if(col == '-1'){
                     $(TH).find('.cornerHeader').html('<input type="checkbox" class="main-checkbox-input">'); 
                 }
                 // contact_form.addInput(col,TH);
-               
             },
             afterGetRowHeader: drawCheckboxInRowHeaders,
             beforeChange     : function(obj) {
@@ -497,6 +558,19 @@ var contact_form = {
                 const col_props = column_property.filter(function(val){   
                     return val.db_name == obj[0][1]; 
                 });
+
+                if(obj[0][3] == "" || obj[0][3] == null){
+                    if(!confirm("Are you sure you want to delete data on "+col_props[0]['title']+" ?")){
+                        return false;
+                    }
+                }
+
+                if(col_props[0]['validate']){
+                    if(!contact_form.checkValidation(obj[0])){
+                        setMessage('Please provide proper data for '+col_props[0]['title'] +' cell','.panel-heading',false);
+                        return false;
+                    };
+                }
 
                 column_type = col_props[0]['type'];
 
@@ -549,6 +623,7 @@ var contact_form = {
                 var curr_props  = '';
                 var contact_id  = '';
                 var ci_id       = '';
+                var alerts_to   = '';
                 $.each(column_property,function(key,val){
                     if(change[0][1] == val.db_name){
                         curr_props = val;
@@ -556,6 +631,8 @@ var contact_form = {
                         contact_id = key;
                     }else if(val.db_name == 'iContactInteractionId'){
                         ci_id = key;
+                    }else if(val.db_name == 'vAlertsTo'){
+                        alerts_to = key;
                     }
                 });
 
@@ -567,6 +644,7 @@ var contact_form = {
                 change[0][9]    = this.getDataAtCell(change[0][0],ci_id);
                 change[0][10]   = curr_props['title'];
                 change[0][11]   = this.getDataAtCell(change[0][0],0);
+                change[0][12]   = this.getDataAtCell(change[0][0],alerts_to);
 
                 $.ajax({
                     url         : "update_data",
@@ -582,26 +660,59 @@ var contact_form = {
                     },
                     success: function (data) {
                         if(data.success == 1){
-                            // var currentInstance = $("#dataTable").handsontable('getInstance');
-
                             if(typeof data['insert_id'] != "undefined" && data['insert_id'] != ''){
                                 contact_form.getLoadData();
                             }
                             setMessage('Column data is updated successfully','.panel-heading',true);
                         }else{
-                            setMessage('Error occurred while updating column data','.panel-heading',false);
+                            var error_message = "Error occurred while updating column data";
+                            if(typeof data['message'] != "undefined" && data['message'] != ''){
+                                error_message = data['message'];
+                                contact_form.getLoadData();
+                            }
+                            setMessage(error_message,'.panel-heading',false);
                         }
                     }
                 });
             },
             afterSelection:function(row, column, row2, column2, preventScrolling, preventScrolling, selectionLayerLevel){
+                
                 preventScrolling.value = true;
-                var row_count = (row == row2)?1:(row > row2)?row+1:row2+1;
-                var col_count = (column == column2)?1:(column > column2)?column+1:column2+1;
-                $('.panel-heading .selected-count').html(' - [Rows:'+row_count+', Columns:'+col_count+']');
+                
+                var row_count       = (row == row2)?1:(row > row2)?row+1:row2+1;
+                var col_count       = (column == column2)?1:(column > column2)?column+1:column2+1;
+                var data_row_count  = data_col_count = 0;
+                var hotInstance     = $("#dataTable").handsontable('getInstance');
+            
+                var row_start_loop  = (row < row2)?row:row2;
+                var row_end_loop    = (row > row2)?row:row2;
+                var col_start_loop  = (column < column2)?column:column2;
+                var col_end_loop    = (column > column2)?column:column2;
+                 
+                for(var i = row_start_loop; i <= row_end_loop;i++){
+                    var row_data_flag = false;
+                    for(var j = col_start_loop; j <= col_end_loop;j++){
+                        var cell_data = hotInstance.getDataAtCell(i,j);
+                        if(cell_data != '' && cell_data != null){
+                            row_data_flag = true;
+                            data_col_count += 1;
+                        }
+                    }
+                    if(row_data_flag){
+                        data_row_count += 1;
+                    }
+                }
+
+                var selection_html  = `[ No.of rows:`+row_count+`,columns:`+col_count+` |
+                        No.of Data rows:`+data_row_count+`,columns:`+data_col_count+` ]`; 
+                // $('.panel-heading .selected-count').html(' - [No.of Rows:'+row_count+' AND Columns:'+col_count+' No.of Data Rows:'+data_row_count+' AND Columns:'+data_col_count+']');
+                $('.panel-heading .selected-count').html(' - '+selection_html);
             },
             afterDeselect:function(){
                 $('.panel-heading .selected-count').html('');
+            },
+            afterColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible, orderChanged){
+                console.log(arguments);
             }
             // , 
             // beforeRemoveRow: function(index, amount) {
@@ -654,29 +765,80 @@ var contact_form = {
                     data    : source_data
                 }
             }
+            // else if(val.db_name == 'vAlertsTo'){
+            //     obj['source'] = function(query, process) {
+            //         $.ajax({
+            //             url     : 'get_user',
+            //             dataType: 'json',
+            //             data    : {'q': query},
+            //             success: function (response) {
+            //                 var columnArr = response.map(function(row) {
+            //                     return row['id'];
+            //                 });
+            //                 process(columnArr);
+            //             }
+            //         });
+            //     }
+            //     obj['strict'] = true;
+            //     obj['multiple'] = true;
+            // }
 
             columns_obj.push(obj);
         });
 
         return columns_obj;
     },
-    getLoadData:function(extra_data = {}, call_from = ''){
+    getLoadData:function(extra_data = {},call_from = ''){
+        var filter_data             = contact_form.getFilterData();
+        filter_data['call_from']    = call_from;  
         $.ajax({
             url     : "get_contact",
             dataType: 'json',
-            data    : {'start_date' : $('#contact-datefilter').val().split(" - ")[0],'end_date' : $('#contact-datefilter').val().split(" - ")[1],'extra_data':extra_data,'call_from':call_from},
+            data    : filter_data,
             type    : 'GET',
             success : function (res) {
-                if(call_from == 'filter'){
+                if(call_from == 'filter' || call_from == 'clear_filter'){
                     $('.close').trigger('click');
                 }
-
-                if(call_from == 'filter' || call_from == 'clear_filter'){
-                    logged_filter_data = res.logged_filter_data;
+                if(call_from != 'onload'){
+                    logged_filter_data = res.logged_filter_data;    
                 }
                 $('#dataTable').data('handsontable').loadData(res.data);
             }
         });
+    },
+    getFilterData:function(){
+        var filter_obj = {
+            'custom_filter': {},
+            'global_filter': {},
+        }
+        
+        var contact_datefilter =  $('#contact-datefilter').val();
+        if(contact_datefilter != ''){
+            filter_obj['global_filter'] = {
+                'start_date': contact_datefilter.split(" - ")[0],
+                'end_date'  : contact_datefilter.split(" - ")[1]
+            }
+        }
+
+        $.each($('.filter-table tbody tr'),function(key,val){
+            if(!$(val).hasClass('hide')){
+                var column_type     =   $(val).find('.filter-column option:selected').attr('data-type');
+                var filter_value    =   (column_type == 'dropdown')?$(val).find('select.filter_value').val():$(val).find('input.filter_value').val();
+                
+                if(filter_value != '' && filter_value != null){
+                    filter_obj['custom_filter'][key] = {
+                        'filter_column' : $(val).find('.filter-column option:selected').attr('data-dbcolumn-name'),
+                        'filter_type'   : $(val).find('.filter-type').val(),
+                        'filter_value'  : filter_value,
+                        'table_name'    : $(val).find('.filter-column option:selected').attr('data-table-name'),
+                        'column_type'   : column_type
+                    }
+                }
+            }
+        });
+
+        return filter_obj;
     },
     addInput:function(col, TH){
         if (typeof col !== 'number') {
@@ -703,8 +865,78 @@ var contact_form = {
         input.addEventListener('keydown', event => {
             debounceFn(colIndex, event);
         });
-    }
+    },
+    setFilterDataOnForm:function(filter_data = ''){
+        if(filter_data != ''){
+            $.each(filter_data,function(key,val){
+                var tr_object = $('.filter-table tr[data-row="'+key+'"]');
+                
+                if(val['column_type'] == 'dropdown'){
+                    tr_object.find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
 
+                    var select_option = '';
+                    $.each(column_pre_data[val['filter_column']],function(ckey,cval){
+                        var selected = "";
+                        if($.inArray(cval,val['filter_value'])  !== -1){
+                            selected = "selected";
+                        }
+
+                        select_option += '<option value="'+cval+'" '+selected+'>'+cval+'</option>';
+                    });
+
+                    tr_object.find('select.filter_value').removeClass('hide').html(select_option);
+                    tr_object.find('select.filter_value').chosen("destroy").chosen();
+                    tr_object.find('input.filter_value').addClass('hide');
+                }else if(val['column_type'] == 'text' || val['column_type'] == 'time'){
+                    tr_object.find('input.filter_value').val(val['filter_value']);
+                    tr_object.find('input.filter_value').removeClass('hide');
+                    tr_object.find('select.filter_value').addClass('hide');
+                    tr_object.find('select.filter_value').chosen("destroy");
+                }else if(val['column_type'] == 'date'){
+                    tr_object.find('input.filter_value').daterangepicker({
+                        opens           : 'left',
+                        showDropdowns   : true,
+                        linkedCalendars : false,
+                        locale: {
+                            format: 'DD-MM-YYYY',
+                        },
+                        ranges: {
+                            'Today': [moment(), moment()],
+                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                            'This Month': [moment().startOf('month'), moment().endOf('month')],
+                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                        }
+                    });
+                    
+                    tr_object.find('input.filter_value').val(val['filter_value']);
+                    tr_object.find('input.filter_value').removeClass('hide');
+                    tr_object.find('select.filter_value').addClass('hide');
+                    tr_object.find('select.filter_value').chosen("destroy");
+                }
+            });
+        }
+    },
+    checkValidation:function(col_data = ''){
+        var return_flag = false;
+        switch(col_data[1]){
+            case "vLinkedURL":
+                if( /(ftp|http|https):\/\/?(?:www\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(col_data[3]) ) {
+                    return true;
+                }
+                break;
+            case "vEmail":
+                if (/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/.test(col_data[3])) {
+                    return true;
+                }
+                break;
+            default:
+                return_flag = true;
+                break;
+        }
+        return return_flag;
+    }
 }
 
 const debounceFn = Handsontable.helper.debounce((colIndex, event) => {
@@ -748,10 +980,9 @@ function drawCheckboxInRowHeaders(row, TH) {
     if (row >= 0 && this.getDataAtRowProp(row, '0')) {
         input.checked = true;
     }
-
-    Handsontable.dom.empty(TH);
-
-    TH.appendChild(input);
+    // Handsontable.dom.empty(TH);
+    TH.getElementsByClassName("rowHeader")[0].appendChild(input);
+    // TH.appendChild(input);
 }
 
 $(document).ready(function(){

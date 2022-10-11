@@ -1,5 +1,3 @@
-
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" > -->
 <link rel="stylesheet" href="{{ asset('font/fonts.css') }}" type="text/css">
 <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}" type="text/css" >
 <div class="content">

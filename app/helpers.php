@@ -30,9 +30,20 @@ if (! function_exists('getUserData')) {
 
         $query_response = [];
         if(!empty($query_obj_data)){
-            $query_response = json_decode(json_encode($query_obj_data), true);
+            $query_response = json_decode(json_encode($query_obj_data[0]), true);
         }
         
         return $query_response;
+    }
+}
+
+
+if(! function_exists('pr')){
+    function pr($data = [],$exist_flag = false){
+        echo "<pre>";
+        print_r($data);
+        if($exist_flag){
+            exit;
+        }
     }
 }

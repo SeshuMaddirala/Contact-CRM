@@ -22,9 +22,23 @@ class Contact extends BaseController
         $hidden_column_id   = array_keys(array_column($default_column, 'hide_column'), 'true');
         
         $column_source_data = [];
-        foreach($default_column as $d_val){
+        foreach($default_column as $d_key => $d_val){
             if(!empty($d_val['source_data'])){
                 $column_source_data[$d_val['db_name']] = $d_val['source_data'];
+            }
+
+            if($d_val['db_name'] == 'vAlertsTo'){//Quick Fix for now
+                $query_obj_data = DB::table('user')
+                ->selectRaw("vEmail")
+                ->orderBy('iUserId','DESC')
+                ->get();
+                    
+                $query_response = [];
+                if(!empty($query_obj_data)){
+                    $query_response = json_decode(json_encode($query_obj_data), true);
+                    $query_response = !empty($query_response)?array_column($query_response,'vEmail'):[];
+                }
+                $default_column[$d_key]['source_data'] = !empty($query_response)?$query_response:[];
             }
         }
 
@@ -33,18 +47,21 @@ class Contact extends BaseController
     }
 
     public function get(Request $request){
-        $request_data               = $request->all();
-        $start_date                 = str_replace('/', '-', $request_data['start_date']);
-        $end_date                   = str_replace('/', '-', $request_data['end_date']);
-        $request_data['extra_data'] = isset($request_data['extra_data'])?$request_data['extra_data']:[];
+        $request_data   = $request->all();
+        $custom_filter  = isset($request_data['custom_filter'])?$request_data['custom_filter']:[];
+        $global_filter  = isset($request_data['global_filter'])?$request_data['global_filter']:[];
 
         $where_cond     = '1=1';
-        if($request_data['start_date'] != '' && $request_data['end_date'] != ''){
+        
+        if(!empty($global_filter) && (isset($global_filter['start_date']) && $global_filter['start_date'] != '') && (isset($global_filter['start_date']) && $global_filter['end_date'] != '')){
+            $start_date = str_replace('/', '-', $global_filter['start_date']);
+            $end_date   = str_replace('/', '-', $global_filter['end_date']);
+
             $where_cond = " DATE_FORMAT(c.dtAddedDate,'%Y-%m-%d') BETWEEN '".date('Y-m-d',strtotime($start_date))."' AND '".date('Y-m-d',strtotime($end_date))."'";
         }
 
-        if(!empty($request_data['extra_data'])){
-            foreach($request_data['extra_data'] as $extra_val){
+        if(!empty($custom_filter)){
+            foreach($custom_filter as $extra_val){
                 $table_alias        = ($extra_val['table_name'] == 'contact_interaction')?"ci":"c";
                 $temp_where_cond    = '';
 
@@ -104,7 +121,7 @@ class Contact extends BaseController
             }
         }
 
-        $select_columns = ['c.iContactsId','ci.iContactInteractionId','c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y")as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime','c.vHometownState'];
+        $select_columns = ['c.iContactsId','ci.iContactInteractionId','c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y")as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime','c.vHometownState','c.vAlertsTo'];
 
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
@@ -121,18 +138,17 @@ class Contact extends BaseController
         }, $query_obj_data->toArray());
 
         $output = array(
-            'data'  =>	$query_response
+            'data'              => $query_response,
+            'logged_filter_data'=> []
         );
 
         /**
          * Log filter data
          */
-        if(isset($request_data['call_from']) && (in_array($request_data['call_from'],['clear_filter','filter']))){
-            $this->logFilterData($request_data['extra_data'],$request_data['call_from']);
-        
+        if(!in_array($request_data['call_from'],['onload'])){
+            $this->logFilterData($request_data);
             $output['logged_filter_data'] = $this->getFilterLogData();
         }
-        
 
         echo json_encode($output);exit;
     }
@@ -152,7 +168,8 @@ class Contact extends BaseController
         $ci_id          = $request_data[0][9];
         $column_title   = $request_data[0][10];
         $contact_name   = $request_data[0][11];
-        
+        $alerts_to      = $request_data[0][12];
+    
         if($data_type == 'date'){
             if(isset($new_value) && $new_value != ''){
                 $new_value = date('Y-m-d', strtotime(str_replace('/', '-', $new_value)));
@@ -160,6 +177,18 @@ class Contact extends BaseController
         }else if($data_type == 'time'){
             if(isset($new_value) && $new_value != ''){
                 $new_value = date('H:i:s',strtotime($new_value));
+            }
+        }
+
+        if($db_name == 'vLinkedURL'){
+            $contact_query_obj = DB::table('contacts')->where('vLinkedURL',$new_value)->get();
+            
+            $contact_data_exist = array_map(function($item) {
+                return (array)$item; 
+            }, $contact_query_obj->toArray());
+
+            if(!empty($contact_data_exist)){
+                echo json_encode(['success' => 0,'message'=> 'LinkedIn data is already existed in the system.']);exit;
             }
         }
 
@@ -223,7 +252,9 @@ class Contact extends BaseController
                         'contacts_url'  => $linked_url,
                         'contacts_name' => $contact_name,
                         'column_data'   => $new_value,
+                        'attendees'     => explode(',',$alerts_to)
                     ];
+
                     $this->setColumnBasedReminder($request,$required_data);
                 }
 
@@ -496,8 +527,13 @@ class Contact extends BaseController
     }
 
     public function export_data(Request $request){
+        $unselected_column = $request->all()['unselected_column'];
 
-        $select_columns = ['c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y") as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime','c.vHometownState'];
+        if(isset($unselected_column) && $unselected_column != ''){
+            $unselected_column  = explode(',',base64_decode($unselected_column)); 
+        }
+
+        $select_columns = ['c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y") as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime','c.vHometownState','c.vAlertsTo'];
 
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
@@ -515,14 +551,19 @@ class Contact extends BaseController
         $default_columns    = $this->defaultColumns();
         $hidden_column_id   = array_keys(array_column($default_columns, 'hide_column'), 'true');
         
-        $hidden_columns_title = $hidden_columns_db_name = []; 
+        $hidden_columns_title = []; 
         foreach($hidden_column_id as $hc_val){
-            $hidden_columns_title[]     = $default_columns[$hc_val]['title'];
-            $hidden_columns_db_name[]   = $default_columns[$hc_val]['db_name'];    
+            $unselected_column[]   = $default_columns[$hc_val]['db_name'];    
         }
+        
+        $column_titles = $column_data_key = [];
 
-        $column_titles      = array_diff(array_column($default_columns,'title'),$hidden_columns_title);
-        $column_data_key    = array_column($default_columns,'db_name');
+        foreach($default_columns as $dc_val){
+            if(!in_array($dc_val['db_name'],$unselected_column)){
+                $column_titles[]      = $dc_val['title'];
+                $column_data_key[]    = $dc_val['db_name'];
+            }
+        }
 
         $filename           = storage_path()."/contact_list.csv";
         $output             = fopen($filename, 'w+');
@@ -532,9 +573,9 @@ class Contact extends BaseController
         foreach ($query_response as $line) {
             $temp_arr = [];
             foreach($column_data_key as $val){
-                if(!in_array($val,$hidden_columns_db_name)){                    
+                // if(!in_array($val,$hidden_columns_db_name)){                    
                     $temp_arr[] = !empty($line[$val])?$line[$val]:'N/A';
-                }
+                //}
             }
             
             if(!empty($temp_arr) && count($temp_arr) > 0){
@@ -555,10 +596,12 @@ class Contact extends BaseController
         }
 
         $required_data = [
-            'notes' => "Linked CRM Personal Reminder",
-            'remainder_date_time' => $input_params['column_data'],
-            'contacts_url' => $input_params['contacts_url'],
-            'contacts_name' => $input_params['contacts_name'],
+            'notes'                 => "Linked CRM Personal Reminder",
+            'remainder_date_time'   => $input_params['column_data'],
+            'contacts_url'          => $input_params['contacts_url'],
+            'contacts'              => $input_params['contacts_url'],
+            'contacts_name'         => $input_params['contacts_name'],
+            'attendees'             => $input_params['attendees']
         ];
         
         $this->set_remainder($request,$required_data);
@@ -566,8 +609,18 @@ class Contact extends BaseController
     }
 
     public function defaultColumns($column_enum = ''){
+        $column_json = Storage::disk('public')->get('contact_column.json');
+        if(empty($column_json)){
+            $column_json = [];
+        }else{
+            $column_json = json_decode($column_json,true);
+        }
 
-        return json_decode(Storage::disk('public')->get('contact_column.json'),true);
+        usort($column_json, function($a, $b) {
+            return $a['sequence'] <=> $b['sequence'];
+        });
+
+        return $column_json;
 
         return [
             [
@@ -945,13 +998,15 @@ class Contact extends BaseController
         ];
     }
 
-    public function logFilterData($input_params = [],$action_for = ''){
-        
-        $update_data = [];
-        foreach($input_params as $value){
-            unset($value['table_name']);
-            $update_data[] = $value;
+    public function logFilterData($input_params = []){
+        if(empty($input_params['global_filter']) && empty($input_params['custom_filter'])){
+            return true;
         }
+
+        $update_data = [
+            'custom_filter' => (!empty($input_params['custom_filter']))?$input_params['custom_filter']:[],
+            'global_filter' => (!empty($input_params['global_filter']))?$input_params['global_filter']:[],
+        ];
 
         if(isset(loggedUserData()['user_id']) && loggedUserData()['user_id'] != ''){
             DB::table('user')
@@ -968,8 +1023,8 @@ class Contact extends BaseController
     public function getFilterLogData(){
         $user_data  = getUserData(loggedUserData()['user_id']);
         $log_data   = [];
-        if(!empty($user_data)){
-            $log_data = json_decode($user_data[0]['tConfiguration'],true);
+        if(!empty($user_data['tConfiguration'])){
+            $log_data = json_decode($user_data['tConfiguration'],true);
         }
         return $log_data;
     }

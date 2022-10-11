@@ -49,11 +49,14 @@
                     <a href="reminder?type=all" class="dropdown-item dropdown-footer">See All Reminders</a>
                 </div>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown profile-div">
                 <a class="nav-link user-profile" data-toggle="dropdown" href="#">
                     <span> {{loggedUserData()['name']}} </span>
                     <i class="fa fa-user-circle"></i>
                 </a>
+                <div class="dropdown-menu">
+                    <a href="logout" class="dropdown-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                </div>
             </li>
         </ul>
     </div>
