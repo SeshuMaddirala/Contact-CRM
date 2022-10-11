@@ -16,8 +16,8 @@
             
             <form name="remainder_form" id="remainder_form" method="post" enctype="multipart/form-data" autocomplete="off" >
                 <table class="table table-striped filter-table">
-                    @if(!empty($filter_data))
-                        @foreach($filter_data as $fd_key => $fd_val)
+                    @if(!empty($filter_data['custom_filter']))
+                        @foreach($filter_data['custom_filter'] as $fd_key => $fd_val)
                             <tr data-row="{{$fd_key}}">
                                 <td style="width: 30%">
                                     <div class="form-group">
@@ -126,4 +126,5 @@
 
 <script>
     var logged_filter_data = @json($filter_data);
+    contact_form.setFilterDataOnForm(logged_filter_data['custom_filter']);
 </script>

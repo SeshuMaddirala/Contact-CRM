@@ -15,7 +15,7 @@ class settings extends Controller
     public function add_update_column(Request $request){
         $request_data   = $request->all();
         $column_data    = [];
-        foreach($request_data['column_data'] as $val){
+        foreach($request_data['column_data'] as $key => $val){
             $db_table = 'contacts';
             if(in_array($val['db_alias_name'],['vConnectionStatus','vMessageStatus','tMessage','dMessageTime','dMessageDate','vMessageBy'])){
                 $db_table = 'contact_interaction';
@@ -28,8 +28,8 @@ class settings extends Controller
                 // 'data'          => 'contact_name',
                 'db_name'       => $val['db_alias_name'],
                 'db_table'      => $db_table,
-                'source_data'   => ($val['data_source'] != '')?array_map('trim',explode(',',$val['data_source'])):'',
-                'sequence'      => ($val['sequence'] != '')?$val['sequence']:'',
+                'source_data'   => ($val['data_source'] != '')?array_map('trim',explode(',',$val['data_source'])):[],
+                'sequence'      => ($val['sequence'] != '')?$val['sequence']:($key+1),
                 'hide_column'   => $val['hide_column'],
                 'validate'      => $val['validate'],
             ];

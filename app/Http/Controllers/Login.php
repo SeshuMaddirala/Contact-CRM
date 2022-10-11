@@ -19,7 +19,7 @@ class Login extends BaseController
     }
 
     public function login_sso_action(Request $request) {
-
+       
         if(isset($_REQUEST['state'])){
             $request        = $_REQUEST;
             $expectedState  = session('oauthState');
@@ -42,7 +42,6 @@ class Login extends BaseController
                     $accessToken = $oauthClient->getAccessToken('authorization_code', [
                         'code' => $authCode
                     ]);
-                    //echo "ksdjfkc".$accessToken; exit;
                     
                     $graph = new Graph();
                     $graph->setAccessToken($accessToken->getToken());
@@ -164,5 +163,11 @@ class Login extends BaseController
             $query_response = json_decode(json_encode($query_obj_data), true);
         }
         echo json_encode($query_response);exit;
+    }
+
+    public function logout(Request $request){
+        
+        $request->session()->flush();
+        return redirect(config("constants.MICROSOFT_GRAPH_URL_LOGOUT").'?post_logout_redirect_uri='.config("constants.MICROSOFT_GRAPH_REDIRECT_URI"));
     }
 }

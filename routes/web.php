@@ -35,6 +35,8 @@ Route::get('get_user',[Login::class, 'get_user'])->name('get_user');
 
 Route::get('attempt_login',[Login::class, 'attempt_login'])->middleware('auth');
 
+Route::get('logout',[Login::class, 'logout'])->name('logout')->middleware('auth');
+
 Route::get('index',[Dashboard::class, 'index'])->name('index')->middleware('auth');
 
 Route::get('contact',[Contact::class, 'index'])->name('contact')->middleware('auth');

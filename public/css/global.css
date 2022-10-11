@@ -644,7 +644,7 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .icon-a:hover{
-    background-color: white;
+    background-color: white !important;
 }
 .app-icon{
     margin: 0;
@@ -831,6 +831,7 @@ button.btn-modal{
 
 .main-checkbox-input, .checkbox-input{
     cursor: pointer;
+    margin-left: 5px !important;
 }
 
 #remainder_form .error {
@@ -981,4 +982,39 @@ table.htCore tbody tr td.listbox:hover {
 
 .column-list-div .form-control{
     color: #000;
+}
+
+.chosen-container{
+    min-width: 200px !important;
+}
+
+.nav-item.open .nav-link{
+    background-color: #2b4068 !important;
+} 
+
+.profile-div .dropdown-menu{
+    margin-top: 15px !important;
+    min-width: 148px;
+}
+
+.profile-div .dropdown-item{
+    font-size: 14px;
+}
+
+.profile-div .dropdown-menu a{
+    text-decoration: none;
+}
+
+.export-contact-modal{
+    height: 50%;
+    overflow: auto;
+}
+
+.export-contact-modal .toggle.btn {
+    min-width: 100px !important;
+    min-height: 34px !important;
+}
+
+.export-contact-modal{
+    padding: 8px;
 }
