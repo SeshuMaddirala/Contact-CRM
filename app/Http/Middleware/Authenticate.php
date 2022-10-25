@@ -44,7 +44,8 @@ class Authenticate extends Middleware
         if($request->session()->get('accessToken') != ''){
             return $next($request);
         }else{
-            return redirect()->route('login_sso_action');
+            // return redirect()->route('login_sso_action');
+            return redirect()->route('login_index');
         } 
     }
 

@@ -1,54 +1,50 @@
-<link rel="stylesheet" href="{{ asset('font/fonts.css') }}" type="text/css">
-<link rel="stylesheet" href="{{ URL::asset('css/login.css') }}" type="text/css" >
-<div class="content">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <img src="{{ asset('image/login_bg.svg') }} " alt="Image" class="img-fluid" >
-      </div>
-      <div class="col-md-6 contents">
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="mb-4">
-              <h3>Sign In</h3>
-              <!-- <p class="mb-4">Lorem ipsum dolor sit amet elit. Sapiente sit aut eos consectetur adipisicing.</p> -->
-            </div>
-            <form action="#" method="post">
-              <div class="form-group first">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username">
-              </div>
-              <div class="form-group last mb-4">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password">
-              </div>
-              <div class="d-flex mb-5 align-items-center">
-                <label class="control control--checkbox mb-0">
-                  <span class="caption">Remember me</span>
-                  <input type="checkbox" checked="">
-                  <div class="control__indicator"></div>
-                </label>
-                <span class="ml-auto">
-                  <a href="#" class="forgot-pass">Forgot Password</a>
-                </span>
-              </div>
-              <input type="submit" value="Log In" class="btn btn-block btn-primary">
-              <span class="d-block text-left my-4 text-muted">— or login with —</span>
-              <div class="social-login">
-                <a href="#" class="facebook">
-                  <span class="icon-facebook mr-3"></span>
-                </a>
-                <a href="#" class="twitter">
-                  <span class="icon-twitter mr-3"></span>
-                </a>
-                <a href="#" class="google">
-                  <span class="icon-google mr-3"></span>
-                </a>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="{{ asset('image/application-icon.png') }}" type="image/x-icon" />
+    <link rel="shortcut icon" href="{{ asset('image/application-icon.png') }}" type="image/x-icon" />
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ URL::asset('css/login.css') }}" type="text/css" >
+</head>
+<body>  
+    <div id="background-branding-container">
+        <img id="login-background-image" src="{{ asset('image/bg-image.jpg') }}" style="width: 1136px; height: 710px;">
     </div>
-  </div>
-</div>
+    <div id="background-branding-overlay" class="overlay ie_legacy" style="visibility: visible; background-color: rgb(0, 114, 198); display: none;"></div>
+
+    <div id="login-container" class="login-container" style="display: block;">
+        <table class="login-container-layout">
+            <tbody>
+                <tr>
+                    <td id="login-container-center" style="height: 425px;">
+                        <div class="login-form-container">
+                            <div class="credentials-container">
+                                <div class="org-logo-container">
+                                    <img class="logo" src="{{ asset('image/techigai-logo.png') }}">
+                                </div>
+                                <div class="spacer"></div>
+                                <h4 class="login-heading">Login</h4>
+                                <p>Please use following login modes to access application</p>
+                                <div class="form-group">
+                                    <div class="form-horizontal inline-block external-login-button-container">
+                                        <a href="login_sso_action" class="btn btn-danger btn-login">Login with Office 365</a>
+                                        <a href="login_google_sso_action" class="btn btn-danger btn-login btn-keka-login">Login with Google Account</a>
+                                    </div>
+                                </div>
+                                <div class="clear-side-padding top-margin login-instructions"><p></p></div>
+                                <div class="footer-keka-inc">
+                                    <span>@ 2022 Dash CRM </span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

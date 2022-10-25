@@ -12,7 +12,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "league/oauth2-client": "^2.6",
-        "microsoft/microsoft-graph": "^1.73"
+        "microsoft/microsoft-graph": "^1.73",
+        "google/apiclient":"^2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
