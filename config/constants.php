@@ -29,7 +29,7 @@ if(env('APP_ENV') == 'local'){
     $constant_arr['LOGIN_REDIRECT_URL']             = 'http://localhost:8000';
     $constant_arr['PROFILE_REDIRECT_URL']           = 'http://localhost:8000/index';
     $constant_arr['GOOGLE_REDIRECT_URI']            = 'http://localhost:8000/login_google_sso_action';
-}else if(env('APP_ENV') == 'ccrm.techigai.ga'){
+}else if(env('APP_ENV') == 'production'){
     $constant_arr['MICROSOFT_GRAPH_REDIRECT_URI']   = 'https://ccrm.techigai.ga/login_sso_action';
     $constant_arr['LOGIN_REDIRECT_URL']             = 'http://ccrm.techigai.ga';
     $constant_arr['PROFILE_REDIRECT_URL']           = 'http://ccrm.techigai.ga/index';

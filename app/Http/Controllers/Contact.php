@@ -124,13 +124,17 @@ class Contact extends BaseController
 
         $select_columns = ['c.iContactsId','ci.iContactInteractionId','c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y")as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime','c.vHometownState','c.vAlertsTo'];
 
+        if(loggedUserData()['is_admin'] != 'Yes'){
+            $where_cond .= " AND c.iAddedById = '".loggedUserData()['user_id']."'"; 
+        }
+
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
                 $join->on('ci.vLinkedURL', '=', 'c.vLinkedURL');
                 $join->orOn('ci.iContactId', '=','c.iContactsId');
             })
             ->whereRaw($where_cond)
-            ->where('c.iAddedById',loggedUserData()['user_id'])
+            // ->where('c.iAddedById',loggedUserData()['user_id'])
             ->orderBy('c.iContactsId', 'ASC')
             ->get(DB::raw(implode(',',$select_columns)));
 
