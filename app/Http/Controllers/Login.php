@@ -7,36 +7,40 @@ use Illuminate\Http\Request;
 use TokenCache;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
+use Google;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Http;
 
 include_once('TokenCache.php');
 
 class Login extends BaseController
 {
     public function index(){
-        return view('pages.login');        
+        if(!empty(session()->get('login_through'))){
+            if(session()->get('login_through') == 'google'){
+                return redirect()->route('login_google_sso_action');
+            }else{
+                return redirect()->route('login_sso_action');
+            }
+        }else{
+            return view('pages.login');
+        }        
     }
-
+     
+    /**
+     * Outlook SSO Login
+     */
     public function login_sso_action(Request $request) {
-       
+        
+        // Initialize the OAuth client 
+        $oauthClient = $this->getOutlookClient();
+
         if(isset($_REQUEST['state'])){
-            $request        = $_REQUEST;
-            $expectedState  = session('oauthState');
-            $providedState  = $request['state'];
-            $authCode       = $request['code'];
+            $request    = $_REQUEST;
+            $authCode   = $request['code'];
+
             if (isset($authCode)) {
-                // Initialize the OAuth client 
-                $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-                    'clientId'                => config("constants.MICROSOFT_GRAPH_CLIENT_ID"),
-                    'clientSecret'            => config("constants.MICROSOFT_GRAPH_CLIENT_SECRET"),
-                    'redirectUri'             => config("constants.MICROSOFT_GRAPH_REDIRECT_URI"),
-                    'urlAuthorize'            => config("constants.MICROSOFT_GRAPH_URL_AUTHORIZE"),
-                    'urlAccessToken'          => config("constants.MICROSOFT_GRAPH_URL_ACCESS_TOKENS"),
-                    'urlResourceOwnerDetails' => config("constants.MICROSOFT_GRAPH_URL_RESOURCEOWNERDETAILS"),
-                    'scopes'                  => config("constants.MICROSOFT_GRAPH_SCOPES")
-                ]);
- 
                 try {
                     // Make the token request
                     $accessToken = $oauthClient->getAccessToken('authorization_code', [
@@ -55,7 +59,8 @@ class Login extends BaseController
                  
                     session([
                         'loginUserName' => $user->getDisplayName(),
-                        'loginUserMail' => $user->getMail()
+                        'loginUserMail' => $user->getMail(),
+                        'login_through' => 'outlook'
                     ]);
                     return redirect(config("constants.LOGIN_REDIRECT_URL").'/attempt_login');
                 }
@@ -63,26 +68,78 @@ class Login extends BaseController
                     return redirect(config("constants.LOGIN_REDIRECT_URL"));
                 }
             }
-        }else
-        {
-            // Initialize the OAuth client
-            $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
-                'clientId'                => config("constants.MICROSOFT_GRAPH_CLIENT_ID"),
-                'clientSecret'            => config("constants.MICROSOFT_GRAPH_CLIENT_SECRET"),
-                'redirectUri'             => config("constants.MICROSOFT_GRAPH_REDIRECT_URI"),
-                'urlAuthorize'            => config("constants.MICROSOFT_GRAPH_URL_AUTHORIZE"),
-                'urlAccessToken'          => config("constants.MICROSOFT_GRAPH_URL_ACCESS_TOKENS"),
-                'urlResourceOwnerDetails' => config("constants.MICROSOFT_GRAPH_URL_RESOURCEOWNERDETAILS"),
-                'scopes'                  => config("constants.MICROSOFT_GRAPH_SCOPES")
-            ]);
-
-            $authUrl = $oauthClient->getAuthorizationUrl();           
-            session([
-                'oauthState' => $oauthClient->getState()
-            ]);
-
+        }else{
+            $authUrl = $oauthClient->getAuthorizationUrl();  
             return redirect($authUrl);
         }
+    }
+
+    public function getOutlookClient(){
+        $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+            'clientId'                => config("constants.MICROSOFT_GRAPH_CLIENT_ID"),
+            'clientSecret'            => config("constants.MICROSOFT_GRAPH_CLIENT_SECRET"),
+            'redirectUri'             => config("constants.MICROSOFT_GRAPH_REDIRECT_URI"),
+            'urlAuthorize'            => config("constants.MICROSOFT_GRAPH_URL_AUTHORIZE"),
+            'urlAccessToken'          => config("constants.MICROSOFT_GRAPH_URL_ACCESS_TOKENS"),
+            'urlResourceOwnerDetails' => config("constants.MICROSOFT_GRAPH_URL_RESOURCEOWNERDETAILS"),
+            'scopes'                  => config("constants.MICROSOFT_GRAPH_SCOPES")
+        ]);
+
+        return $oauthClient;
+    }
+    
+    /**
+     * Google SSO Login
+     */
+
+    public function login_google_sso_action(Request $request) {
+        $client = $this->getGoogleClient();
+
+        if (isset($_GET['code'])){
+            try {
+                // Make the token request
+                $token_data = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+
+                $client->setAccessToken($token_data);
+                
+                $google_service = new \Google\Service\Oauth2($client);
+                $user_info      = $google_service->userinfo->get();
+
+                $user_timezone      = Http::get("https://www.googleapis.com/calendar/v3/users/me/settings/timezone?access_token=".$token_data['access_token']);
+                
+                $user_timezone_body = !empty($user_timezone->getBody())?json_decode($user_timezone->getBody(), true):'';
+                
+                $timezone_val       = '';
+                if(!empty($user_timezone_body)){
+                    $timezone_val = $user_timezone_body['value']; 
+                }
+                $token_data['timezone'] = $timezone_val;
+
+                $tokenCache = new TokenCache();
+                $tokenCache->storeTokens($token_data, $user_info,'google');
+                
+                session([
+                    'loginUserName' => $user_info->name,
+                    'loginUserMail' => $user_info->email,
+                    'login_through' => 'google',
+                    'token_data'    => $token_data
+                ]);
+                return redirect(config("constants.LOGIN_REDIRECT_URL").'/attempt_login');
+            }catch (\Google_AuthException $e) {
+                return redirect(config("constants.LOGIN_REDIRECT_URL"));
+            }
+        } else {
+            $authUrl = $client->createAuthUrl();
+            return redirect($authUrl);
+        }
+    }
+
+    public function getGoogleClient(){
+        $client = new Google\Client(config("constants.google"));
+        if(!empty(session()->get('token_data'))){
+            $client->setAccessToken(session()->get('token_data'));
+        }
+        return $client;
     }
 
     /**
@@ -166,8 +223,15 @@ class Login extends BaseController
     }
 
     public function logout(Request $request){
-        
+        $access_token   = $request->session()->get('accessToken');
+        $login_through  = $request->session()->get('login_through');
         $request->session()->flush();
-        return redirect(config("constants.MICROSOFT_GRAPH_URL_LOGOUT").'?post_logout_redirect_uri='.config("constants.MICROSOFT_GRAPH_REDIRECT_URI"));
+
+        if($login_through == 'google'){
+            Http::get(config("constants.GOOGLE_GRAPH_URL_LOGOUT").$access_token);
+        }else{
+            Http::get(config("constants.MICROSOFT_GRAPH_URL_LOGOUT").'?post_logout_redirect_uri='.config("constants.MICROSOFT_GRAPH_REDIRECT_URI"));
+        }
+        return redirect()->route('login_index');
     }
 }

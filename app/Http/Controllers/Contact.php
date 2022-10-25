@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\View;
 use TokenCache;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
-use phpDocumentor\Reflection\Types\Null_;
+use Google;
+// use phpDocumentor\Reflection\Types\Null_;
 use Illuminate\Support\Facades\Storage;
 
 include_once('TokenCache.php');
@@ -368,8 +369,11 @@ class Contact extends BaseController
         $notes          = $request_data['notes'];
         $request_data['remainder_date_time'] = date("Y-m-d H:i:s",strtotime(str_replace('/', '-',$request_data['remainder_date_time'])));
         
-        $reminder_response = $this->createRemainder($request_data);
-        
+        if(session()->get('login_through') == 'google'){
+            $reminder_response = $this->createGoogleReminder($request_data);
+        }else{
+            $reminder_response = $this->createRemainder($request_data);
+        }
         if(!empty($reminder_response)){
             DB::table('set_reminder')->insert([
                 'dtRemainderDateTime'   => $request_data['remainder_date_time'],
@@ -382,7 +386,8 @@ class Contact extends BaseController
                 'vOutlookId'            => $reminder_response['outlook_id'],
                 'tSubject'              => $reminder_response['subject'],
                 'iAddedById'            => loggedUserData()['user_id'],
-                'iUpdatedById'          => loggedUserData()['user_id']
+                'iUpdatedById'          => loggedUserData()['user_id'],
+                'eProvider'             => (session()->get('login_through') == 'google')?'Google':'Outlook'
             ]);
         }
         echo json_encode(['success'=>1]);exit;
@@ -467,6 +472,82 @@ class Contact extends BaseController
         $graph->setAccessToken($accessToken);
         return $graph;
     }
+    
+    public function createGoogleReminder($input_params = []){      
+        
+        $remainder_date_time = date('Y-m-d', strtotime($input_params['remainder_date_time'])).'T'.date('H:i:s', strtotime($input_params['remainder_date_time'])).'.0000000'; 
+        $reminder_summary    = "Linked CRM Personal Reminder"; 
+        if($input_params['contacts_name'] != ''){
+            $reminder_summary= "Linked CRM Personal Reminder for ". $input_params['contacts_name'];
+        }
+
+        $event_data = [ 
+            'summary'       => $reminder_summary,
+            'location'      => 'Personal Reminder',
+            'description'   => $input_params['notes'],
+            'start'         => array(
+                'dateTime' => $remainder_date_time,
+                'timeZone' => session()->get('userTimeZone'),
+            ),
+            'end' => array(
+                'dateTime' => $remainder_date_time,
+                'timeZone' => session()->get('userTimeZone'),
+            ),
+            // 'recurrence' => array(
+            //   'RRULE:FREQ=DAILY;COUNT=2'
+            // ),
+            'reminders' => array(
+                'useDefault' => FALSE,
+                'overrides' => array(
+                    array('method' => 'email', 'minutes' => 15),
+                    array('method' => 'popup', 'minutes' => 15),
+              ),
+            ),
+        ];
+
+        if(!empty($input_params['attendees'])){
+            foreach($input_params['attendees'] as $val){
+                if(!isset($val) || $val == ''){
+                    continue;
+                }
+
+                $event_data['attendees'][] = [
+                    "email"         => $val,    
+                    "displayName"   => $val,
+                    "optional"      => true
+                ];
+            }
+        }
+        
+        // Get the access token from the cache
+        $tokenCache     = new TokenCache();
+        $accessToken    = $tokenCache->getAccessToken();
+
+        // Get the API client and construct the service object.
+        $client         = new Google\Client(config("constants.google"));
+        if(!empty($accessToken)){
+            $client->setAccessToken($accessToken);
+        }
+        
+        $service        = new \Google\Service\Calendar($client);
+        $event          = new Google\Service\Calendar\Event($event_data);
+        $event_response = $service->events->insert('primary', $event);
+        
+        $attendees_arr  = $event_response->getAttendees();
+        $attendees_email= [];
+        if(!empty($attendees_arr)){            
+            $attendees_email = array_map(function($ae) {
+                return is_object($ae) ? $ae->email : $ae['email'];
+            }, $attendees_arr);
+        }
+
+        return [
+            'cal_uid'           => $event_response->getiCalUId(),
+            'outlook_id'        => $event_response->getId(),
+            'subject'           => $reminder_summary,
+            'attendees_email'   => $attendees_email
+        ];
+    }
 
     public function fetch_reminder_count(){
         
@@ -496,6 +577,7 @@ class Contact extends BaseController
         // ->where(DB::raw("DATE_FORMAT(dtRemainderDateTime,'%Y-%m-%d %H:%i')"), '>=',date('Y-m-d H:i'))
         ->where('iAddedById',loggedUserData()['user_id'])
         // ->limit(10)
+        ->orderBy('dtRemainderDateTime', 'DESC')
         ->get();
         
         $query_response = json_decode(json_encode($query_obj_data), true);
@@ -999,9 +1081,9 @@ class Contact extends BaseController
     }
 
     public function logFilterData($input_params = []){
-        if(empty($input_params['global_filter']) && empty($input_params['custom_filter'])){
-            return true;
-        }
+        // if(empty($input_params['global_filter']) && empty($input_params['custom_filter'])){
+        //     return true;
+        // }
 
         $update_data = [
             'custom_filter' => (!empty($input_params['custom_filter']))?$input_params['custom_filter']:[],

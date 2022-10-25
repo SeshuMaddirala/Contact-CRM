@@ -50,7 +50,7 @@
                      <input type="hidden" class="form-control" id="contacts_name">
                   </div>
                   <div class="form-group">
-                     <label for="attendees" class="col-form-label">Attendees</label><nbsp>*</nbsp>
+                     <label for="attendees" class="col-form-label">Attendees</label>
                      <select class="form-control" name="attendees" id="attendees" placeholder="Please search attendees">
                      </select>
                   </div>

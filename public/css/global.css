@@ -641,10 +641,14 @@ tbody, td, tfoot, th, thead, tr {
     border-radius: 20%;
     background-color: white;
     border: 1px solid white;
+    
+    background-color: #2b4068 !important;
+    border: 1px solid #2b4068 !important;
 }
 
 .icon-a:hover{
     background-color: white !important;
+    background-color: #2b4068 !important;
 }
 .app-icon{
     margin: 0;
@@ -1017,4 +1021,10 @@ table.htCore tbody tr td.listbox:hover {
 
 .export-contact-modal{
     padding: 8px;
+}
+
+.navbar-brand.icon-a span small{
+    vertical-align: bottom;
+    font-size: 13px;
+    font-family: cursive;
 }

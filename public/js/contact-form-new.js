@@ -135,9 +135,9 @@ var contact_form = {
             $('#remainder_form .chosen-select').chosen("destroy").chosen();                
             $('#remainder_form').validate({ 
                 rules: {
-                    attendees: {
-                        required: true,
-                    },
+                    // attendees: {
+                    //     required: true,
+                    // },
                     remainderdatetime: {
                         required: true,
                     },
@@ -147,12 +147,11 @@ var contact_form = {
                     }
                 },
                 messages: {
-                    attendees: {
-                        required: "Enter attendees",
-                    
-                    },
+                    // attendees: {
+                    //     required: "Enter attendees",
+                    // },
                     remainderdatetime: {
-                        required: "select date&time ",
+                        required: "Please select date&time ",
                         
                     },
                     messagetext: {
@@ -512,7 +511,7 @@ var contact_form = {
             columnSorting   : true,
             colWidths       : 300,
             rowHeights      : 40,
-            height          : 'auto',
+            height          : '75%',
             width           : 'auto',
             stretchH        : 'all',
             manualColumnResize: true,

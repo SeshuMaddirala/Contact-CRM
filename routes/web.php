@@ -27,9 +27,16 @@ use App\Http\Controllers\settings;
 
 // Route::get('',[Login::class, 'login'])->name('login');
 
-Route::get('',[Login::class, 'login_sso_action'])->name('login_sso_action');
+// Route::get('',[Login::class, 'login_sso_action'])->name('login_sso_action');
+Route::get('',[Login::class, 'index'])->name('login_index');
+
+Route::get('login_index',[Login::class, 'index'])->name('login_index');
+
+// Route::post('externalLogin',[Login::class, 'externalLogin'])->name('externalLogin');
 
 Route::get('login_sso_action',[Login::class, 'login_sso_action'])->name('login_sso_action');
+
+Route::get('login_google_sso_action',[Login::class, 'login_google_sso_action'])->name('login_google_sso_action');
 
 Route::get('get_user',[Login::class, 'get_user'])->name('get_user');
 
