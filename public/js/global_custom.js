@@ -9,8 +9,8 @@ function showLoader(){
 }
 
 function removeLoader(){
-    $( "#preloader" ).fadeOut(500, function() {
-        $( "#preloader" ).hide();  
+    $("#preloader").fadeOut(500, function() {
+        $("#preloader").hide();  
     });  
 }
 
@@ -49,3 +49,12 @@ function fetchReminderCount(){
         }
     });
 }
+
+$(document).ready(function(){
+    $(document).off('click','.app-logout');
+    $(document).on('click','.app-logout',function(){
+        if(confirm("Do you want to logout from the application ?")){
+            window.location.href = "logout";
+        }
+    });
+});

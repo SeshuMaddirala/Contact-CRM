@@ -730,7 +730,8 @@ tbody, td, tfoot, th, thead, tr {
 }
 
 .daterangepicker td.active, .daterangepicker td.active:hover{
-    background-color: #2b4068;
+    background-color: #2b4068 !important;
+    color: white;
 }
 
 .daterangepicker td.in-range{
@@ -1027,4 +1028,9 @@ table.htCore tbody tr td.listbox:hover {
     vertical-align: bottom;
     font-size: 13px;
     font-family: cursive;
+}
+
+
+.remainderModal .fa-bell{
+    font-size: 14px;
 }

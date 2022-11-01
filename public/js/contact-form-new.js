@@ -35,6 +35,8 @@ var contact_form = {
                 data        : save_obj,
                 async       : true,
                 success: function (data) {
+                    
+                    $('body').css('cursor','default');
                     if(data.success == 1){
                         $('option').attr('selected', false);
                         $(".chosen-select").val('').trigger("chosen:updated");
@@ -50,6 +52,9 @@ var contact_form = {
                     }else{
                         setMessage('Error occurred while creating reminder','.modal-footer',false);
                     }
+                },
+                beforeSend:function(){
+                    $('body').css('cursor','progress');
                 }
             });
         });
@@ -65,22 +70,26 @@ var contact_form = {
             $('input.checkbox-input:checked').each(function () {
                 var linked_url  = hotInstance.getDataAtCell($(this).attr('data-row'),1);
                 var contact_name= hotInstance.getDataAtCell($(this).attr('data-row'),0);
-                
-                if(linked_url == '' || linked_url == null ){
-                    return false;
-                }
-                contact_string += '<li>'+linked_url+' [ '+contact_name+' ] '+'</li>';
+
+                linked_url      = (linked_url == '' || linked_url == null)?'':linked_url;
+                contact_name    = (contact_name == '' || contact_name == null)?'':contact_name;
+
+                // if(linked_url == '' || linked_url == null ){
+                //     return false;
+                // }
+
+                contact_string += '<li>'+contact_name+' [ '+linked_url+' ] '+'</li>';
                 
                 if(tmp_linked_url == ''){
                     tmp_linked_url  = linked_url;
                 }else{
-                    tmp_linked_url  = ','+linked_url;
+                    tmp_linked_url  += ','+linked_url;
                 } 
                 
                 if(tmp_contact_name == ''){
                     tmp_contact_name  = contact_name;
                 }else{
-                    tmp_contact_name  = ','+contact_name;
+                    tmp_contact_name  += ','+contact_name;
                 } 
 
             });
@@ -129,6 +138,19 @@ var contact_form = {
                         id: params.term,
                         text: params.term
                     }
+                }
+            });
+
+            $('#remainder_date_time').daterangepicker({
+                opens           : 'left',
+                showDropdowns   : true,
+                singleDatePicker: true,   
+                timePicker      : true,  
+                minDate         : new Date(),
+                startDate       : new Date(),
+                // maxDate         : today,
+                locale: {
+                    format: 'DD/MM/YYYY hh:mm A',
                 }
             });
 
@@ -467,8 +489,8 @@ var contact_form = {
             showDropdowns   : true,
             linkedCalendars : false,
             autoUpdateInput : (start_date != '')?true:false,
-            startDate       : (start_date != '')?start_date:'',
-            endDate         : (end_date != '')?end_date:'',
+            startDate       : (start_date != '')?start_date:false,
+            endDate         : (end_date != '')?end_date:false,
             maxDate         : today,
             locale: {
                 format: 'DD-MM-YYYY',
@@ -485,20 +507,7 @@ var contact_form = {
 
         // $('#remainder_date_time').datetimepicker({
         //     format:'d/m/Y H:i:s'
-        // });            
-
-        $('#remainder_date_time').daterangepicker({
-            opens           : 'left',
-            showDropdowns   : true,
-            singleDatePicker: true,   
-            timePicker      : true,  
-            minDate         : new Date(),
-            startDate       : new Date(),
-            // maxDate         : today,
-            locale: {
-                format: 'DD/MM/YYYY hh:mm A',
-            }
-        });
+        // });           
 
         contact_form.initialize_handsontable();     
     },
@@ -754,6 +763,7 @@ var contact_form = {
                 // obj['source'].splice(0, 0, "Please select value");
                 obj['renderer']     =  customDropdownRenderer;
                 obj['editor']       = "chosen";
+                obj['visibleRows']  = 5;
                 
                 var source_data     = [];
                 $.each(val.source_data,function(source_key,source_val){
@@ -885,6 +895,7 @@ var contact_form = {
 
                     tr_object.find('select.filter_value').removeClass('hide').html(select_option);
                     tr_object.find('select.filter_value').chosen("destroy").chosen();
+                    // $('.chosen-results').off( 'DOMMouseScroll' );
                     tr_object.find('input.filter_value').addClass('hide');
                 }else if(val['column_type'] == 'text' || val['column_type'] == 'time'){
                     tr_object.find('input.filter_value').val(val['filter_value']);
@@ -918,6 +929,9 @@ var contact_form = {
         }
     },
     checkValidation:function(col_data = ''){
+        if(col_data[3] == '' || col_data[3] == null){
+            return true;
+        }
         var return_flag = false;
         switch(col_data[1]){
             case "vLinkedURL":

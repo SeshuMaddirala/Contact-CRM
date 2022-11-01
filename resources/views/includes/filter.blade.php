@@ -41,7 +41,7 @@
                                     </select>
                                 </td>
                                 <td style="width: 30%">
-                                    <input type="text" class="filter_value form-control" />
+                                    <input type="text" class="filter_value form-control" autocomplete="off"/>
                                     <!-- <input type="text" class="hide filter_value_date form-control" /> -->
                                     <select class="hide filter_value form-control" multiple></select>
                                 </td>
@@ -74,7 +74,7 @@
                                 </select>
                             </td>
                             <td style="width: 30%">
-                                <input type="text" class="filter_value form-control" />
+                                <input type="text" class="filter_value form-control" autocomplete="off"/>
                                 <!-- <input type="text" class="hide filter_value_date form-control" /> -->
                                 <select class="hide filter_value form-control" multiple></select>
                             </td>
@@ -105,7 +105,7 @@
                             </select>
                         </td>
                         <td style="width: 30%">
-                            <input type="text" class="filter_value form-control"/>
+                            <input type="text" class="filter_value form-control" autocomplete="off"/>
                             <select class="hide filter_value form-control" multiple></select>
                         </td>
                         <td  style="width: 5%">

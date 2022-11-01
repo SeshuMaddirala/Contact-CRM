@@ -30,7 +30,7 @@
                      <tr>
                         <td>{{$key+1}}</td>
                         <td>
-                           <input type="text" class="form-control display_name" value="{{$val['title']}}" placeholder="Please enter display name">
+                           <input type="text" class="form-control display_name" value="{{$val['title']}}" placeholder="Please enter display name" autocomplete="off">
                         </td>
                         <td>
                            <select class="form-control type" placeholder="Please select type">
@@ -41,12 +41,12 @@
                               <option value="date" @if($val['type'] == 'date') selected @endif>Date</option>
                               <option value="time" @if($val['type'] == 'time') selected @endif>Time</option>
                            </select>
-                           <input type="text" class="form-control data_source @if($val['type'] != 'dropdown') hide @endif" placeholder="value must be in comma separated" @if(!empty($val['source_data'])) hide  value="{{ implode(', ', $val['source_data']) }} @endif">
+                           <input type="text" class="form-control data_source @if($val['type'] != 'dropdown') hide @endif" placeholder="value must be in comma separated" @if(!empty($val['source_data'])) hide  value="{{ implode(', ', $val['source_data']) }} @endif" autocomplete="off">
                         </td>
                         <td>
-                           <input type="text" class="form-control db_alias_name" value="{{$val['db_name']}}" placeholder="Please enter DB alias name"></td>
+                           <input type="text" class="form-control db_alias_name" value="{{$val['db_name']}}" placeholder="Please enter DB alias name" autocomplete="off"></td>
                         <td>
-                           <input type="number" class="form-control sequence" value="{{$val['sequence']}}" placeholder="Please enter sequence"></td>
+                           <input type="number" class="form-control sequence" value="{{$val['sequence']}}" placeholder="Please enter sequence" autocomplete="off"></td>
                         <td>
                            <input type="checkbox" class="form-control hide_column" data-on="Yes" data-off="No" data-toggle="toggle" data-style="ios" @if($val['hide_column'] == 'true') checked @else unchecked @endif >
                         </td>
@@ -62,7 +62,7 @@
                <tr>
                   <td>{{$key+1}}</td>
                   <td>
-                     <input type="text" class="form-control display_name" placeholder="Please enter display name">
+                     <input type="text" class="form-control display_name" placeholder="Please enter display name" autocomplete="off">
                   </td>
                   <td>
                      <select class="form-control type" placeholder="Please select type">
@@ -75,7 +75,7 @@
                      </select>
                   </td>
                   <td>
-                     <input type="text" class="form-control db_alias_name" placeholder="Please enter DB alias name"></td>
+                     <input type="text" class="form-control db_alias_name" placeholder="Please enter DB alias name" autocomplete="off"></td>
                   <td>
                      <input type="number" class="form-control sequence" placeholder="Please enter sequence"></td>
                   <td>
@@ -91,7 +91,7 @@
                   <td></td>
                   <td></td>
                   <td colspan="6">
-                     <input type="text" class="form-control data_source" placeholder="Please enter data source value must be in comma separated">
+                     <input type="text" class="form-control data_source" placeholder="Please enter data source value must be in comma separated" autocomplete="off">
                   </td>
                </tr>   
                @endif

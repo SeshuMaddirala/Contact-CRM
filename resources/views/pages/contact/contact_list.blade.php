@@ -12,16 +12,16 @@
       <div class="panel-heading">
          Contact's List
          <span class="selected-count"></span>
-         <button type="button" class="btn btn-primary remainderModal" data-toggle="modal" data-target="#remainderModal">Reminder</button>
+         <button type="button" class="btn btn-primary remainderModal" data-toggle="modal" data-target="#remainderModal"><i class="fa-solid fa-bell"></i> Reminder</button>
          <!-- <button type="button" class="btn btn-primary filter-icon"><i class="fa fa-filter"></i></button> -->
-         <button type="button" class="btn btn-primary filterModal btn-modal" data-toggle="modal" data-target="#filterModal">Filter</button>
+         <button type="button" class="btn btn-primary filterModal btn-modal" data-toggle="modal" data-target="#filterModal"><i class="fa-solid fa-filter"></i> Filter</button>
          <!-- <button type="button" class="btn btn-primary btn-modal export-btn"><i class="fa-solid fa-download"></i> Export</button> -->
 
          <button type="button" class="btn btn-primary btn-modal exportModal" data-toggle="modal" data-target="#exportModal"><i class="fa-solid fa-download"></i> Export</button>
          <button type="button" class="btn btn-primary btn-modal add-new-contact"><i class="fa-solid fa-plus"></i> Add Contact</button>
          <div class="float-right contact-datefilter-div">
             <i class="fa-solid fa-calendar-days"></i>
-            <input type="text" name="contact-datefilter" id="contact-datefilter" value=""  />
+            <input type="text" name="contact-datefilter" id="contact-datefilter" value="" autocomplete="off" />
          </div>
       </div>
       <div class="panel-body">
@@ -56,7 +56,7 @@
                   </div>
                   <div class="form-group">
                      <label for="remainder_date_time" class="col-form-label">Date&Time</label><nbsp>*</nbsp>
-                     <input type="text" class="form-control" name="remainderdatetime" id="remainder_date_time" placeholder="Please select date&time">
+                     <input type="text" class="form-control" name="remainderdatetime" id="remainder_date_time" placeholder="Please select date&time" autocomplete="off">
                      <!-- <div class="contact-datefilter-div">
                         <i class="fa-solid fa-calendar-days"></i>
                         <input type="text" class="form-control" id="remainder_date_time" placeholder="Please select date&time">
