@@ -14,7 +14,7 @@
             <div class="text-center tracking-status-intransit">
                <div class="float-right contact-datefilter-div">
                   <i class="fa-solid fa-calendar-days"></i>
-                  <input type="text" name="datefilter" id="datefilter" value=""  />
+                  <input type="text" name="datefilter" id="datefilter" value="" autocomplete="off"/>
                </div>
                <p class="tracking-status text-tight">Activities</p>
             </div>

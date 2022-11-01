@@ -7,7 +7,7 @@
     <div class="row">
          <div class="col-md-12">
             <div class="float-right contact-datefilter">
-               <input type="text" name="datefilter" value=""  />
+               <input type="text" name="datefilter" value="" autocomplete="off" />
             </div>
          </div>
          <div class="col-md-12">

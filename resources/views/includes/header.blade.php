@@ -9,7 +9,10 @@
         </button>
         <a class="navbar-brand icon-a" href="#">
             <!-- <i class="fa-solid fa-handshake-angle"></i>CRM -->
-            <span><img src="{{ asset('image/application-icon.png') }}" class="app-icon" alt="Linked Contact CRM" /><small>DASH CRM</small></span>
+            <span><img src="{{ asset('image/application-icon.png') }}" class="app-icon" alt="Linked Contact CRM" /><small>DASH CRM 
+                @if(Session::has('login_through') && Session::get('login_through') == 'google')(Google)@endif
+                @if(Session::has('login_through') && Session::get('login_through') == 'outlook')(Outlook)@endif
+            </small></span>
         </a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
@@ -55,7 +58,7 @@
                     <i class="fa fa-user-circle"></i>
                 </a>
                 <div class="dropdown-menu">
-                    <a href="logout" class="dropdown-item"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+                    <a href="javascript:;;" class="dropdown-item app-logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                 </div>
             </li>
         </ul>
