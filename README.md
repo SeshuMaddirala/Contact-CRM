@@ -62,3 +62,20 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Dockerize the application
+
+1. Create the docker network - docker network create crm-net
+2. Create the volume - docker volume create crm-vol
+3. Pull the Docker image of Mysql of version 8.0.30 - docker pull mysql:8.0.30 and run the database in the network - docker run -d --name crm-db -v crm-vol:/var/lib/mysql --network crm-net -e MYSQL_ROOT_PASSWORD=dashcrm@123 mysql:8.0.30
+4. Note the IP of Mysql container spinned - docker container inspect crm-db
+5. Create the database in the DB container - docker exec -ti crm-db bash
+# mysql -u root -p
+> CREATE DATABASE laravel;
+> SHOW DATABASES;
+> USE laravel;
+6. Copy the content of .env.example into .env and edit the connection details of Mysql.
+7. Add the docker file in the repo.
+8. Build the docker file - docker build -t crm_app:v4 -f ./Dockerfile .
+9. Spin the container using image generated - docker run -d -p 8000:8000 --name crm-app --network crm-net crm_app:v1
+10. Enter into the container - docker exec -it crm-app bash & generate the key for artisan - php artisan key:generate
