@@ -48,6 +48,12 @@ agent any
                 sh "cat ./.env"
             }
         }
+        stage('Move file to storage'){
+            steps{
+                sh 'mkdir ./storage/app/public'
+                sh 'cp /home/tgu1ser06/Contact-CRM/contact_column.json ./storage/app/public/'
+            }
+        }
         stage('Build image'){
             steps{
                 sh "docker build -t crm-${branch}-b${BUILD_NUMBER} -f Dockerfile ."
