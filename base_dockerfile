@@ -1,0 +1,26 @@
+FROM php:7.4-apache
+
+RUN apt-get update -y && apt-get install -y \
+        libmcrypt-dev \
+        git \
+        zip \
+        unzip \
+        curl \
+        libpng-dev \
+        libonig-dev \
+        libxml2 \
+        libxml2-dev
+
+RUN apt-get update -y && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libldap2-dev \
+        mariadb-client
+
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN php composer-setup.php --version=2.2.6 --install-dir=/usr/local/bin --filename=composer
+RUN docker-php-ext-install pdo mbstring pdo_mysql mysqli soap gd
+
+COPY ./vendor.zip .
+RUN unzip vendor.zip
