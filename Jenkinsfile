@@ -28,9 +28,9 @@ agent any
 
                     echo "${envr}"
 
-                    // sh "docker container stop \$(docker container ls -q --filter name=crm-${branch}-V*)"
-                    // sh "docker container rm -f \$(docker container ps -a -q --filter name=crm-'${branch}'-V*)"
-                    // sh "docker rmi \$(docker images -f=reference=crm-${branch}-b* --format \"{{.ID}}\") "
+                    sh "docker container stop \$(docker container ls -q --filter name=crm-${branch}-V*)"
+                    sh "docker container rm -f \$(docker container ps -a -q --filter name=crm-'${branch}'-V*)"
+                    sh "docker rmi \$(docker images -f=reference=crm-${branch}-b* --format \"{{.ID}}\") "
                 }
             }
         }
