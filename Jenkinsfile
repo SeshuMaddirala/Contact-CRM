@@ -34,24 +34,10 @@ agent any
                 }
             }
         }
-        stage('Create .env file'){
+        stage('Pre-requisities for building application'){
             steps{
-                sh "pwd"
-                sh 'cp ./.env.example ./.env'
-                sh "sed -i 's/DB_HOST=127.0.0.1/DB_HOST=172.18.0.4/' .env"
-                sh "sed -i 's/DB_PORT=3306/DB_PORT=3305/' .env"
-                sh "sed -i 's/DB_DATABASE=laravel/DB_DATABASE=crm/' .env"
-                sh "sed -i 's/DB_USERNAME=root/DB_USERNAME=crm/' .env"
-                sh "sed -i 's/DB_PASSWORD=/DB_PASSWORD=contactcrm@123/' .env"
-                sh "sed -i 's/APP_ENV=local/APP_ENV=production/' .env"
-                sh "echo 'Final env file'"
-                sh "cat ./.env"
-            }
-        }
-        stage('Move file to storage'){
-            steps{
-                sh 'mkdir ./storage/app/public'
-                sh 'cp /home/tgu1ser06/Contact-CRM/contact_column.json ./storage/app/public/'
+                sh "chmod 777 ./init.sh"
+                sh "./init.sh"
             }
         }
         stage('Build image'){

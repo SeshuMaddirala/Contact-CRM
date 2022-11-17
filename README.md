@@ -79,3 +79,11 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 8. Build the docker file - docker build -t crm_app:v4 -f ./Dockerfile .
 9. Spin the container using image generated - docker run -d -p 8000:8000 --name crm-app --network crm-net crm_app:v1
 10. Enter into the container - docker exec -it crm-app bash & generate the key for artisan - php artisan key:generate
+
+
+**Pre-requisities** before building the docker image -
+
+1. Need to create .env file and replace the values with the DB config details.
+2. Place the contact_crm.json in server & have to place it in the code by making a directory *public* in Contact-CRM/storage/app/ path.
+
+**![IMPORTANT]!** These steps included in the bash script, run before the setup is made. Cmd to run - ./init.sh
