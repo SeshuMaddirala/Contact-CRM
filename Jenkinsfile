@@ -50,7 +50,7 @@ agent any
             steps{
                 script{
                    containerID = sh (
-                   script: "docker run -d -p 8000:8000 --name crm-${branch}-V${BUILD_NUMBER} --network tg-net --env-file ./.env crm-${branch}-b${BUILD_NUMBER}", 
+                   script: "docker run -d -p 8001:8000 --name crm-${branch}-V${BUILD_NUMBER} --network tg-net --env-file ./.env crm-${branch}-b${BUILD_NUMBER}", 
                    returnStdout: true
                    ).trim()
                    echo "Container ID is ==> ${containerID}"
