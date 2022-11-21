@@ -65,7 +65,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Dockerize the application
 
-1. Create the docker network - docker network create crm-net
+<!-- 1. Create the docker network - docker network create crm-net
 2. Create the volume - docker volume create crm-vol
 3. Pull the Docker image of Mysql of version 8.0.30 - docker pull mysql:8.0.30 and run the database in the network - docker run -d --name crm-db -v crm-vol:/var/lib/mysql --network crm-net -e MYSQL_ROOT_PASSWORD=dashcrm@123 mysql:8.0.30
 4. Note the IP of Mysql container spinned - docker container inspect crm-db
@@ -78,10 +78,19 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 7. Add the docker file in the repo.
 8. Build the docker file - docker build -t crm_app:v4 -f ./Dockerfile .
 9. Spin the container using image generated - docker run -d -p 8000:8000 --name crm-app --network crm-net crm_app:v1
-10. Enter into the container - docker exec -it crm-app bash & generate the key for artisan - php artisan key:generate
+10. Enter into the container - docker exec -it crm-app bash & generate the key for artisan - php artisan key:generate -->
 
 
-**Pre-requisities** before building the docker image -
+**Pre-requisities** -
+- Before setting application we need to follow 2 manadatory steps -
+
+# Step 1 - spinning base image for reducing the computation speed & spinning. For that do the following process -
+
+- Stated commands need to be run in the server only ->
+    1.1. Compose up need to be done for spinning MySQL & phpmyadmin for database & creating network, volume cmd is - docker-compose up -d
+    1.2. Build the base image with placing vendor.zip in server & run the base_dockerfile to build image - docker build --no-cache -t crm_base:v1 -f ./Dockerfile . 
+
+# Step 2 - before building the docker image for application -
 
 1. Need to create .env file and replace the values with the DB config details.
 2. Place the contact_crm.json in server & have to place it in the code by making a directory *public* in Contact-CRM/storage/app/ path.

@@ -42,7 +42,7 @@ agent any
         }
         stage('Build image'){
             steps{
-                sh "docker build -t crm-${branch}-b${BUILD_NUMBER} -f Dockerfile ."
+                sh "docker build --no-cache -t crm-${branch}-b${BUILD_NUMBER} -f Dockerfile ."
             }
         }
         stage('run image')
