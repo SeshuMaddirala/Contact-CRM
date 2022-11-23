@@ -143,6 +143,7 @@ var contact_form = {
 
             $('#remainder_date_time').daterangepicker({
                 opens           : 'left',
+                drops           : 'auto',
                 showDropdowns   : true,
                 singleDatePicker: true,   
                 timePicker      : true,  
@@ -294,6 +295,7 @@ var contact_form = {
 
                 $(this).parents('tr').find('input.filter_value').daterangepicker({
                     opens           : 'left',
+                    drops           : 'auto',
                     showDropdowns   : true,
                     linkedCalendars : false,
                     // startDate       : moment().startOf('month'),
@@ -437,6 +439,7 @@ var contact_form = {
                     alert("Please select atleast one column");
                     return false;
                 }
+                $('#exportModal').modal('hide');
 
                 window.open("export_data?row_ids="+selected_row_ids+"&unselected_column="+btoa(unselected_column),'_blank');
             } else {
@@ -487,6 +490,7 @@ var contact_form = {
 
         $('#contact-datefilter').daterangepicker({
             opens           : 'left',
+            drops           : 'auto',
             showDropdowns   : true,
             linkedCalendars : false,
             autoUpdateInput : (start_date != '')?true:false,
@@ -945,6 +949,7 @@ var contact_form = {
                 }else if(val['column_type'] == 'date'){
                     tr_object.find('input.filter_value').daterangepicker({
                         opens           : 'left',
+                        drops           : 'auto',
                         showDropdowns   : true,
                         linkedCalendars : false,
                         locale: {
