@@ -667,14 +667,14 @@ var contact_form = {
 
                 $.ajax({
                     url         : "update_data",
-                    dataType    : "json",
+                    dataType    : "JSON",
                     type        : "POST",
                     contentType : 'application/json; charset=utf-8',
                     data        : JSON.stringify(change),
                     async       : true,
                     processData : false,
                     cache       : false,
-                    error: function() {
+                    error       : function(jqXHR, exception) {
                         setMessage('Error occurred while updating column data','.panel-heading',false);
                     },
                     success: function (data) {
@@ -730,15 +730,18 @@ var contact_form = {
             afterDeselect:function(){
                 $('.panel-heading .selected-count').html('');
             },
-            // beforeColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible){
-            //     // console.log(dropIndex);
-            //     // console.log(finalIndex);
-            //     // console.log(this);
-            //     // if(dropIndex == 0 || dropIndex == 1 || finalIndex == 0 || finalIndex == 1){
-            //     //     return false;
-            //     // }
-            //     return false;
-            // },
+            beforeColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible){
+                // console.log(movedColumns,'movedColumns');
+                // console.log(dropIndex,'dropIndex');
+                // console.log(movePossible,'movePossible');
+                // console.log(finalIndex,'finalIndex');
+                // // console.log(this);
+                // if(dropIndex == 0 || dropIndex == 1 || dropIndex == 2 || finalIndex == 0 || finalIndex == 1 || finalIndex == 2){
+                //     alert("Ad");
+                //     return false;
+                // }
+                return true;
+            },
             afterColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible, orderChanged){
                 
                 if(orderChanged){

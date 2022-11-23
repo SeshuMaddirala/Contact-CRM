@@ -193,10 +193,7 @@
 
         var windowHeight= $(window).height() + $('body').scrollTop(),
         totalHeight     = $(this.TEXTAREA_PARENT).find(".chosen-container .chosen-drop").height() + Math.ceil($(this.TEXTAREA_PARENT).find(".chosen-container .chosen-drop").offset().top)+200;
-        // console.log(totalHeight,'totalHeight');        
-        // console.log($(this.TEXTAREA_PARENT).find(".chosen-container .chosen-drop").height(),'height');
-        // console.log(Math.ceil($(this.TEXTAREA_PARENT).find(".chosen-container .chosen-drop").offset().top),'offset');
-        // console.log(windowHeight,'windowHeight');
+        
         if (totalHeight > windowHeight) {
             $(this.TEXTAREA_PARENT).find(".chosen-container .chosen-drop").addClass("chosen-top-auto");
         } else{

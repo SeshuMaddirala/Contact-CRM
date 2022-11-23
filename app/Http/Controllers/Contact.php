@@ -121,7 +121,7 @@ class Contact extends BaseController
                 $where_cond .= $temp_where_cond; 
             }
         }
-
+        
         $select_columns = ['c.iContactsId','ci.iContactInteractionId','c.vStatus','date_format(c.dtStatusDate,"%d/%m/%Y")as dtStatusDate','date_format(c.dtLastConversationDate,"%d/%m/%Y") as dtLastConversationDate','c.tDiscussionPoints','c.vNextSteps','date_format(c.dtNextActionDate,"%d/%m/%Y") as dtNextActionDate','c.vContactName','c.vRelationshipStatus','c.vDesignation','c.vReportingManager','c.vOrganizationName','c.vWebsite','c.vPreviousRelationShip','c.vIndustry','c.vCityName','c.vStateName','c.vCountryName','c.vLinkedURL','c.vEmail','c.vReachoutCategory','c.vWorkNumber','c.vMobileNumber','c.vCategory','c.vTouchPoints','c.vAdaptability','c.vDispositionTowards','c.vCoverage','c.tResponse','ci.tMessage','ci.vMessageBy','ci.vConnectionStatus','ci.vMessageStatus','date_format(ci.dMessageDate,"%d/%m/%Y") as dMessageDate','ci.dMessageTime','c.vHometownState','c.vAlertsTo'];
 
         if(loggedUserData()['is_admin'] != 'Yes'){
@@ -278,30 +278,39 @@ class Contact extends BaseController
                 $return_arr = ['success' => 0];
 
                 if(empty($ci_data_exist)){
-                    $db_inert_id = DB::table('contact_interaction')->insertGetId([
-                        'vLinkedURL'    => ($linked_url != '')?$linked_url:'',
-                        'iContactId'    => ($contact_id != '')?$contact_id:'',
-                        $db_name        => $new_value,
-                        'elogBy'        => 'Manual',
-                        'iAddedById'    => loggedUserData()['user_id'],
-                        'iUpdatedById'  => loggedUserData()['user_id'],
-                        'dtAddedDate'   => date('Y-m-d H:i:s'),
-                        'dtUpdatedDate' => date('Y-m-d H:i:s')
+                    $contact_db_inert_id = DB::table('contacts')->insertGetId([
+                        'iAddedById'        => loggedUserData()['user_id'],
+                        'iUpdatedById'      => loggedUserData()['user_id'],
+                        'dtAddedDate'       => date('Y-m-d H:i:s'),
+                        'dtUpdatedDate'     => date('Y-m-d H:i:s')
                     ]);
-                    
-                    if($db_inert_id){
-                        $return_arr = ['success' => 1,'insert_id'=>$db_inert_id,'db_table'=>'contact_interaction'];
-                        
-                        $params_obj     = [
-                            "contact_name"  => $contact_name,
-                            "contact_id"    => $contact_id,
-                            "column_name"   => $column_title,
-                            "value"         => $new_value,
-                            "performed_by"  => loggedUserData()['name'],
-                            "performed_by_id"=> loggedUserData()['user_id']
-                        ];
-                        
-                        $this->addActivities('contacts',$contact_id,json_encode($params_obj),'add_contact_interaction');
+
+                    if($contact_db_inert_id){
+                        $db_inert_id = DB::table('contact_interaction')->insertGetId([
+                            'vLinkedURL'    => ($linked_url != '')?$linked_url:'',
+                            'iContactId'    => ($contact_db_inert_id != '')?$contact_db_inert_id:'',
+                            $db_name        => $new_value,
+                            'elogBy'        => 'Manual',
+                            'iAddedById'    => loggedUserData()['user_id'],
+                            'iUpdatedById'  => loggedUserData()['user_id'],
+                            'dtAddedDate'   => date('Y-m-d H:i:s'),
+                            'dtUpdatedDate' => date('Y-m-d H:i:s')
+                        ]);
+
+                        if($db_inert_id){
+                            $return_arr = ['success' => 1,'insert_id'=>$db_inert_id,'db_table'=>'contact_interaction'];
+                            
+                            $params_obj     = [
+                                "contact_name"  => $contact_name,
+                                "contact_id"    => $contact_db_inert_id,
+                                "column_name"   => $column_title,
+                                "value"         => $new_value,
+                                "performed_by"  => loggedUserData()['name'],
+                                "performed_by_id"=> loggedUserData()['user_id']
+                            ];
+                            
+                            $this->addActivities('contacts',$contact_db_inert_id,json_encode($params_obj),'add_contact_interaction');
+                        }
                     }
                 }else{
                     $db_response = DB::table('contact_interaction')
@@ -600,7 +609,6 @@ class Contact extends BaseController
     }
 
     public function addActivities($activity_type = '',$for_id = '',$params = '',$activity_code = ''){
-
         DB::table('activities')->insertGetId([
             'vActivitiesCode'       => $activity_code,
             'eActivityType'         => $activity_type,
