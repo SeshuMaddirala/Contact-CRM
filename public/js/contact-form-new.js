@@ -726,15 +726,15 @@ var contact_form = {
             afterDeselect:function(){
                 $('.panel-heading .selected-count').html('');
             },
-            beforeColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible){
-                // console.log(dropIndex);
-                // console.log(finalIndex);
-                // console.log(this);
-                // if(dropIndex == 0 || dropIndex == 1 || finalIndex == 0 || finalIndex == 1){
-                //     return false;
-                // }
-                return false;
-            },
+            // beforeColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible){
+            //     // console.log(dropIndex);
+            //     // console.log(finalIndex);
+            //     // console.log(this);
+            //     // if(dropIndex == 0 || dropIndex == 1 || finalIndex == 0 || finalIndex == 1){
+            //     //     return false;
+            //     // }
+            //     return false;
+            // },
             afterColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible, orderChanged){
                 
                 if(orderChanged){
