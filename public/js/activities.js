@@ -10,6 +10,7 @@ var activities = {
 
         $('input[name="datefilter"]').daterangepicker({
             opens           : 'left',
+            drops           : 'auto',
             showDropdowns   : true,
             linkedCalendars : false,
             startDate       : moment().startOf('month'),

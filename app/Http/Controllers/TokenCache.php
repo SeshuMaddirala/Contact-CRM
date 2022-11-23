@@ -137,10 +137,20 @@ class TokenCache {
             // Token is expired (or very close to it)
             // so let's refresh
 
-            $oauthClient = $login->getOutlookClient();
+            // $oauthClient = $login->getOutlookClient();
+            $oauthClient = new \League\OAuth2\Client\Provider\GenericProvider([
+                'clientId'                => config("constants.MICROSOFT_GRAPH_CLIENT_ID"),
+                'clientSecret'            => config("constants.MICROSOFT_GRAPH_CLIENT_SECRET"),
+                'redirectUri'             => config("constants.MICROSOFT_GRAPH_REDIRECT_URI"),
+                'urlAuthorize'            => config("constants.MICROSOFT_GRAPH_URL_AUTHORIZE"),
+                'urlAccessToken'          => config("constants.MICROSOFT_GRAPH_URL_ACCESS_TOKENS"),
+                'urlResourceOwnerDetails' => config("constants.MICROSOFT_GRAPH_URL_RESOURCEOWNERDETAILS"),
+                'scopes'                  => config("constants.MICROSOFT_GRAPH_SCOPES")
+            ]);
             try {
-                $newToken=$oauthClient->getAccessToken('refresh_tolken', [
-                    'refresh_token' => session()->get('refreshtoken')
+                
+                $newToken = $oauthClient->getAccessToken('refresh_token', [
+                    'refresh_token' => session()->get('refreshToken')
                 ]);
 
                 // Store the new values
