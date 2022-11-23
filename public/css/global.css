@@ -825,12 +825,16 @@ button.btn-modal{
     padding-top: 10px;
 }
 
-.handsontable thead th:nth-child(4) .relative,
+/* .handsontable thead th:nth-child(4) .relative,
 .handsontable thead th:nth-child(5) .relative,
 .handsontable thead th:nth-child(6) .relative,
 .handsontable thead th:nth-child(7) .relative,
 .handsontable thead th:nth-child(8) .relative,
 .handsontable thead th:nth-child(9) .relative{
+    background-color: #afeae9 !important;
+} */
+
+.handsontable th.cyan-color .relative{
     background-color: #afeae9 !important;
 }
 
@@ -1034,3 +1038,57 @@ table.htCore tbody tr td.listbox:hover {
 .remainderModal .fa-bell{
     font-size: 14px;
 }
+
+.chosen-container .chosen-drop.chosen-top-auto {
+    border-bottom: 0;
+    border-top: 1px solid #aaa;
+    top: auto;
+    bottom: 40px;
+}
+
+.chosen-container .chosen-drop.chosen-top-noauto {
+    border-bottom: 0;
+    border-top: 1px solid #aaa;
+    top: 40px;
+    bottom: auto;
+}
+
+/* ---------------------------- */
+/* .chosen-container .chosen-drop {
+    border-bottom: 0;
+    border-top: 1px solid #aaa;
+    top: auto;
+    bottom: 40px;
+} */
+
+
+/* 
+
+.chosen-container .chosen-drop {
+    border-bottom: 0;
+    border-top: 1px solid #aaa;
+    top: auto;
+    bottom: 40px;
+}
+
+.chosen-container.chosen-with-drop .chosen-single {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    background-image: none;
+}
+
+.chosen-container.chosen-with-drop .chosen-drop {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    
+    box-shadow: none;
+    
+    margin-bottom: -16px;
+} */

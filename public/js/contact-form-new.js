@@ -267,6 +267,7 @@ var contact_form = {
       
         $('#contact-datefilter').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
+            contact_form.getLoadData();
         });
 
         $(document).on('change','.filter-column',function(){
@@ -494,6 +495,7 @@ var contact_form = {
             maxDate         : today,
             locale: {
                 format: 'DD-MM-YYYY',
+                cancelLabel: 'Clear'
             },
             ranges: {
                 'Today': [moment(), moment()],
@@ -545,6 +547,11 @@ var contact_form = {
             afterGetColHeader: function(col, TH) {
                 if(col == '-1'){
                     $(TH).find('.cornerHeader').html('<input type="checkbox" class="main-checkbox-input">'); 
+                }
+
+                var add_custom_class_column = ['Connection Status','Message Status','Last Message','Message By','Message Date','Message Time','contact_interaction_id'];
+                if(add_custom_class_column.includes($(TH).find('.colHeader').html())){
+                    $(TH).addClass("cyan-color");
                 }
                 // contact_form.addInput(col,TH);
             },
@@ -719,8 +726,41 @@ var contact_form = {
             afterDeselect:function(){
                 $('.panel-heading .selected-count').html('');
             },
+            beforeColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible){
+                // console.log(dropIndex);
+                // console.log(finalIndex);
+                // console.log(this);
+                // if(dropIndex == 0 || dropIndex == 1 || finalIndex == 0 || finalIndex == 1){
+                //     return false;
+                // }
+                return false;
+            },
             afterColumnMove:function(movedColumns, finalIndex, dropIndex, movePossible, orderChanged){
-                console.log(arguments);
+                
+                if(orderChanged){
+                    let column_sequence = this.getColHeader;
+                    $.ajax({
+                        url         : "update_column_sequence",
+                        dataType    : "json",
+                        type        : "POST",
+                        data        : {'column_sequence' : column_sequence},
+                        async       : true,
+                        success: function (data) {
+                            $('body').css('cursor','default');
+                            
+                            if(data.success == 1){
+                                // setMessage('Reminder has been created successfully','.panel-heading',true);
+                                column_property = data.column_array;
+                            }else{
+                                // setMessage('Error occurred while creating reminder','.modal-footer',false);
+                            }
+                        },
+                        beforeSend:function(){
+                            $('body').css('cursor','progress');
+                        }
+                    });
+                    
+                }
             }
             // , 
             // beforeRemoveRow: function(index, amount) {
@@ -935,7 +975,8 @@ var contact_form = {
         var return_flag = false;
         switch(col_data[1]){
             case "vLinkedURL":
-                if( /(ftp|http|https):\/\/?(?:www\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(col_data[3]) ) {
+                // if( /(ftp|http|https):\/\/?(?:www\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(col_data[3]) ) {
+                if( /http(s)?:\/\/([w]{3}\.)?linkedin\.com\/in\/([a-zA-Z0-9-]{5,30})\/?/.test(col_data[3]) ) {
                     return true;
                 }
                 break;

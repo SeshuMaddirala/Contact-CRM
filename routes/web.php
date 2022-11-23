@@ -60,6 +60,8 @@ Route::get('reminder',[Contact::class, 'reminder'])->name('reminder')->middlewar
 
 Route::get('export_data',[Contact::class, 'export_data'])->name('export_data')->middleware('auth');
 
+Route::post('update_column_sequence',[Contact::class, 'update_column_sequence'])->name('update_column_sequence')->middleware('auth');
+
 Route::get('column_list',[Settings::class, 'column_list'])->name('column_list')->middleware('auth');
 
 Route::post('add_update_column',[Settings::class, 'add_update_column'])->name('add_update_column')->middleware('auth');

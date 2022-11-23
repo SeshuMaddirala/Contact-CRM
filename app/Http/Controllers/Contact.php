@@ -742,4 +742,39 @@ class Contact extends BaseController
         }
         return $log_data;
     }
+
+    public function update_column_sequence(Request $request){
+        $request_data       = $request->all();
+        $column_seq         = isset($request_data['column_sequence'])?explode(',',$request_data['column_sequence']):[];
+        
+        $column_json_decode = [];
+        $return_flag        = false;
+        
+        if(!empty($column_seq)){
+            $column_json = Storage::disk('public')->get('contact_column.json');
+            
+            if(!empty($column_json)){
+                $column_json_decode = json_decode($column_json,true);
+                $column_json_decode = array_column($column_json_decode,null,'title');
+                
+                if(!empty($column_json_decode)){
+                    foreach($column_seq as $cs_key => $cs_val){
+                        if(!empty($column_json_decode[$cs_val])){
+                            $column_json_decode[$cs_val]['sequence'] = ($cs_key+1); 
+                        }
+                    }
+                    $column_json_decode = array_values($column_json_decode);
+
+                    usort($column_json_decode, function($a, $b) {
+                        return $a['sequence'] <=> $b['sequence'];
+                    });
+                    
+                    $return_flag    = true;
+                    
+                    Storage::disk('public')->put('contact_column.json', json_encode($column_json_decode));
+                }
+            }
+        }
+        echo json_encode(['success' => $return_flag,'column_array' => $column_json_decode]);exit;
+    }
 }
