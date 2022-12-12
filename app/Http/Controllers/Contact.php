@@ -50,7 +50,9 @@ class Contact extends BaseController
     public function get(Request $request){
         $request_data   = $request->all();
         $custom_filter  = isset($request_data['custom_filter'])?$request_data['custom_filter']:[];
-        $global_filter  = isset($request_data['global_filter'])?$request_data['global_filter']:[];
+        $global_filter  = isset($request_data['global_filter'])?$request_data['global_filter']:[];        
+        $page_start     = $request_data['page_start'];
+        $per_page       = $request_data['per_page']; 
 
         $where_cond     = '1=1';
         
@@ -128,6 +130,14 @@ class Contact extends BaseController
             $where_cond .= " AND c.iAddedById = '".loggedUserData()['user_id']."'"; 
         }
 
+        $total_records_count = $query_obj_data = DB::table('contacts as c')
+        ->leftJoin('contact_interaction as ci', function($join) {
+            $join->on('ci.vLinkedURL', '=', 'c.vLinkedURL');
+            $join->orOn('ci.iContactId', '=','c.iContactsId');
+        })
+        ->whereRaw($where_cond)
+        ->count();
+
         $query_obj_data = DB::table('contacts as c')
             ->leftJoin('contact_interaction as ci', function($join) {
                 $join->on('ci.vLinkedURL', '=', 'c.vLinkedURL');
@@ -136,14 +146,18 @@ class Contact extends BaseController
             ->whereRaw($where_cond)
             // ->where('c.iAddedById',loggedUserData()['user_id'])
             ->orderBy('c.iContactsId', 'ASC')
+            // ->skip($page_start)
+            // ->take($per_page)
             ->get(DB::raw(implode(',',$select_columns)));
 
-        $query_response = array_map(function($item) {
+            $query_response = array_map(function($item) {
             return (array)$item; 
         }, $query_obj_data->toArray());
 
         $output = array(
             'data'              => $query_response,
+            'total_records'     => $total_records_count,
+            'page_record_count' => count($query_response),
             'logged_filter_data'=> []
         );
 
@@ -160,6 +174,12 @@ class Contact extends BaseController
 
     public function update_data(Request $request){
         $request_data   = $request->all();
+
+        if(count($request_data) > 1){
+            echo json_encode(
+                ['success' => 0,'message'=> 'Error occured while processing this request.']
+            );exit;
+        }
 
         $row_id         = $request_data[0][0];
         $field_name     = $request_data[0][1];
@@ -261,6 +281,8 @@ class Contact extends BaseController
                     ];
 
                     $this->setColumnBasedReminder($request,$required_data);
+                    
+                    $return_arr['set_remainder_flag'] = true;
                 }
 
                 break;
@@ -405,6 +427,11 @@ class Contact extends BaseController
                 'eProvider'             => (session()->get('login_through') == 'google')?'Google':'Outlook'
             ]);
         }
+
+        if(isset($request_data['custom_reminder']) && $request_data['custom_reminder']){
+            return $return_flag;
+        }
+
         echo json_encode(['success'=>$return_flag]);exit;
     }
 
@@ -546,7 +573,7 @@ class Contact extends BaseController
         
         $service        = new \Google\Service\Calendar($client);
         $event          = new Google\Service\Calendar\Event($event_data);
-        $event_response = $service->events->insert('primary', $event);
+        $event_response = $service->events->insert('primary', $event,['sendUpdates'=>'all']);
         
         $attendees_arr  = $event_response->getAttendees();
         $attendees_email= [];
@@ -697,7 +724,8 @@ class Contact extends BaseController
             'contacts_url'          => $input_params['contacts_url'],
             'contacts'              => $input_params['contacts_url'],
             'contacts_name'         => $input_params['contacts_name'],
-            'attendees'             => $input_params['attendees']
+            'attendees'             => $input_params['attendees'],
+            'custom_reminder'       => true
         ];
         
         $this->set_remainder($request,$required_data);

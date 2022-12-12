@@ -15,7 +15,6 @@
         <img id="login-background-image" src="{{ asset('image/bg-image.jpg') }}" style="width: 1136px; height: 710px;">
     </div>
     <div id="background-branding-overlay" class="overlay ie_legacy" style="visibility: visible; background-color: rgb(0, 114, 198); display: none;"></div>
-
     <div id="login-container" class="login-container" style="display: block;">
         <table class="login-container-layout">
             <tbody>
@@ -23,9 +22,9 @@
                     <td id="login-container-center" style="height: 425px;">
                         <div class="login-form-container">
                             <div class="credentials-container">
-                                <div class="org-logo-container">
+                                <!-- <div class="org-logo-container">
                                     <img class="logo" src="{{ asset('image/techigai-logo.png') }}">
-                                </div>
+                                </div> -->
                                 <div class="spacer"></div>
                                 <h4 class="login-heading">Login</h4>
                                 <p>Please use following login modes to access application</p>
