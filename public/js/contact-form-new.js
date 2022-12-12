@@ -1,4 +1,8 @@
-var hot;
+var handsontable_instance;
+var page_start      = 0;
+var current_page    = 1;
+var per_page        = 10;
+
 var contact_form = {
     init:function(){
 
@@ -48,6 +52,7 @@ var contact_form = {
                         
                         fetchReminderCount();
                         $('.close').trigger('click');
+                        $('.checkbox-input').prop('checked',false);
                         setMessage('Reminder has been created successfully','.panel-heading',true);
                     }else{
                         setMessage('Error occurred while creating reminder','.modal-footer',false);
@@ -74,23 +79,22 @@ var contact_form = {
                 linked_url      = (linked_url == '' || linked_url == null)?'':linked_url;
                 contact_name    = (contact_name == '' || contact_name == null)?'':contact_name;
 
-                // if(linked_url == '' || linked_url == null ){
-                //     return false;
-                // }
-
                 contact_string += '<li>'+contact_name+' [ '+linked_url+' ] '+'</li>';
                 
-                if(tmp_linked_url == ''){
-                    tmp_linked_url  = linked_url;
-                }else{
-                    tmp_linked_url  += ','+linked_url;
-                } 
+                tmp_linked_url += (tmp_linked_url == '')?linked_url:','+linked_url;
+                tmp_contact_name  = (tmp_contact_name == '')?contact_name:','+contact_name;
+
+                // if(tmp_linked_url == ''){
+                //     tmp_linked_url  = linked_url;
+                // }else{
+                //     tmp_linked_url  += ','+linked_url;
+                // } 
                 
-                if(tmp_contact_name == ''){
-                    tmp_contact_name  = contact_name;
-                }else{
-                    tmp_contact_name  += ','+contact_name;
-                } 
+                // if(tmp_contact_name == ''){
+                //     tmp_contact_name  = contact_name;
+                // }else{
+                //     tmp_contact_name  += ','+contact_name;
+                // } 
 
             });
 
@@ -190,77 +194,17 @@ var contact_form = {
         });
 
         $('#filterModal').on('shown.bs.modal', function (event) {     
-                
             $('.filter-table .chosen-select').chosen("destroy").chosen();      
             contact_form.setFilterDataOnForm(logged_filter_data['custom_filter']);
-            // if(logged_filter_data['custom_filter'] != ''){
-            //     $.each(logged_filter_data['custom_filter'],function(key,val){
-            //         var tr_object = $('.filter-table tr[data-row="'+key+'"]');
-                    
-            //         if(val['column_type'] == 'dropdown'){
-            //             tr_object.find('.filter-type').html('<option value="equal_to">Is equal to</option><option value="not_equal_to">Is not equal to</option>');
-        
-            //             var select_option = '';
-            //             $.each(column_pre_data[val['filter_column']],function(ckey,cval){
-            //                 var selected = "";
-            //                 if($.inArray(cval,val['filter_value'])  !== -1){
-            //                     selected = "selected";
-            //                 }
-
-            //                 select_option += '<option value="'+cval+'" '+selected+'>'+cval+'</option>';
-            //             });
-        
-            //             tr_object.find('select.filter_value').removeClass('hide').html(select_option);
-            //             tr_object.find('select.filter_value').chosen("destroy").chosen();
-            //             tr_object.find('input.filter_value').addClass('hide');
-            //         }else if(val['column_type'] == 'text' || val['column_type'] == 'time'){
-            //             tr_object.find('input.filter_value').val(val['filter_value']);
-            //             tr_object.find('input.filter_value').removeClass('hide');
-            //             tr_object.find('select.filter_value').addClass('hide');
-            //             tr_object.find('select.filter_value').chosen("destroy");
-            //         }else if(val['column_type'] == 'date'){
-            //             tr_object.find('input.filter_value').daterangepicker({
-            //                 opens           : 'left',
-            //                 showDropdowns   : true,
-            //                 linkedCalendars : false,
-            //                 locale: {
-            //                     format: 'DD-MM-YYYY',
-            //                 },
-            //                 ranges: {
-            //                     'Today': [moment(), moment()],
-            //                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-            //                     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-            //                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-            //                     'This Month': [moment().startOf('month'), moment().endOf('month')],
-            //                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            //                 }
-            //             });
-                        
-            //             tr_object.find('input.filter_value').val(val['filter_value']);
-            //             tr_object.find('input.filter_value').removeClass('hide');
-            //             tr_object.find('select.filter_value').addClass('hide');
-            //             tr_object.find('select.filter_value').chosen("destroy");
-            //         }
-            //     });
-            // }
         });
 
+        $(document).off('click','.clear-remainder');
         $(document).on('click','.clear-remainder',function(){
             $('#remainder_date_time, #message-text').val('');
             $('#attendees').val(null).trigger('change');
             $('label[id="remainder_date_time-error"], label[id="attendees-error"], label[id="message-text-error"]').text('');
         });
-        // $(document).off('click','.filter-icon');
-        // $(document).on('click','.filter-icon',function(){
-        //     if($('.filterHeader').hasClass('hide')){
-        //         $('.filterHeader').removeClass('hide');
-        //         $('.filterHeader').show();
-        //     }else{
-        //         $('.filterHeader').addClass('hide');
-        //         $('.filterHeader').hide();    
-        //     }
-        // });
-        
+
         $('#contact-datefilter').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
             contact_form.getLoadData();
@@ -353,7 +297,8 @@ var contact_form = {
                 }
             });
             
-            contact_form.getLoadData(filter_data,'filter');
+            // contact_form.getLoadData(filter_data,'filter');
+            contact_form.getLoadData('filter');
         });
 
         $(document).off('click','.add_new_filter');
@@ -384,8 +329,8 @@ var contact_form = {
             });
             
             contact_form.getLoadData();
+            $('.close').trigger('click');
         });
-
         
         $('#exportModal').on('show.bs.modal', function (event) {   
             if(!$('.main-checkbox-input').is(':checked') && !$('.checkbox-input').is(':checked')){
@@ -462,22 +407,31 @@ var contact_form = {
                 $('.export-col-checkbox').prop("checked", false);
             }
         });
+
+        $(document).off('click','.table_paginate .paginate_btn');
+        $(document).on('click','.table_paginate .paginate_btn',function(){
+            if($(this).hasClass('current')){
+                return false;
+            }
+            per_page    = $('.table_length_select').val();
+            current_page= $(this).attr('data-idx');
+            page_start  = (per_page * current_page - per_page);
+
+            contact_form.getLoadData();
+        });
+
+        $(document).on('change','.tables_length .table_length_select',function(){
+            
+            per_page    = $('.table_length_select').val();
+            current_page= $('.table_paginate .paginate_btn.current').attr('data-idx');
+            page_start  = (per_page * current_page - per_page);
+
+            contact_form.getLoadData();
+        });
+        
     },
     plugin_initialize:function(){
-        var today   = new Date();
-        var dd      = today.getDate();
-        var mm      = today.getMonth()+1; 
-        var yyyy    = today.getFullYear();
         
-        if(dd<10) {
-            dd='0'+dd
-        } 
-        
-        if(mm<10) {
-            mm='0'+mm
-        } 
-        today = dd+'/'+mm+'/'+yyyy;
-
         // var start_date  = moment().startOf('month');
         // var end_date    = moment().endOf('month');
         var start_date    = '';
@@ -496,7 +450,7 @@ var contact_form = {
             autoUpdateInput : (start_date != '')?true:false,
             startDate       : (start_date != '')?start_date:false,
             endDate         : (end_date != '')?end_date:false,
-            maxDate         : today,
+            maxDate         : new Date(),
             locale: {
                 format: 'DD-MM-YYYY',
                 cancelLabel: 'Clear'
@@ -509,17 +463,40 @@ var contact_form = {
                 'This Month': [moment().startOf('month'), moment().endOf('month')],
                 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             }
-        });
+        }); 
 
-        // $('#remainder_date_time').datetimepicker({
-        //     format:'d/m/Y H:i:s'
-        // });           
-
-        contact_form.initialize_handsontable();     
+        contact_form.initialize_handsontable();
+        // contact_form.initialize_jqgrid();Inprocess     
     },
+    // initialize_jqgrid:function(){//Inprocess
+    //     var filter_data             = contact_form.getFilterData();
+    //     filter_data['call_from']    = 'onload';
+        
+    //     $("#43rowed3").jqGrid({
+    //         url:'get_contact?call_from=onload',
+    //         datatype: "json",
+    //         // colNames:['Inv No','Date', 'Client', 'Amount','Tax','Total','Notes'],
+    //         colModel:contact_form.getColumns(),
+    //         rowNum:10,
+    //         rowList:[10,20,30],
+    //         // pager: '#p43rowed3',
+    //         sortname: 'id',
+    //         viewrecords: true,
+    //         sortorder: "desc",
+    //         editurl: "server.php",
+    //         caption: "Contact Excel",
+    //         shrinkToFit: false,
+    //         gridComplete: function(){
+    //             // $('#43rowed3').jqGrid('setGridWidth', '1000'); // max width for grid
+    //         }
+    //     });
+    //     // $("#43rowed3").jqGrid('navGrid',"#p43rowed3",{edit:false,add:false,del:false});
+    //     // $("#43rowed3").jqGrid('inlineNav',"#p43rowed3");
+    // },
     initialize_handsontable:function(){
-        hot = $('#dataTable').handsontable({
-            data            : contact_form.getLoadData({},'onload'),
+
+        handsontable_instance = $('#dataTable').handsontable({
+            data            : contact_form.getLoadData('onload'),
             columns         : contact_form.getColumns(),
             // colHeaders      : true,
             rowHeaders      : true,
@@ -557,9 +534,9 @@ var contact_form = {
                 if(add_custom_class_column.includes($(TH).find('.colHeader').html())){
                     $(TH).addClass("cyan-color");
                 }
-                // contact_form.addInput(col,TH);
+                // contact_form.addInput(col,TH);//As of now, Not in use 
             },
-            afterGetRowHeader: drawCheckboxInRowHeaders,
+            afterGetRowHeader: contact_form.drawCheckboxInRowHeaders,
             beforeChange     : function(obj) {
                 
                 if(obj[0][1] == 'iContactsId' || obj[0][1] == 'iContactInteractionId'){
@@ -682,6 +659,10 @@ var contact_form = {
                             if(typeof data['insert_id'] != "undefined" && data['insert_id'] != ''){
                                 contact_form.getLoadData();
                             }
+
+                            if(typeof data['set_remainder_flag'] != "undefined" && data['set_remainder_flag']){
+                                fetchReminderCount();
+                            }
                             setMessage('Column data is updated successfully','.panel-heading',true);
                         }else{
                             var error_message = "Error occurred while updating column data";
@@ -768,6 +749,12 @@ var contact_form = {
                     });
                     
                 }
+            },
+            beforePaste:function(data, coords){
+                if(data[0].length > 1){
+                    setMessage('Copy and paste whole row is not allowed','.panel-heading',false);
+                    return false;
+                }
             }
             // , 
             // beforeRemoveRow: function(index, amount) {
@@ -804,11 +791,22 @@ var contact_form = {
                             }
                         }
                     }
-                }   
+                }else if(val.db_name == "dtNextActionDate") {
+                    obj['datePickerConfig'] = {
+                        disableDayFn(date) { 
+                            var d2 = new Date();
+                            if(date >= d2){
+                                return false;
+                            } else {
+                                return true;
+                            }
+                        }
+                    }
+                }
             }else if(val.type == 'dropdown'){	
                 obj['placeholder']  = "Please select value";
                 // obj['source'].splice(0, 0, "Please select value");
-                obj['renderer']     =  customDropdownRenderer;
+                obj['renderer']     =  contact_form.customDropdownRenderer;
                 obj['editor']       = "chosen";
                 obj['visibleRows']  = 5;
                 
@@ -844,9 +842,12 @@ var contact_form = {
 
         return columns_obj;
     },
-    getLoadData:function(extra_data = {},call_from = ''){
+    getLoadData:function(call_from = ''){
         var filter_data             = contact_form.getFilterData();
-        filter_data['call_from']    = call_from;  
+        filter_data['call_from']    = call_from;
+        filter_data['per_page']     = per_page;
+        filter_data['page_start']   = page_start;
+
         $.ajax({
             url     : "get_contact",
             dataType: 'json',
@@ -860,8 +861,59 @@ var contact_form = {
                     logged_filter_data = res.logged_filter_data;    
                 }
                 $('#dataTable').data('handsontable').loadData(res.data);
+                // contact_form.updatePagination(res);
             }
         });
+    },
+    updatePagination:function(data){
+
+        var data_start      = page_start+1;
+        var total_records   = data.total_records;
+        var data_end        = (current_page*per_page);
+        data_end            = (data_end > data.total_records)?data.total_records:data_end;
+
+        var page_info       = 'Showing '+data_start+' to '+data_end+' of '+total_records+' entries';
+        
+        $(".table-pagination-div .table_info").html(page_info);
+
+        var page_count      = Math.ceil(data.total_records/per_page);
+        // console.log(page_count);
+        var pagination_html = '<span>';
+        
+        pagination_html = '<a class="paginate_btn first disabled" data-idx="first">First</a>';
+        pagination_html     += '<a class="paginate_btn previous disabled" data-idx="previous">Previous</a>';
+
+        for(var i=1;i<=page_count;i++){
+            if(current_page == i){
+                pagination_html += '<a class="paginate_btn current" data-idx='+i+'>'+i+'</a>';
+            }else{
+                pagination_html += '<a class="paginate_btn" data-idx='+i+'>'+i+'</a>';
+            }
+        }
+        pagination_html     += '<a class="paginate_btn next disabled" data-idx="next">Next</a>';
+        pagination_html     +='<a class="paginate_btn last disabled" data-idx="last" >Last</a>';
+        
+        pagination_html += '</span>';
+        
+        // var pagination_html = '<a class="paginate_btn first disabled" data-idx="first">First</a>';
+        // pagination_html     += '<a class="paginate_btn previous disabled" data-idx="previous">Previous</a>';
+        
+        // pagination_html     += '<a class="paginate_btn next disabled" data-idx="next">Next</a>';
+        // pagination_html     +='<a class="paginate_btn last disabled" data-idx="last" >Last</a>';
+        
+
+        $(".table-pagination-div .table_paginate").html(pagination_html);
+        // var template    = $("#table_pagination").html();
+        // var data = {
+        //     'total_records' : 57,
+        //     'per_page'      : 10,
+        //     'no_of_pages'   : 6,
+        //     'previous_flag' : false,
+        //     'next_flag'     : true,
+        //     'current_page'  : 1
+        // };
+        // var text        = Mustache.render(template, data);
+        // $(".table-pagination-div").html(text);
     },
     getFilterData:function(){
         var filter_obj = {
@@ -896,32 +948,32 @@ var contact_form = {
 
         return filter_obj;
     },
-    addInput:function(col, TH){
-        if (typeof col !== 'number') {
-          return col;
-        }
+    // addInput:function(col, TH){//As of now, Not in use
+    //     if (typeof col !== 'number') {
+    //       return col;
+    //     }
       
-        if (col >= 0 && TH.childElementCount < 2) {
-          TH.appendChild(contact_form.getInitializedElements(col));
-        }
-    },
-    getInitializedElements:function(colIndex){
-        const div           = document.createElement('div');
-        const input         = document.createElement('input');
-        div.className       = 'filterHeader';
-        input.placeholder   = "Please search here";
-        input.className     = 'form-control';
-        contact_form.addEventListeners(input, colIndex);
+    //     if (col >= 0 && TH.childElementCount < 2) {
+    //       TH.appendChild(contact_form.getInitializedElements(col));
+    //     }
+    // },
+    // getInitializedElements:function(colIndex){//As of now, Not in use
+    //     const div           = document.createElement('div');
+    //     const input         = document.createElement('input');
+    //     div.className       = 'filterHeader';
+    //     input.placeholder   = "Please search here";
+    //     input.className     = 'form-control';
+    //     contact_form.addEventListeners(input, colIndex);
 
-        div.appendChild(input);
+    //     div.appendChild(input);
 
-        return div;
-    },
-    addEventListeners:function(input, colIndex){
-        input.addEventListener('keydown', event => {
-            debounceFn(colIndex, event);
-        });
-    },
+    //     return div;
+    // },
+    // addEventListeners:function(input, colIndex){//As of now, Not in use
+    //     input.addEventListener('keydown', event => {
+    //         debounceFn(colIndex, event);
+    //     });
+    // },
     setFilterDataOnForm:function(filter_data = ''){
         if(filter_data != ''){
             $.each(filter_data,function(key,val){
@@ -983,8 +1035,8 @@ var contact_form = {
         var return_flag = false;
         switch(col_data[1]){
             case "vLinkedURL":
-                // if( /(ftp|http|https):\/\/?(?:www\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(col_data[3]) ) {
-                if( /http(s)?:\/\/([w]{3}\.)?linkedin\.com\/in\/([a-zA-Z0-9-]{5,30})\/?/.test(col_data[3]) ) {
+                if( /(ftp|http|https):\/\/?(?:www\.)?linkedin.com(\w+:{0,1}\w*@)?(\S+)(:([0-9])+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(col_data[3]) ) {
+                // if( /http(s)?:\/\/([w]{3}\.)?linkedin\.com\/in\/([a-zA-Z0-9-]{5,30})\/?/.test(col_data[3]) ) {
                     return true;
                 }
                 break;
@@ -998,54 +1050,89 @@ var contact_form = {
                 break;
         }
         return return_flag;
-    }
-}
-
-const debounceFn = Handsontable.helper.debounce((colIndex, event) => {
-    const filtersPlugin = $('#dataTable').data('handsontable').getPlugin('filters');
-    filtersPlugin.removeConditions(colIndex);
-    filtersPlugin.addCondition(colIndex, 'contains', [event.target.value]);
-    filtersPlugin.filter();
-}, 100);
-
-function customDropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
-    var selectedId;
-    var optionsList = cellProperties.chosenOptions.data;
-
-    if(typeof optionsList === "undefined" || typeof optionsList.length === "undefined" || !optionsList.length) {
+    },
+    customDropdownRenderer:function(instance, td, row, col, prop, value, cellProperties) {
+        var selectedId;
+        var optionsList = cellProperties.chosenOptions.data;
+    
+        if(typeof optionsList === "undefined" || typeof optionsList.length === "undefined" || !optionsList.length) {
+            Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
+            return td;
+        }
+    
+        var values = (value + "").split(",");
+        value = [];
+        for (var index = 0; index < optionsList.length; index++) {
+    
+            if (values.indexOf(optionsList[index].id + "") > -1) {
+                selectedId = optionsList[index].id;
+                value.push(optionsList[index].label);
+            }
+        }
+        value = value.join(", ");
+    
         Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
         return td;
-    }
-
-    var values = (value + "").split(",");
-    value = [];
-    for (var index = 0; index < optionsList.length; index++) {
-
-        if (values.indexOf(optionsList[index].id + "") > -1) {
-            selectedId = optionsList[index].id;
-            value.push(optionsList[index].label);
+    },
+    drawCheckboxInRowHeaders:function(row, TH) {
+        var input       = document.createElement('input');
+        input.type      = 'checkbox';
+        input.className = 'checkbox-input';
+        input.setAttribute("data-row", row);
+    
+        if (row >= 0 && this.getDataAtRowProp(row, '0')) {
+            input.checked = true;
         }
+        // Handsontable.dom.empty(TH);
+        TH.getElementsByClassName("rowHeader")[0].appendChild(input);
+        // TH.appendChild(input);
     }
-    value = value.join(", ");
-
-    Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
-    return td;
 }
 
+// const debounceFn = Handsontable.helper.debounce((colIndex, event) => {//As of now, Not in use
+//     const filtersPlugin = $('#dataTable').data('handsontable').getPlugin('filters');
+//     filtersPlugin.removeConditions(colIndex);
+//     filtersPlugin.addCondition(colIndex, 'contains', [event.target.value]);
+//     filtersPlugin.filter();
+// }, 100);
 
-function drawCheckboxInRowHeaders(row, TH) {
-    var input       = document.createElement('input');
-    input.type      = 'checkbox';
-    input.className = 'checkbox-input';
-    input.setAttribute("data-row", row);
+// function customDropdownRenderer(instance, td, row, col, prop, value, cellProperties) {
+//     var selectedId;
+//     var optionsList = cellProperties.chosenOptions.data;
 
-    if (row >= 0 && this.getDataAtRowProp(row, '0')) {
-        input.checked = true;
-    }
-    // Handsontable.dom.empty(TH);
-    TH.getElementsByClassName("rowHeader")[0].appendChild(input);
-    // TH.appendChild(input);
-}
+//     if(typeof optionsList === "undefined" || typeof optionsList.length === "undefined" || !optionsList.length) {
+//         Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
+//         return td;
+//     }
+
+//     var values = (value + "").split(",");
+//     value = [];
+//     for (var index = 0; index < optionsList.length; index++) {
+
+//         if (values.indexOf(optionsList[index].id + "") > -1) {
+//             selectedId = optionsList[index].id;
+//             value.push(optionsList[index].label);
+//         }
+//     }
+//     value = value.join(", ");
+
+//     Handsontable.cellTypes.dropdown.renderer(instance, td, row, col, prop, value, cellProperties);
+//     return td;
+// }
+
+// function drawCheckboxInRowHeaders(row, TH) {
+//     var input       = document.createElement('input');
+//     input.type      = 'checkbox';
+//     input.className = 'checkbox-input';
+//     input.setAttribute("data-row", row);
+
+//     if (row >= 0 && this.getDataAtRowProp(row, '0')) {
+//         input.checked = true;
+//     }
+//     // Handsontable.dom.empty(TH);
+//     TH.getElementsByClassName("rowHeader")[0].appendChild(input);
+//     // TH.appendChild(input);
+// }
 
 $(document).ready(function(){
     contact_form.init();

@@ -27,6 +27,25 @@
       <div class="panel-body">
          <div class="table-responsive">
             <div id="dataTable" class="custom-scroll"></div>
+            <!-- <div class="table-footer">
+               <div class="table-pagination-div">
+                  <div class="table_info"></div>
+                  <div class="tables_length">
+                     <label>Show 
+                        <select name="table_length_select" class="table_length_select">
+                           <option value="5">5</option>
+                           <option value="10" selected>10</option>
+                           <option value="25">25</option>
+                           <option value="50">50</option>
+                           <option value="100">100</option>
+                        </select> entries
+                     </label>
+                  </div>
+                  <div class="table_paginate"></div>
+               </div>
+            </div> -->
+            <!-- <table id="43rowed3"></table>
+            <div id="p43rowed3"></div> -->
          </div>
       </div>
    </div>
@@ -120,14 +139,17 @@
 
 @section('scripts')
 
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/js/jquery.jqGrid.min.js"></script> -->
 <script src="{{ asset('js/handsontable.full.min.js') }}"></script>
 <script src="{{ asset('js/handsontable-chosen-editor.js') }}"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script> -->
 <script src="{{ asset('js/jquery.datetimepicker.full.min.js') }}"></script>
 <script src="{{ asset('js/daterangepicker.min.js') }}" ></script>
 <script src="{{ asset('js/select2.full.min.js') }}"></script>
 <script src="{{ asset('js/chosen.jquery.min.js') }}"></script>
 <script src="{{ asset('js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap4-toggle.min.js') }}"></script>
+<!-- <script src="{{ asset('js/mustache.min.js') }}"></script> -->
 <script src="{{ asset('js/contact-form-new.js') }}"></script>
 <link rel="stylesheet" href="{{ asset('css/handsontable.full.min.css') }}"/>
 <link rel="stylesheet" href="{{ asset('css/jquery.datetimepicker.css') }}" />
@@ -135,6 +157,7 @@
 <link rel="stylesheet" href="{{ asset('css/daterangepicker.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('css/select2.min.css') }}"/>
 <link href="{{ asset('css/bootstrap4-toggle.min.css') }}" rel="stylesheet">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid-bootstrap.min.css"/> -->
 @stop
 
 <script>

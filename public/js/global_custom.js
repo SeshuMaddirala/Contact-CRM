@@ -57,4 +57,15 @@ $(document).ready(function(){
             window.location.href = "logout";
         }
     });
+
+    $(document).off('click','.hamburger');
+    $(document).on('click','.hamburger',function(){
+        if($(this).hasClass('is-active')){
+            $(this).removeClass('is-active');
+            $('#main-wrapper').removeClass('menu-toggle');
+        }else{
+            $(this).addClass('is-active');
+            $('#main-wrapper').addClass('menu-toggle');
+        }
+    });
 });
