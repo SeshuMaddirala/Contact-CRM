@@ -53,6 +53,7 @@ var contact_form = {
                         fetchReminderCount();
                         $('.close').trigger('click');
                         $('.checkbox-input').prop('checked',false);
+                        $('.main-checkbox-input').prop('checked',false);
                         setMessage('Reminder has been created successfully','.panel-heading',true);
                     }else{
                         setMessage('Error occurred while creating reminder','.modal-footer',false);
@@ -72,7 +73,7 @@ var contact_form = {
             var tmp_linked_url  = '';
             var tmp_contact_name= '';
 
-            $('input.checkbox-input:checked').each(function () {
+            $('.ht_clone_inline_start input.checkbox-input:checked').each(function () {
                 var linked_url  = hotInstance.getDataAtCell($(this).attr('data-row'),1);
                 var contact_name= hotInstance.getDataAtCell($(this).attr('data-row'),0);
 
@@ -333,25 +334,36 @@ var contact_form = {
         });
         
         $('#exportModal').on('show.bs.modal', function (event) {   
-            if(!$('.main-checkbox-input').is(':checked') && !$('.checkbox-input').is(':checked')){
+            if(!$('.main-checkbox-input').is(':checked') && !$('.ht_clone_inline_start .checkbox-input').is(':checked')){
                 alert("Please select atleast one contact to export");
                 return event.preventDefault(); 
+            }
+        });
+
+        $(document).off('click','.ht_clone_inline_start .checkbox-input');
+        $(document).on('click','.ht_clone_inline_start .checkbox-input',function(){
+            if(!$(this).is(':checked')){
+                $('.main-checkbox-input').prop('checked',false);
+            }else{
+                if($('.ht_clone_inline_start .checkbox-input:not(:checked)').length <= 0){
+                    $('.main-checkbox-input').prop('checked',true);
+                }
             }
         });
 
         $(document).off('click','.main-checkbox-input');
         $(document).on('click','.main-checkbox-input',function(){
             if($(this).is(':checked')){
-                $('.checkbox-input').prop('checked',true);
+                $('.ht_clone_inline_start .checkbox-input').prop('checked',true);
             }else{
-                $('.checkbox-input').prop('checked',false);
+                $('.ht_clone_inline_start .checkbox-input').prop('checked',false);
             }
         });
 
         $(document).off('click','.export-btn');
         $(document).on('click','.export-btn',function(){
             
-            if($('.main-checkbox-input').is(':checked') || $('.checkbox-input').is(':checked')){
+            if($('.main-checkbox-input').is(':checked') || $('.ht_clone_inline_start .checkbox-input').is(':checked')){
 
                 var contact_id  = '';
                 $.each(column_property,function(key,val){
@@ -364,11 +376,11 @@ var contact_form = {
                 var selected_column  = [];
                 var unselected_column  = [];
                 if($('.main-checkbox-input').is(':checked')){
-                    $.each($(".checkbox-input"), function (K, V) {
+                    $.each($(".ht_clone_inline_start .checkbox-input"), function (K, V) {
                         selected_row_ids.push($("#dataTable").handsontable('getInstance').getDataAtCell($(V).attr('data-row'),contact_id));
                     });
-                }else if($('.checkbox-input').is(':checked')){
-                    $.each($(".checkbox-input:checked"), function (K, V) {    
+                }else if($('.ht_clone_inline_start .checkbox-input').is(':checked')){
+                    $.each($(".ht_clone_inline_start .checkbox-input:checked"), function (K, V) {    
                         selected_row_ids.push($("#dataTable").handsontable('getInstance').getDataAtCell($(V).attr('data-row'),contact_id));        
                     });
                 }
@@ -379,13 +391,13 @@ var contact_form = {
                         unselected_column.push($(this).attr('data-dbcolumn-name'));
                     }        
                 });
-
+                selected_row_ids = selected_row_ids.filter(Boolean);
                 if(selected_column.length <= 0){
                     alert("Please select atleast one column");
                     return false;
                 }
                 $('#exportModal').modal('hide');
-
+                
                 window.open("export_data?row_ids="+selected_row_ids+"&unselected_column="+btoa(unselected_column),'_blank');
             } else {
                 alert("Please select atleast one contact to export");
@@ -406,6 +418,18 @@ var contact_form = {
             }else{
                 $('.export-col-checkbox').prop("checked", false);
             }
+        });
+
+        $(document).off('click','.export-contact-modal .export-col-checkbox');
+        $(document).on('click','.export-contact-modal .export-col-checkbox',function(){
+            if(!$(this).is(':checked')){
+                $('.export-check-uncheck').bootstrapToggle('off');
+            }else{
+                if($('.export-col-checkbox:not(:checked)').length <= 0){
+                    $('.export-check-uncheck').bootstrapToggle('on');
+                }
+            }
+
         });
 
         $(document).off('click','.table_paginate .paginate_btn');
@@ -672,6 +696,12 @@ var contact_form = {
                             }
                             setMessage(error_message,'.panel-heading',false);
                         }
+                    },
+                    beforeSend:function(){
+                        $('#loader-spinner').css("visibility", "visible");
+                    },
+                    complete:function(){
+                        $('#loader-spinner').css("visibility", "hidden");
                     }
                 });
             },
@@ -858,7 +888,8 @@ var contact_form = {
                     $('.close').trigger('click');
                 }
                 if(call_from != 'onload'){
-                    logged_filter_data = res.logged_filter_data;    
+                    logged_filter_data = res.logged_filter_data;
+                    $('#lblfilterCount').html(logged_filter_data['custom_filter'].length);    
                 }
                 $('#dataTable').data('handsontable').loadData(res.data);
                 // contact_form.updatePagination(res);
@@ -1079,7 +1110,7 @@ var contact_form = {
         input.type      = 'checkbox';
         input.className = 'checkbox-input';
         input.setAttribute("data-row", row);
-    
+
         if (row >= 0 && this.getDataAtRowProp(row, '0')) {
             input.checked = true;
         }

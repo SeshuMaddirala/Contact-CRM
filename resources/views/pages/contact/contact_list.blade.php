@@ -14,7 +14,7 @@
          <span class="selected-count"></span>
          <button type="button" class="btn btn-primary remainderModal" data-toggle="modal" data-target="#remainderModal"><i class="fa-solid fa-bell"></i> Reminder</button>
          <!-- <button type="button" class="btn btn-primary filter-icon"><i class="fa fa-filter"></i></button> -->
-         <button type="button" class="btn btn-primary filterModal btn-modal" data-toggle="modal" data-target="#filterModal"><i class="fa-solid fa-filter"></i> Filter</button>
+         <button type="button" class="btn btn-primary filterModal btn-modal" data-toggle="modal" data-target="#filterModal"><i class="fa-solid fa-filter"></i> Filter <span class='badge badge-warning' id='lblfilterCount'>{{ count($filter_data['custom_filter']) }}</span></button>
          <!-- <button type="button" class="btn btn-primary btn-modal export-btn"><i class="fa-solid fa-download"></i> Export</button> -->
 
          <button type="button" class="btn btn-primary btn-modal exportModal" data-toggle="modal" data-target="#exportModal"><i class="fa-solid fa-download"></i> Export</button>
@@ -26,7 +26,14 @@
       </div>
       <div class="panel-body">
          <div class="table-responsive">
-            <div id="dataTable" class="custom-scroll"></div>
+            <div id="dataTable" class="custom-scroll">
+               <div id="loader-spinner">
+                  <span class="ouro ouro3">
+                     <span class="left"><span class="anim"></span></span>
+                     <span class="right"><span class="anim"></span></span>
+                  </span>
+               </div>
+            </div>
             <!-- <div class="table-footer">
                <div class="table-pagination-div">
                   <div class="table_info"></div>
