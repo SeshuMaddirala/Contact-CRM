@@ -16,7 +16,7 @@
         </a>
     </div> -->
     <div class="nav-header">
-        <a href="index.html" class="brand-logo">
+        <a href="index" class="brand-logo">
             <img class="logo-abbr" src="{{ asset('image/application-icon.png') }}" alt="Dash CRM">  <small>DASH CRM 
                 @if(Session::has('login_through') && Session::get('login_through') == 'google')(Google)@endif
                 @if(Session::has('login_through') && Session::get('login_through') == 'outlook')(Outlook)@endif
