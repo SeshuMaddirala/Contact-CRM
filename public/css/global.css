@@ -526,6 +526,7 @@ tbody, td, tfoot, th, thead, tr {
     margin: 0 0 10px;
     padding: 0;
     position: relative;
+    padding-bottom: 30px;
 }
 
 .timeline::before {
@@ -1675,4 +1676,10 @@ img {
     background-color: white;
     color: #333;
     border: 0.1px solid #333;
+}
+
+.reminder-list{
+    min-height: 200px;
+    overflow: auto;
+    height: 600px;
 }

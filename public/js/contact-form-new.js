@@ -397,7 +397,9 @@ var contact_form = {
                     return false;
                 }
                 $('#exportModal').modal('hide');
-                
+                $('.checkbox-input').prop('checked',false);
+                $('.main-checkbox-input').prop('checked',false);
+                           
                 window.open("export_data?row_ids="+selected_row_ids+"&unselected_column="+btoa(unselected_column),'_blank');
             } else {
                 alert("Please select atleast one contact to export");
@@ -423,10 +425,10 @@ var contact_form = {
         $(document).off('click','.export-contact-modal .export-col-checkbox');
         $(document).on('click','.export-contact-modal .export-col-checkbox',function(){
             if(!$(this).is(':checked')){
-                $('.export-check-uncheck').bootstrapToggle('off');
+                $('.export-check-uncheck').bootstrapToggle('off', true);
             }else{
                 if($('.export-col-checkbox:not(:checked)').length <= 0){
-                    $('.export-check-uncheck').bootstrapToggle('on');
+                    $('.export-check-uncheck').bootstrapToggle('on',true);
                 }
             }
 
